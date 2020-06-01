@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="10dp"
+    >
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/update_imageview"
+        android:background="@color/colorPrimaryDark"
+        android:src="@drawable/add_a_photo_black_20dp">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/upd_edtId"
+        android:layout_width="213dp"
+        android:layout_height="30dp"
+        android:ems="10"
+        android:hint="Id:"></TextView>
+
+    <EditText
+        android:id="@+id/upd_edtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name:"></EditText>
+
+    <EditText
+        android:id="@+id/upd_edtLastName"
+        android:hint="Lastname:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"></EditText>
+    <EditText
+        android:id="@+id/upd_edtPasswd"
+        android:hint="Passwd:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"></EditText>
+    <EditText
+        android:id="@+id/upd_edtRating"
+        android:hint="Rating:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"></EditText>
+    <EditText
+        android:id="@+id/upd_edtNumber"
+        android:hint="Number:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"></EditText>
+    <EditText
+        android:id="@+id/upd_edtCreatedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Created date:"></EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/upd_btn"
+        android:text="Update">
+    </Button>
+
+    <Button
+        android:id="@+id/upd_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"></Button>
+    </LinearLayout>>
+</LinearLayout>

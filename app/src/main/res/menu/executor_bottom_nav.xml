@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/executor_nav_profile"
+        android:icon="@android:color/transparent"
+        android:title="Информация" />
+    <item
+        android:id="@+id/executor_nav_reviews"
+        android:title="Отзывы" />
+
+</menu>

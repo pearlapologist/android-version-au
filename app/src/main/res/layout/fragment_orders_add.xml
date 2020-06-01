@@ -1,0 +1,106 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="fragments.Orders_add">
+
+    <ScrollView
+        android:id="@+id/orders_add_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp">
+
+        <LinearLayout
+            android:id="@+id/orders_add_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Раздел:"
+                android:textSize="14sp"></TextView>
+
+            <Spinner
+                android:id="@+id/orders_add_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"></Spinner>
+
+            <EditText
+                android:id="@+id/orders_add_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:ems="10"
+                android:hint="title:"
+                android:inputType="text"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/orders_add_descr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:ems="10"
+                android:hint="description"
+                android:inputType="text"
+                android:textSize="18sp" />
+
+
+            <EditText
+                android:id="@+id/orders_add_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:ems="10"
+                android:hint="price:"
+                android:inputType="number"
+                android:textSize="18sp" />
+
+
+            <CheckBox
+                android:id="@+id/orders_add_variants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:text="Рассмотрю варианты" />
+
+
+            <com.santalu.maskedittext.MaskEditText
+                android:id="@+id/orders_add_deadlinee"
+                app:met_mask="##.##.####"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:ems="10"
+                android:hint="deadline:"
+                android:inputType="date"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/orders_add_checkDeadl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:text="Not important" />
+
+
+            <Button
+                android:id="@+id/orders_add_btnOk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:layout_marginBottom="20sp"
+                android:text="Ok"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

@@ -1,0 +1,96 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fragments.Fragment_executor_view_reviews">
+
+    <!--
+        android:textAlignment="center"
+    -->
+    <RelativeLayout
+        android:id="@+id/fragment_executor_view_profile_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5sp"
+        android:padding="5sp">
+
+        <TextView
+            android:id="@+id/fragment_executor_view_profile_spec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10sp"
+            android:text="TextView"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_executor_view_profile_view"
+            android:background="@color/gray"
+            android:layout_marginTop="10sp"
+            android:layout_below="@id/fragment_executor_view_profile_desc"
+            android:layout_height="1sp">
+
+        </View>
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_executor_view_profile_view2"
+            android:background="@color/gray"
+            android:layout_marginTop="10sp"
+            android:layout_below="@id/fragment_executor_view_profile_spec"
+            android:layout_height="1sp">
+
+        </View>
+
+        <TextView
+            android:id="@+id/fragment_executor_view_profile_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_executor_view_profile_view2"
+            android:layout_marginTop="10sp"
+            android:text="desc"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_executor_view_profile_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_executor_view_profile_view"
+            android:layout_marginTop="10sp" />
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_executor_view_profile_view3"
+            android:background="@color/gray"
+            android:layout_marginTop="10sp"
+            android:layout_below="@id/fragment_executor_view_profile_rv"
+            android:layout_height="1sp">
+
+        </View>
+
+
+        <TextView
+            android:id="@+id/fragment_executor_view_profile_contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_executor_view_profile_view3"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="10sp"
+            android:padding="5sp"
+            android:textSize="16sp"
+            android:text="телефон" />
+
+        <Button
+            android:id="@+id/fragment_executor_view_profile_contacts_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_executor_view_profile_view3"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10sp"
+            android:layout_marginRight="5sp"
+            android:padding="5sp"
+            android:text="Связаться"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</FrameLayout>
