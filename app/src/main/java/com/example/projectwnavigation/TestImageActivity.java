@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -29,22 +32,28 @@ public class TestImageActivity extends AppCompatActivity {
     EditText etTitle;
     Button btnAdd, btnList, btnChoose;
     ImageView imageView;
+
     MyDataProvider provider;
-    final int REQUEST_CODE_GALLERY = 999;
+    final int READ_GALLERY = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_image);
-        init();
 
+        etTitle = findViewById(R.id.testImage_title);
+        btnAdd = findViewById(R.id.testImage_add);
+        btnChoose = findViewById(R.id.testImage_choose);
+        btnList = findViewById(R.id.testImage_list);
+        imageView = findViewById(R.id.testImage_image);
         provider = new MyDataProvider(this);
+
         btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(
                         TestImageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_CODE_GALLERY
+                        READ_GALLERY
                 );
 
             }
@@ -54,14 +63,13 @@ public class TestImageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    provider.insertDataImage(
+                    provider.addImage(
                             etTitle.getText().toString().trim(),
-                            imageViewToByte(imageView));
-
-                    Toast.makeText(TestImageActivity.this, "Added", Toast.LENGTH_SHORT).show();
-
+                            provider.imageViewToByte(imageView)
+                    );
+                    Toast.makeText(getApplicationContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
                     etTitle.setText("");
-                    imageView.setImageResource(R.mipmap.ic_launcher);
+                    imageView.setImageResource(R.mipmap.ic_add_image);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -73,61 +81,51 @@ public class TestImageActivity extends AppCompatActivity {
         btnList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TestImageActivity.this , TestImageList.class);
+                Intent i = new Intent(TestImageActivity.this, TestImageList.class);
                 startActivity(i);
             }
         });
     }
 
-    public void init() {
-        etTitle = findViewById(R.id.testImage_title);
-        btnAdd = findViewById(R.id.testImage_add);
-        btnChoose = findViewById(R.id.testImage_choose);
-        btnList = findViewById(R.id.testImage_list);
-        imageView = findViewById(R.id.testImage_image);
-
-    }
-
-    public byte[] imageViewToByte(ImageView image) {
-        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE_GALLERY) {
+        if (requestCode == READ_GALLERY) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent i = new Intent(Intent.ACTION_PICK);
-                i.setType("image/*");
-                startActivityForResult(i, REQUEST_CODE_GALLERY);
-
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, READ_GALLERY);
             } else {
-                Toast.makeText(this, "u do not have persmission", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
             }
             return;
         }
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
+        if (requestCode == READ_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
 
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                imageView.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1).start(this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult res = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = res.getUri();
+                imageView.setImageURI(resultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception ex = res.getError();
             }
 
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

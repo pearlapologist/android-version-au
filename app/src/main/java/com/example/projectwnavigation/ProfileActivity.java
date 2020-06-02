@@ -65,4 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+     }
 }

@@ -7,7 +7,8 @@
     tools:context=".TestImageList">
 
     <GridView
-        android:id="@+id/test_image_gridView"
+        android:id="@+id/test_image_list_gridView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent"></GridView>
+
 </RelativeLayout>

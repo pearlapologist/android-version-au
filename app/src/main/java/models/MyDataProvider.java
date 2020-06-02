@@ -1,12 +1,21 @@
 package models;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -1622,31 +1631,80 @@ where executor_services.executor_id = 1
     //endregion
 
 
-    public void insertDataImage(String title, byte[] image) {
-        SQLiteDatabase sqlDb =  db.getWritableDatabase();
-        String sql = "INSERT INTO test_image (title, image) VALUES(?,?)";
+    public void addImage(String name, byte[] image){
+        SQLiteDatabase database = db.getWritableDatabase();
+        String sql = "INSERT INTO test_image VALUES (NULL, ?, ?)";
 
-        SQLiteStatement insertStmt = sqlDb.compileStatement(sql);
-        insertStmt.clearBindings();
-        insertStmt.bindString(1, title);
-        insertStmt.bindBlob(2, image);
-        insertStmt.executeInsert();
-        db.close();
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, name);
+        statement.bindBlob(2, image);
+
+        statement.executeInsert();
     }
 
+    public void updateData(String name,  byte[] image, int id) {
+        SQLiteDatabase database = db.getWritableDatabase();
 
-    public void addImage(String title, byte[] image) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        String sql = "INSERT INTO test_image (title, image) VALUES ('" + title + "', " + image + ")";
-        sqLiteDatabase.execSQL(sql);
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
+        String sql = "UPDATE test_image SET title = ?,  image = ? WHERE _id = ?";
+        SQLiteStatement statement = database.compileStatement(sql);
+
+        statement.bindString(1, name);
+        statement.bindBlob(2, image);
+        statement.bindDouble(3, id);
+
+        statement.execute();
+        database.close();
     }
 
-    public Cursor getDataImage(String sql) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        return sqLiteDb.rawQuery(sql, null);
+    public  void deleteData(int id) {
+        SQLiteDatabase database = db.getWritableDatabase();
+
+        String sql = "DELETE FROM test_image WHERE _id = ?";
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+        statement.bindDouble(1, id);
+
+        statement.execute();
+        database.close();
+    }
+
+    public ArrayList<TestEntity> getAllDataFromTestImage(){
+        SQLiteDatabase database = db.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM test_image", null);
+    ArrayList<TestEntity> result = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String name = cursor.getString(cursor.getColumnIndex("title"));
+            byte[] image = cursor.getBlob(cursor.getColumnIndex("image"));
+
+            result.add(new TestEntity(name, image, id));
+        }
+        return result;
+    }
+
+    public ArrayList<Integer> getIdArrayFromTestImage(){
+        SQLiteDatabase database = db.getReadableDatabase();
+        Cursor c = database.rawQuery("SELECT _id FROM test_image", null);
+        ArrayList<Integer> arrID = new ArrayList<Integer>();
+        while (c.moveToNext()) {
+            arrID.add(c.getInt(0));
+        }
+        return arrID;
+    }
+
+    public Bitmap decodeByteToBitmap(byte[] image){
+        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0 , image.length);
+        return bitmap;
+    }
+
+    public byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 
 }

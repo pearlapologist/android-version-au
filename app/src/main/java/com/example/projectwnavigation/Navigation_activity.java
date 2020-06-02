@@ -18,6 +18,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,7 +38,7 @@ import models.DbHelper;
 import models.MyDataProvider;
 import models.Persons;
 
-public class Navigation_activity extends AppCompatActivity{
+public class Navigation_activity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private TextView mNotifyTv;
@@ -79,13 +80,18 @@ public class Navigation_activity extends AppCompatActivity{
         fragment_profile = new Fragment_profile(getApplicationContext());
 
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.fram, fragment_profile, "PROFILE_FRAGMENT").commit();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_orders).commit();
+       // getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_orders).commit();
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
         View headerView = navigationView.getHeaderView(0);
-      headerPersonName = headerView.findViewById(R.id.header_textView_profileName);
+        headerPersonName = headerView.findViewById(R.id.header_textView_profileName);
 
         headerPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,14 +119,15 @@ public class Navigation_activity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        Persons currentPerson = provider.getLoggedInPerson(); ;
-       if (currentPerson == null) {
+        Persons currentPerson = provider.getLoggedInPerson();
+        ;
+        if (currentPerson == null) {
             Intent intent = new Intent(this, FirstActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return;
         }
-       headerPersonName.setText(currentPerson.getName() +" " + currentPerson.getLastname());
+        headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
 
     }
 
@@ -157,20 +164,20 @@ public class Navigation_activity extends AppCompatActivity{
             onStart();
         }
         return super.onOptionsItemSelected(item);
-}
+    }
 
-        private NavigationView.OnNavigationItemSelectedListener navListener
-            = new NavigationView.OnNavigationItemSelectedListener(){
+    private NavigationView.OnNavigationItemSelectedListener navListener
+            = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int id = item.getItemId();
             Fragment fragment = fragment_orders;
             if (id == R.id.nav_speacl) {
-               fragment = fragment_specials;
+                fragment = fragment_specials;
             } else if (id == R.id.nav_orders) {
                 fragment = fragment_orders;
             } else if (id == R.id.nav_bkmr) {
-               fragment = fragment_bkmrk;
+                fragment = fragment_bkmrk;
             } else if (id == R.id.nav_notificatn) {
                 fragment = fragment_notification;
                 initializeCountDrawer();

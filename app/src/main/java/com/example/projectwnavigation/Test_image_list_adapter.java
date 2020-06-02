@@ -12,17 +12,20 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import models.MyDataProvider;
 import models.TestEntity;
 
 public class Test_image_list_adapter extends BaseAdapter {
     private Context context;
     private int layout;
+    MyDataProvider provider;
     private ArrayList<TestEntity> arrayList;
 
     public Test_image_list_adapter(Context context, int layout, ArrayList<TestEntity> arrayList) {
         this.context = context;
         this.layout = layout;
         this.arrayList = arrayList;
+        this.provider  = new MyDataProvider(context);
     }
 
     @Override
@@ -50,20 +53,20 @@ public class Test_image_list_adapter extends BaseAdapter {
 
             holder.txtTitle = row.findViewById(R.id.test_image_items_title);
             holder.imageView = row.findViewById(R.id.test_image_items_photo);
+
             row.setTag(holder);
         } else {
             holder = (MyViewHolderTestImage) row.getTag();
          }
         TestEntity entity = arrayList.get(position);
-         holder.txtTitle.setText(entity.getTitle());
 
-         byte[] image  = entity.getImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0 , image.length);
-        holder.imageView.setImageBitmap(bitmap);
-
+         holder.txtTitle.setText(entity.getName());
+        holder.imageView.setImageBitmap(provider.decodeByteToBitmap(entity.getImage()));
 
         return row;
     }
+
+
 
 
     private class MyViewHolderTestImage {

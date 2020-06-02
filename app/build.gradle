@@ -47,8 +47,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.synnapps:carouselview:0.1.5'
 
-    dependencies {
-        api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
-    }
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.github.mohammadatif:CircularImageView:1.0.0'
 
 }
