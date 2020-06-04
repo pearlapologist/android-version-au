@@ -71,7 +71,12 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         Persons p = provider.getPerson(executor.getPersonId());
         if (p!=null ) {
             nametxt = p.getName();
+           holder.photo.setImageBitmap(provider.decodeByteToBitmap(p.getPhoto()));
         }
+        else{
+            holder.photo.setImageResource(R.drawable.ic_add);
+        }
+
         holder.name.setText(nametxt);
 
         final int id = executor.getId();

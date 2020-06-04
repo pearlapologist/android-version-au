@@ -1,5 +1,6 @@
 package models;
 
+import android.app.Person;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ public class MyDataProvider {
     private static final String KEY_LOGGED_ID = "id";
     SharedPreferences sPref;
 
+    public final int READ_GALLERY = 999;
 
     final String SAVED_TEXT = "saved_text";
 
@@ -196,25 +199,6 @@ public class MyDataProvider {
         currentPerson = person;
     }
 
-//TODO: delete this code
-/*    public Persons getPersonByPasswd(String passwd) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_PERSONS + " where " + KEY_PERSON_PASSWD + "='"
-                    + passwd + "'", null);
-            if (c.moveToFirst()) {
-                Persons person = getPersonFromCursor(c);
-                return person;
-            }
-            sqLiteDb.setTransactionSuccessful();
-            c.close();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return null;
-    }*/
 
     public Persons getPersonByPasswdNNumb(String passwd, String number) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
@@ -249,8 +233,8 @@ public class MyDataProvider {
         return null;
     }
 
-    //TODO: delete
- /*   public Persons getPersonByNumber(String number) {
+
+    public Persons getPersonByNumber(String number) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -267,7 +251,7 @@ public class MyDataProvider {
             sqLiteDb.endTransaction();
         }
         return null;
-    }*/
+    }
 
     public Persons getPerson(int personId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
@@ -327,7 +311,6 @@ public class MyDataProvider {
     }
 
     public Persons getPersonFromCursor(Cursor c) {
-        Persons p = new Persons();
         int id = c.getInt(c.getColumnIndex(KEY_PERSON_ID));
         String name = c.getString(c.getColumnIndex(KEY_PERSON_NAME));
         String number = c.getString(c.getColumnIndex(KEY_PERSON_NUMBER));
@@ -335,39 +318,67 @@ public class MyDataProvider {
         int rating = c.getInt(c.getColumnIndex(KEY_PERSON_RATING));
         String passwd = c.getString(c.getColumnIndex(KEY_PERSON_PASSWD));
         Long created = c.getLong(c.getColumnIndex(KEY_PERSON_CREATED_DATE));
+        byte[] photo = c.getBlob(c.getColumnIndex(KEY_PERSON_PHOTO));
 
-        p.setId(id);
-        p.setName(name);
-        p.setLastname(lastname);
-        p.setNumber(number);
-        p.setRating(rating);
-        p.setPasswd(passwd);
-        p.setCreatedDate(created);
-        return p;
+        Persons per = new Persons(id, name, lastname, passwd, photo, number, rating, created);
+        return per;
     }
 
 
     //UPDATE PERSON
+
     public void updatePerson(Persons person) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
+        SQLiteDatabase sqlDatabase = db.getWritableDatabase();
+        sqlDatabase.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_PERSONS + " SET " +
-                    KEY_PERSON_NAME + "='" + person.getName() + "', " +
-                    KEY_PERSON_LASTNAME + "=' " + person.getLastname() + "', " +
-                    KEY_PERSON_PASSWD + "=' " + person.getPasswd() + "', " +
-                    KEY_PERSON_RATING + "= " + person.getRating() + ", " +
-                    KEY_PERSON_NUMBER + "=' " + person.getNumber() + "', " +
-                    KEY_PERSON_CREATED_DATE + "= " +
-                    person.getCreatedDate() +
-                    " WHERE " + KEY_PERSON_ID + "=" + person.getId();
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
+                    KEY_PERSON_NAME + "= ?," +
+                    KEY_PERSON_LASTNAME + "= ?," +
+                    KEY_PERSON_PASSWD + "= ?," +
+                    KEY_PERSON_RATING + "= ?," +
+                    KEY_PERSON_NUMBER + "= ?," +
+                    KEY_PERSON_PHOTO + "= ?" +
+                    " WHERE " + KEY_PERSON_ID + "= ?";
+            SQLiteStatement statement = sqlDatabase.compileStatement(sql);
+
+            statement.bindString(1, person.getName());
+            statement.bindString(2, person.getLastname());
+            statement.bindString(3, person.getPasswd());
+            statement.bindDouble(4, person.getRating());
+            statement.bindString(5, person.getNumber());
+            statement.bindBlob(6, person.getPhoto());
+            statement.bindDouble(7, person.getId());
+            statement.execute();
+            sqlDatabase.setTransactionSuccessful();
         } finally {
-            sqLiteDb.endTransaction();
+            sqlDatabase.endTransaction();
+            sqlDatabase.close();
         }
     }
 
+    public void setPersonIsExecutorField(Persons p, Boolean b) {
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        int value;
+        if (b == true) {
+            value = 1;
+        } else {
+            value = 0;
+        }
+        try {
+            String sql = "UPDATE " + TABLE_PERSONS + " SET " +
+                    KEY_PERSON_ISEXECUTOR + "= ?" +
+                    " WHERE " + KEY_PERSON_ID + "= ?";
+            SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
+
+            statement.bindDouble(1, value);
+            statement.bindDouble(2, p.getId());
+            statement.execute();
+            sqLiteDatabase.setTransactionSuccessful();
+        } finally {
+            sqLiteDatabase.endTransaction();
+        }
+    }
 
     //DELETE PERSON
     public void deletePerson(int personId) {
@@ -407,9 +418,14 @@ public class MyDataProvider {
             }
             executor.setId(maxId);
             onExecutorCreate(executor);
-            sqLiteDb.setTransactionSuccessful();
-
-        } finally {
+            onExecutorServicesCreate(executor);
+            Persons person = getPerson(executor.getPersonId());
+            setPersonIsExecutorField(person, true);
+            sqLiteDb.setTransactionSuccessful();}
+            catch(Exception e){
+                e.printStackTrace();
+            }
+         finally {
             sqLiteDb.endTransaction();
         }
     }
@@ -444,15 +460,24 @@ public class MyDataProvider {
         ArrayList<Executor> result = new ArrayList<>();
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        String s = "some text";
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                     + TABLE_EXECUTOR + " order by " + KEY_EXECUTOR_ID +
                     " desc", null);
-            while (c.moveToNext()) {
-                Executor executor = getExecutorFromCursor(c);
-                //loadExecutorServices(executor);
-                result.add(executor);
+            try {
+                while (c.moveToNext()) {
+                    Executor executor = getExecutorFromCursor(c);
+                    loadExecutorServices(executor);
+                    result.add(executor);
+                }
             }
+            catch (Exception e) {
+                s = e.getMessage();
+                e.printStackTrace();
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            }
+
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
@@ -625,7 +650,7 @@ where executor_services.executor_id = 1
         return null;
     }
 
-    public ArrayList<Service> getServices() {
+    public ArrayList<Service> getAllServices() {
         ArrayList<Service> result = new ArrayList<>();
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
@@ -644,6 +669,7 @@ where executor_services.executor_id = 1
         }
         return result;
     }
+
 
     public Service getServiceFromCursor(Cursor c) {
 
@@ -1459,17 +1485,25 @@ where executor_services.executor_id = 1
 
     //region Executor and services
     //CREATE EXECUTORNSERVICE
-    public void onServiceCreate(Executor executor, Service service) {
+    public void onExecutorServicesCreate(Executor executor) {
+        if (executor.getServices() == null || executor.getId() == 0) {
+            return;
+        }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
-            String sql = "INSERT INTO " + TABLE_EXECUTORNSERVICES + "(" + KEY_EXECUTORNSERVICES_EXECUTOR_ID +
-                    ", " + KEY_EXECUTORNSERVICES_SERVICE_ID +
-                    ") VALUES (" + executor.getId() + " , "
-                    + service.getId() + ")";
-            sqLiteDb.execSQL(sql);
+            for (Service service : executor.getServices()) {
+                String sql = "INSERT INTO " + TABLE_EXECUTORNSERVICES + "(" +
+                        KEY_EXECUTORNSERVICES_EXECUTOR_ID + ", " + KEY_EXECUTORNSERVICES_SERVICE_ID +
+                        ") VALUES (" + executor.getId() + ", " + service.getId() + ")";
+                sqLiteDb.execSQL(sql);
+            }
             sqLiteDb.setTransactionSuccessful();
-        } finally {
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
             sqLiteDb.endTransaction();
         }
     }
@@ -1631,7 +1665,7 @@ where executor_services.executor_id = 1
     //endregion
 
 
-    public void addImage(String name, byte[] image){
+    public void addImage(String name, byte[] image) {
         SQLiteDatabase database = db.getWritableDatabase();
         String sql = "INSERT INTO test_image VALUES (NULL, ?, ?)";
 
@@ -1644,7 +1678,7 @@ where executor_services.executor_id = 1
         statement.executeInsert();
     }
 
-    public void updateData(String name,  byte[] image, int id) {
+    public void updateData(String name, byte[] image, int id) {
         SQLiteDatabase database = db.getWritableDatabase();
 
         String sql = "UPDATE test_image SET title = ?,  image = ? WHERE _id = ?";
@@ -1658,7 +1692,7 @@ where executor_services.executor_id = 1
         database.close();
     }
 
-    public  void deleteData(int id) {
+    public void deleteData(int id) {
         SQLiteDatabase database = db.getWritableDatabase();
 
         String sql = "DELETE FROM test_image WHERE _id = ?";
@@ -1670,10 +1704,10 @@ where executor_services.executor_id = 1
         database.close();
     }
 
-    public ArrayList<TestEntity> getAllDataFromTestImage(){
+    public ArrayList<TestEntity> getAllDataFromTestImage() {
         SQLiteDatabase database = db.getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM test_image", null);
-    ArrayList<TestEntity> result = new ArrayList<>();
+        ArrayList<TestEntity> result = new ArrayList<>();
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             String name = cursor.getString(cursor.getColumnIndex("title"));
@@ -1684,7 +1718,7 @@ where executor_services.executor_id = 1
         return result;
     }
 
-    public ArrayList<Integer> getIdArrayFromTestImage(){
+    public ArrayList<Integer> getIdArrayFromTestImage() {
         SQLiteDatabase database = db.getReadableDatabase();
         Cursor c = database.rawQuery("SELECT _id FROM test_image", null);
         ArrayList<Integer> arrID = new ArrayList<Integer>();
@@ -1694,13 +1728,13 @@ where executor_services.executor_id = 1
         return arrID;
     }
 
-    public Bitmap decodeByteToBitmap(byte[] image){
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0 , image.length);
+    public Bitmap decodeByteToBitmap(byte[] image) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
         return bitmap;
     }
 
     public byte[] imageViewToByte(ImageView image) {
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();

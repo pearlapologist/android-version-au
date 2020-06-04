@@ -12,7 +12,6 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import models.DbHelper;
 import models.MyDataProvider;
 import models.Service;
 
@@ -57,7 +56,7 @@ public class Service_list_activity extends AppCompatActivity {
     }
 
     void insertArray() {
-        services = provider.getServices();
+        services = provider.getAllServices();
     }
 
 

@@ -1,6 +1,10 @@
 package models;
 
-public class Service {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Service implements Serializable {
     private int id;
     private String title;
     private double price;

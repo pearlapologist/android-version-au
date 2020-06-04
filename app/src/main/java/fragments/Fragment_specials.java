@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.projectwnavigation.Executors_adapter;
 import com.example.projectwnavigation.R;
@@ -84,6 +85,9 @@ public class Fragment_specials extends Fragment {
 
     void insertArray() {
         executors = provider.getExecutors();
+        if(executors ==null || executors.size() <= 0 ){
+            Toast.makeText(context, "list is empty", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

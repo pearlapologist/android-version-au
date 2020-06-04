@@ -13,6 +13,9 @@ public class Persons {
    // boolean hasAccount;
 
 
+    //upd
+    private Long birthday;
+
     public static final String ONLINE = "online";
     public static final String OFFLINE = "offline";
 
@@ -37,13 +40,14 @@ public class Persons {
         this.createdDate = createdDate;
     }
 
-    public Persons(int id, String name, String lastname, String passwd, String number, int rating) {
-        this.id = id;
+    public Persons(String name, String lastname, String passwd,  byte[] photo, String number, int rating, Long createdDate) {
         this.passwd = passwd;
         this.name = name;
         this.lastname = lastname;
         this.rating = rating;
+        this.photo = photo;
         this.number = number;
+        this.createdDate = createdDate;
     }
 
 

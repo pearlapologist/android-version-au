@@ -27,7 +27,7 @@ import models.Order;
 
 public class Orders_list_activity extends AppCompatActivity {
     RecyclerView recyclerView;
-    Button add_button;
+    Button add_button, btnBack;
     MyDataProvider provider;
     ArrayList<Order> orders;
     Orders_adapter orders_adapter;
@@ -56,6 +56,15 @@ public class Orders_list_activity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Orders_list_activity.this, Orders_createActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Orders_list_activity.this, Profile_edit_activity.class);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 

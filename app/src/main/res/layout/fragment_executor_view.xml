@@ -20,9 +20,9 @@
                 android:id="@+id/fragment_executor_view_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:textAlignment="center"
-                android:layout_below="@id/fragment_executor_view_photo"
+                android:layout_below="@id/fragment_executor_view_carousel"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="20dp"
                 android:text="TextView" />
 
@@ -39,10 +39,10 @@
 
             <TextView
                 android:id="@+id/fragment_executor_view_name"
-                android:layout_width="238dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fragment_executor_view_carousel"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="33dp"
                 android:layout_marginTop="20sp"
                 android:layout_toRightOf="@id/fragment_executor_view_photo"
                 android:text="Name"
@@ -60,18 +60,18 @@
                 app:fillColor="@color/gray"
                 app:pageColor="@color/gray"
                 app:radius="6sp"
-                app:slideInterval="4000"
+                app:slideInterval="8000"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1sp">
-
             </com.synnapps.carouselview.CarouselView>
 
             <Button
                 android:id="@+id/fragment_executor_view_chat"
-                android:layout_width="170sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="45sp"
                 android:layout_marginTop="10sp"
+                android:textSize="13sp"
                 android:layout_below="@id/fragment_executor_view_name"
                 android:layout_toRightOf="@id/fragment_executor_view_photo"
                 android:text="Chat" />
@@ -80,7 +80,7 @@
                 android:id="@+id/fragment_executor_view_bottomnav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_executor_view_section"
+                android:layout_below="@id/fragment_executor_view_chat"
                 android:layout_marginTop="14dp"
                 android:visibility="visible"
                 app:itemHorizontalTranslationEnabled="true"

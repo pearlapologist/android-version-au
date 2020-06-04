@@ -113,13 +113,19 @@ public class Executors_view_activity extends AppCompatActivity {
             Executor cur = provider.getExecutor(gettedId);
             String personname = " ";
             String lastname = " ";
-            if (provider.getPerson(cur.getPersonId()) != null) {
-                Persons p = provider.getPerson(cur.getPersonId());
+
+            Persons p = provider.getPerson(cur.getPersonId());
+            if (p != null) {
                 personname = p.getName();
                 lastname = p.getLastname();
+
+                photo.setImageBitmap(provider.decodeByteToBitmap(p.getPhoto()));
             }
 
             personName.setText(personname + lastname);
+
+
+
            /* int sectionId= cur.getSectionId();
             Section_of_services f = provider.getSection(sectionId);
             section.setText(f.getTitle());*/

@@ -11,14 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,10 +29,8 @@ import androidx.navigation.ui.NavigationUI;
 import fragments.Fragment_bkmrk;
 import fragments.Fragment_notification;
 import fragments.Fragment_orders;
-import fragments.Fragment_profile;
 import fragments.Fragment_settings;
 import fragments.Fragment_specials;
-import models.DbHelper;
 import models.MyDataProvider;
 import models.Persons;
 
@@ -50,8 +46,9 @@ public class Navigation_activity extends AppCompatActivity {
     Fragment_bkmrk fragment_bkmrk;
     Fragment_notification fragment_notification;
     Fragment_settings fragment_settings;
-    Fragment_profile fragment_profile;
     TextView headerPersonName;
+    ImageView headerImageView;
+    Persons currentPerson;
 
 
     @Override
@@ -64,29 +61,58 @@ public class Navigation_activity extends AppCompatActivity {
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.open, R.string.close);
-        drawer.addDrawerListener(toogle);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                toogle.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+                toogle.onDrawerOpened(drawerView);
+                headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
+                if (currentPerson.getPhoto() != null) {
+                    headerImageView.setImageBitmap(provider.decodeByteToBitmap(currentPerson.getPhoto()));
+                }
+                //  lastsynced.setText(lastsynced());
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                toogle.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         toogle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navListener);
-
         fragment_specials = new Fragment_specials(getApplicationContext());
         fragment_orders = new Fragment_orders(getApplicationContext());
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
         fragment_notification = new Fragment_notification(getApplicationContext());
         fragment_settings = new Fragment_settings(getApplicationContext());
-        fragment_profile = new Fragment_profile(getApplicationContext());
 
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
                 R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
-        transaction.add(R.id.fram, fragment_profile, "PROFILE_FRAGMENT").commit();
+        transaction.replace(R.id.fram, fragment_orders).commit();
+        setTitle("Заказы");
+        DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
+        drawer2.closeDrawer(GravityCompat.START);
+        currentPerson = provider.getLoggedInPerson();
 
-       // getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_orders).commit();
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
@@ -96,17 +122,13 @@ public class Navigation_activity extends AppCompatActivity {
         headerPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_profile).commit();
-                setTitle("Профиль");
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-//                Intent intent_profile = new Intent(Navigation_activity.this, ProfileActivity.class);
-//                startActivity(intent_profile);
+                Intent intent_profile = new Intent(Navigation_activity.this, ProfileActivity.class);
+                startActivity(intent_profile);
+                setTitle("profile");
             }
         });
 
-
-        ImageView headerImageView = headerView.findViewById(R.id.header_imageView);
+        headerImageView = headerView.findViewById(R.id.header_imageView);
         headerImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,22 +136,32 @@ public class Navigation_activity extends AppCompatActivity {
                 startActivity(intent_profile);
             }
         });
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Persons currentPerson = provider.getLoggedInPerson();
-        ;
+
         if (currentPerson == null) {
             Intent intent = new Intent(this, FirstActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return;
         }
-        headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
 
     }
+
+   /* @Override
+    protected void onResume() {
+        headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
+        if (currentPerson.getPhoto() != null) {
+            headerImageView.setImageBitmap(provider.decodeByteToBitmap(currentPerson.getPhoto()));
+        }
+        super.onResume();
+    }*/
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,12 +169,15 @@ public class Navigation_activity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-//                || super.onSupportNavigateUp();
-//    }
+
+    /*@Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+
+
+    }*/
 
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -159,9 +194,11 @@ public class Navigation_activity extends AppCompatActivity {
         if (id == R.id.action_test) {
             Intent testIntent = new Intent(Navigation_activity.this, TestActivity.class);
             startActivity(testIntent);
+            return true;
         } else if (id == R.id.action_exit) {
             provider.setLoggedInPerson(null);
             onStart();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -188,6 +225,7 @@ public class Navigation_activity extends AppCompatActivity {
             setTitle(item.getTitle());
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
+
             return true;
         }
     };

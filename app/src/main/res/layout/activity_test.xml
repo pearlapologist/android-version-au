@@ -64,7 +64,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginTop="49dp"
+        android:layout_marginEnd="82dp"
         android:text="Services"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_list_of_bkmrks" />
 
@@ -86,7 +88,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="196dp"
         android:layout_marginEnd="42dp"
+        android:layout_marginBottom="198dp"
         android:text="image"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/test_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="54dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewtest2"
+        android:layout_width="80sp"
+        android:layout_height="80sp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="135dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/test_list_of_services"
+        app:layout_constraintTop_toBottomOf="@+id/test_image"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/add_a_photo_black_20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

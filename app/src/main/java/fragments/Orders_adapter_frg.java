@@ -36,16 +36,13 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView  title, section, price, descr, deadline, createdDate;
-        private ImageView image;
         LinearLayout adapter_layout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            image = itemView.findViewById(R.id.orders_adapter_fragment_image);
             title = itemView.findViewById(R.id.orders_adapter_fragment_title);
             section = itemView.findViewById(R.id.orders_adapter_fragment_section);
-            // sectionId_txt = itemView.findViewById(R.id.executors_adapter_);
             price = itemView.findViewById(R.id.orders_adapter_fragment_price);
             descr = itemView.findViewById(R.id.orders_adapter_fragment_desc);
             deadline = itemView.findViewById(R.id.orders_adapter_fragment_deadline);
@@ -77,8 +74,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         String deadlinetext =  DataConverter.convertLongToDataString(order.getDeadline());
         holder.deadline.setText(deadlinetext);
        final int id = order.getId();
-        Section_of_services section = provider.getSection(order.getSection());
-        holder.section.setText(section.getTitle());
+       // Section_of_services section = provider.getSection(order.getSection());
+        holder.section.setText(order.getSection()+"");
+
 
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override

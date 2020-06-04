@@ -60,8 +60,6 @@ public class Orders_adapter extends RecyclerView.Adapter<Orders_adapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull final Orders_adapter.MyViewHolder holder, int position) {
        provider = new MyDataProvider(context);
-
-
        holder.title.setText(orders.get(position).getTitle());
        holder.descr.setText(orders.get(position).getDescription());
         holder.price.setText(orders.get(position).getPrice() +"");

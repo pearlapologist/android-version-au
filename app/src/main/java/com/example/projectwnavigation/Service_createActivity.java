@@ -2,12 +2,15 @@ package com.example.projectwnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import models.DbHelper;
 import models.MyDataProvider;
@@ -29,14 +32,29 @@ public class Service_createActivity extends AppCompatActivity {
         btn = findViewById(R.id.service_create_btn_ok);
         provider = new MyDataProvider(this);
 
+       // Intent intent = getIntent();
+        Bundle extra = getIntent().getBundleExtra("extraServicesCreate");
+        final ArrayList<Service> services = (ArrayList<Service>) extra.getSerializable("servicesCreate");
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    provider.addService(new Service(title.getText().toString().trim(),
-                            Double.parseDouble(price.getText().toString())));
+                services.add(new Service(title.getText().toString().trim(),
+                        Double.parseDouble(price.getText().toString())));
+
+                Bundle extra = new Bundle();
+                extra.putSerializable("servicesCreate2", services);
+                Intent i = new Intent(Service_createActivity.this, Profile_createFormActivity.class);
+                i.putExtra("extraServicesCreate2", extra);
+                setResult(RESULT_OK, i);
+
                 Toast.makeText(Service_createActivity.this, "Added", Toast.LENGTH_SHORT).show();
                 title.setText("");
                 price.setText("");
+               finish();
+                   /* provider.addService(new Service(title.getText().toString().trim(),
+                            Double.parseDouble(price.getText().toString())));*/
+
             }
         });
     }

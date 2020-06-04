@@ -53,7 +53,8 @@ public class Fragment_orders extends Fragment {
         this.context = context;
     }
 
-/*
+    public Fragment_orders(){}
+
     public static Fragment_orders newInstance(String param1, String param2) {
         Fragment_orders fragment = new Fragment_orders();
         Bundle args = new Bundle();
@@ -62,7 +63,7 @@ public class Fragment_orders extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-*/
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +85,6 @@ public class Fragment_orders extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         add_button = view.findViewById(R.id.orders_listf_fb);
         recyclerView = view.findViewById(R.id.orders_listf_rv);
-
-        provider = new MyDataProvider(context);
 
         insertArray();
 

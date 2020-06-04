@@ -46,6 +46,7 @@ public class TestImageActivity extends AppCompatActivity {
         btnChoose = findViewById(R.id.testImage_choose);
         btnList = findViewById(R.id.testImage_list);
         imageView = findViewById(R.id.testImage_image);
+
         provider = new MyDataProvider(this);
 
         btnChoose.setOnClickListener(new View.OnClickListener() {

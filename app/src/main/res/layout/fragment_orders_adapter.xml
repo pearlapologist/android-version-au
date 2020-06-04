@@ -2,72 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/orders_adapter_fragment_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/orders_adapter_fragment_row_layout"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_margin="4sp"
-        android:layout_marginTop="5sp">
+        android:layout_marginTop="5sp"
+        android:padding="5dp">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            app:layout_constraintBottom_toTopOf="@id/executors_adapter_id"
-            app:layout_constraintTop_toTopOf="@id/executors_adapter_name">
+       <RelativeLayout
+           android:id="@+id/executors_adapter_id"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
 
-            <ImageView
-                android:id="@+id/orders_adapter_fragment_image"
-                android:layout_width="63dp"
-                android:layout_height="58dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="333dp"
-                android:src="@drawable/add_a_photo_black_20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.098" />
-
+           >
             <TextView
                 android:id="@+id/orders_adapter_fragment_section"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="221dp"
                 android:hint="section"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@id/orders_adapter_fragment_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.108" />
+               android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_title"
-                android:layout_width="230sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="29dp"
-                android:layout_marginTop="11dp"
-                android:layout_marginEnd="11dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="10dp"
                 android:hint="title"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@+id/orders_adapter_fragment_desc"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.615"
-                app:layout_constraintStart_toEndOf="@id/orders_adapter_fragment_image"
-                app:layout_constraintTop_toBottomOf="@id/orders_adapter_fragment_section" />
+                android:layout_alignParentLeft="true"
+
+                />
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_desc"
@@ -75,63 +53,49 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginTop="5sp"
                 android:hint="desc"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+          android:layout_below="@id/orders_adapter_fragment_price"/>
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_created"
                 android:layout_width="154dp"
                 android:layout_height="18dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8sp"
                 android:layout_marginBottom="16dp"
                 android:hint="created date"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.032"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/orders_adapter_fragment_desc"
-                app:layout_constraintVertical_bias="0.181" />
+                android:layout_below="@id/orders_adapter_fragment_desc"
+
+                />
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_deadline"
                 android:layout_width="145dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="73dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="14dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:hint="deadline"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@id/orders_adapter_fragment_created"
-                app:layout_constraintTop_toBottomOf="@id/orders_adapter_fragment_desc"
-                app:layout_constraintVertical_bias="0.176" />
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_toRightOf="@id/orders_adapter_fragment_created" />
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_price"
                 android:layout_width="63dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="26dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="92dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginBottom="20dp"
                 android:hint="textView"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@id/orders_adapter_fragment_title"
-                app:layout_constraintEnd_toStartOf="@+id/orders_adapter_fragment_section"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@id/orders_adapter_fragment_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+             android:layout_below="@id/orders_adapter_fragment_title"/>
+       </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>

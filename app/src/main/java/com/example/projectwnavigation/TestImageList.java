@@ -203,5 +203,3 @@ public class TestImageList extends AppCompatActivity {
     }
 }
 
-//<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-//

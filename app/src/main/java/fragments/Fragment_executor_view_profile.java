@@ -13,14 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
-import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageClickListener;
-import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 
@@ -106,7 +101,7 @@ public class Fragment_executor_view_profile extends Fragment {
     }
 
     void insertArray() {
-        services = provider.getServices();
+        services = provider.getAllServices();
     }
 
 }

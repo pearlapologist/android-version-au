@@ -6,4 +6,140 @@
     android:layout_height="match_parent"
     tools:context=".Profile_edit_activity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/profile_edit_image"
+                android:layout_width="140sp"
+                android:layout_height="140sp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="20sp"
+                android:layout_marginTop="30sp"
+                android:clickable="true"
+                android:src="@drawable/add_a_photo_black_20dp" />
+
+        <TextView
+            android:id="@+id/profile_edit_tvname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Имя"
+            android:textSize="15sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="10sp"
+            android:layout_below="@id/profile_edit_btnChoose"
+            ></TextView>
+          <EditText
+                android:id="@+id/profile_edit_etName"
+                android:layout_width="match_parent"
+              android:padding="10sp"
+              android:layout_marginStart="10sp"
+              android:layout_marginEnd="10sp"
+              android:layout_marginTop="10sp"
+                android:layout_height="wrap_content"
+              android:hint="..."
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_below="@id/profile_edit_tvname"
+           />
+
+            <TextView
+                android:id="@+id/profile_edit_tvlast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Фамилия"
+                android:textSize="15sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/profile_edit_etName"
+                ></TextView>
+            <EditText
+                android:id="@+id/profile_edit_etLast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_below="@id/profile_edit_tvlast"
+                android:padding="10sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginTop="10sp"
+                android:hint="..."/>
+
+            <TextView
+                android:id="@+id/profile_edit_tvbirth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Дата рождения"
+                android:textSize="15sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/profile_edit_etLast"
+                ></TextView>
+
+            <EditText
+                android:id="@+id/profile_edit_etBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_below="@id/profile_edit_tvbirth"
+                android:padding="10sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginTop="10sp"
+                android:hint="..."/>
+
+            <TextView
+                android:id="@+id/profile_edit_tvnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Номер"
+                android:textSize="15sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/profile_edit_etBirthday"
+                ></TextView>
+
+            <EditText
+                android:id="@+id/profile_edit_etNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_below="@id/profile_edit_tvnum"
+                android:padding="10sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginTop="10sp"
+                android:hint="..."/>
+
+            <Button
+                android:id="@+id/profile_edit_btnChoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_edit_image"
+                android:layout_marginStart="20sp"
+                android:layout_marginTop="10sp"
+                android:textSize="13sp"
+                android:layout_centerHorizontal="true"
+                android:text="Изменить" />
+
+            <Button
+                android:id="@+id/profile_edit_btnOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="30sp"
+               android:layout_alignParentRight="true"
+                android:layout_below="@id/profile_edit_etNumber"
+                android:text="Сохранить" />
+        </RelativeLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

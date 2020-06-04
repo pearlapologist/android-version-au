@@ -56,8 +56,8 @@ public class Orders_view_activity extends AppCompatActivity {
             if(gettedId != -1){
             Order cur = provider.getOrder(gettedId);
             Section_of_services section = provider.getSection(cur.getSection());
-                spinnerSection.setText(section.getTitle());
-           // spinnerSection.setText(cur.getSection()+"");
+             //   spinnerSection.setText(section.getTitle());
+           spinnerSection.setText(cur.getSection()+"");
 
             title.setText(cur.getTitle());
             price.setText(cur.getPrice() + "");
