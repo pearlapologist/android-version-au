@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 
 import models.Executor;
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Persons;
 import models.Section_of_services;
 
@@ -53,6 +54,7 @@ public class Executors_view_activity extends AppCompatActivity {
         provider = new MyDataProvider(this);
         personName = findViewById(R.id.fragment_executor_view_name);
         section = findViewById(R.id.fragment_executor_view_section);
+        photo = findViewById(R.id.fragment_executor_view_photo);
         // btn = findViewById(R.id.executor_update_btn_add);
 
         fragment_reviews = Fragment_executor_view_reviews.newInstance(getIntent().getIntExtra("executorIdFragment", 42));
@@ -69,13 +71,13 @@ public class Executors_view_activity extends AppCompatActivity {
 
 
         carousel.setPageCount(mImages.length);
-        carousel.setImageListener(new ImageListener() {
+        carousel.setImageListener(imageListener);
+       /* carousel.setImageListener(new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-
                 imageView.setImageResource(mImages[position]);
             }
-        });
+        });*/
 
         carousel.setImageClickListener(new ImageClickListener() {
             @Override
@@ -111,28 +113,35 @@ public class Executors_view_activity extends AppCompatActivity {
         if (getIntent().hasExtra("executorIdFragment")) {
             final int gettedId = getIntent().getIntExtra("executorIdFragment", 42);
             Executor cur = provider.getExecutor(gettedId);
-            String personname = " ";
-            String lastname = " ";
 
             Persons p = provider.getPerson(cur.getPersonId());
-            if (p != null) {
-                personname = p.getName();
-                lastname = p.getLastname();
-
-                photo.setImageBitmap(provider.decodeByteToBitmap(p.getPhoto()));
+            if (p.getPhoto() == null) {
+                photo.setImageResource(R.drawable.executors_default_image);
+            } else {
+                photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
             }
 
-            personName.setText(personname + lastname);
+            personName.setText(p.getName() + " " + p.getLastname());
 
 
-
-           /* int sectionId= cur.getSectionId();
-            Section_of_services f = provider.getSection(sectionId);
-            section.setText(f.getTitle());*/
+            int sectionId = cur.getSectionId();
+            // Section_of_services f = provider.getSection(sectionId);
+            section.setText(sectionId + "");
         } else {
             Toast.makeText(Executors_view_activity.this, "error", Toast.LENGTH_SHORT).show();
         }
     }
 
+
+    ImageListener imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, ImageView imageView) {
+            final int gettedId = getIntent().getIntExtra("executorIdFragment", 42);
+            Executor cur = provider.getExecutor(gettedId);
+            if (cur.getCoverPhoto() != null) {
+                imageView.setImageBitmap(MyUtils.decodeByteToBitmap(cur.getCoverPhoto()));
+            }
+        }
+    };
 
 }

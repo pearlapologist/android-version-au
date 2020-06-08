@@ -17,12 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Persons;
 
@@ -88,14 +87,14 @@ public class PersonsListAdapter extends RecyclerView.Adapter<PersonsListAdapter.
         holder.txtName.setText(person.getName());
         holder.txtLastname.setText(person.getLastname());
         holder.txtPasswd.setText(person.getPasswd());
-        String create = DataConverter.convertLongToDataString(person.getCreatedDate());
+        String create = MyUtils.convertLongToDataString(person.getCreatedDate());
         holder.txtCreatedDate.setText(create);
         String rating = (person.getRating() + "");
         holder.txtRating.setText(rating);
 
         holder.txtNumber.setText(person.getNumber());
         if (person.getPhoto() != null) {
-            holder.imageView.setImageBitmap(provider.decodeByteToBitmap(person.getPhoto()));
+            holder.imageView.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,16 +176,16 @@ public class PersonsListAdapter extends RecyclerView.Adapter<PersonsListAdapter.
 
         edtNumber.setText(p.getNumber());
         edtRating.setText(p.getRating() + "");
-        String date = DataConverter.convertLongToDataString(p.getCreatedDate());
+        String date = MyUtils.convertLongToDataString(p.getCreatedDate());
         edtCreatedDate.setText(date + "");
         if (p.getPhoto() != null) {
-            imageViewIcon.setImageBitmap(provider.decodeByteToBitmap(p.getPhoto()));
+            imageViewIcon.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Long createdChange = DataConverter.convertDataToLong(edtCreatedDate.getText().toString());
+                    Long createdChange = MyUtils.convertDataToLong(edtCreatedDate.getText().toString());
                     Persons p = new Persons(position, edtName.getText().toString().trim(),
                             edtLastname.getText().toString().trim(),
                             edtPasswd.getText().toString().trim(),

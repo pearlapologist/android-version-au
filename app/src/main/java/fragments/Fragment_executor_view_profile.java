@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class Fragment_executor_view_profile extends Fragment {
     MyDataProvider provider;
     Context context;
 
-    private int gettedExecutorId;
+    private int gottenExecutorId;
 
     public Fragment_executor_view_profile() {
 
@@ -61,7 +62,7 @@ public class Fragment_executor_view_profile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            gettedExecutorId = getArguments().getInt(ARG_ID);
+            gottenExecutorId = getArguments().getInt(ARG_ID);
         }
     }
 
@@ -73,6 +74,7 @@ public class Fragment_executor_view_profile extends Fragment {
         return v;
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         servicesRv = view.findViewById(R.id.fragment_executor_view_profile_rv);
@@ -80,13 +82,14 @@ public class Fragment_executor_view_profile extends Fragment {
         executor_services_adapter_frg = new Executor_services_adapter_frg(getActivity(), context, services);
         servicesRv.setAdapter(executor_services_adapter_frg);
         servicesRv.setLayoutManager(new LinearLayoutManager(context));
+        Executor executor = provider.getExecutor(gottenExecutorId);
 
-        Executor executor = provider.getExecutor(gettedExecutorId);
         spec = view.findViewById(R.id.fragment_executor_view_profile_spec);
         desc = view.findViewById(R.id.fragment_executor_view_profile_desc);
         contacts = view.findViewById(R.id.fragment_executor_view_profile_contacts);
         number = view.findViewById(R.id.fragment_executor_view_profile_contacts_btn);
         String special = executor.getSpecialztn();
+
         spec.setText(special);
 
         Persons p = provider.getPerson(executor.getPersonId());
@@ -101,7 +104,12 @@ public class Fragment_executor_view_profile extends Fragment {
     }
 
     void insertArray() {
-        services = provider.getAllServices();
+        Executor executor = provider.getExecutor(gottenExecutorId);
+        try{
+        services = provider.getExecutorServices(executor.getId());}
+        catch (NullPointerException e){
+            Log.e("insertArray", e.getMessage());
+        }
     }
 
 }

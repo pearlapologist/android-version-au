@@ -16,8 +16,7 @@ import android.widget.Toast;
 
 import com.santalu.maskedittext.MaskEditText;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
 
@@ -95,7 +94,7 @@ public class Orders_update_activity extends AppCompatActivity {
                 ord.setSection(sectionId);
                 ord.setPrice(Double.parseDouble(price.getText().toString()));
                 ord.setDescription(  descr.getText().toString());
-                Long l = DataConverter.convertPntdStringToLong(deadline.getText().toString());
+                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
                 ord.setDeadline(l);
                 provider.updateOrder(ord);
                 Toast.makeText(Orders_update_activity.this, "Updated", Toast.LENGTH_SHORT).show();
@@ -127,9 +126,9 @@ public class Orders_update_activity extends AppCompatActivity {
             title.setText(cur.getTitle());
             price.setText(cur.getPrice() + "");
             descr.setText(cur.getDescription());
-            String s = DataConverter.convertLongToDataString(cur.getDeadline());
+            String s = MyUtils.convertLongToDataString(cur.getDeadline());
             deadline.setText(s);
-            String d = DataConverter.convertLongToDataString(cur.getCreated_date());
+            String d = MyUtils.convertLongToDataString(cur.getCreated_date());
             createdDate.setText(d);
             id.setText(cur.getId() + "");
         } else {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,12 +39,9 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
     Spinner mSpinner;
     String[] mOptions = {"Стройка", "Здоровье", "Авто", "Рукоделие"};
     int sectionId = 0;
-
     RecyclerView recyclerView;
     Profile_form_services_adapter adapter;
     public Boolean contextModeEnable = false;
-
-    int counterContext = 0;
 
     ArrayList<Service> services;
     ArrayList<Service> selectionList;
@@ -64,11 +63,14 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
         provider = new MyDataProvider(this);
 
         selectionList = new ArrayList<>();
+
+        //
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, mOptions);
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
+        //
 
         insertArray();
         adapter = new Profile_form_services_adapter(Profile_createFormActivity.this, this, services);
@@ -115,33 +117,26 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
                 exec.setServices(services);
                 try {
                     provider.addExecutor(exec);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                Toast.makeText(Profile_createFormActivity.this, "Form created", Toast.LENGTH_SHORT).show();
-                spclztn.setText("");
-                descrp.setText("");
-                selectionList.clear();
-                mSpinner.setSelection(0);
+                Toast.makeText(Profile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(Profile_createFormActivity.this, ProfileActivity.class);
+                startActivity(i);
             }
         });
 
         add_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //AlertDialog.Builder dialog = new AlertDialog.Builder(Profile_createFormActivity.this);
                 showDialogCreate();
-               // dialog.show();
-
-
             }
         });
     }
 
     void insertArray() {
         services = new ArrayList<>();
-       // services = provider.getAllServices();
     }
 
     private void showDialogCreate() {
@@ -164,7 +159,7 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
                 try {
                     Service service = new Service(edTitle.getText().toString().trim(),
                             Double.parseDouble(edPrice.getText().toString().trim()));
-                   services.add(service);
+                    services.add(service);
                 } catch (Exception error) {
                     Log.e("Create error", error.getMessage());
                 }
@@ -185,32 +180,46 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.services_multiply_choice, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
+        selectMenu(menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        selectMenu(menu);
+        return true;
+    }
+
+    private void selectMenu(Menu menu) {
+        menu.clear();
+        MenuInflater inflater = getMenuInflater();
+        if (contextModeEnable) {
+            inflater.inflate(R.menu.services_multiply_choice, menu);
+        } else {
+            inflater.inflate(R.menu.main, menu);
+        }
     }
 
     @Override
     public boolean onLongClick(View v) {
         contextModeEnable = true;
+        invalidateOptionsMenu();
+        //  toolbar.getMenu().clear();
+        // toolbar.inflateMenu(R.menu.services_multiply_choice);
+
         adapter.notifyDataSetChanged();
         return true;
     }
 
     public void setSelection(View v, int position) {
-        selectionList.add(services.get(position));
+        //selectionList.add(services.get(position));
         if (((CheckBox) v).isChecked()) {
             selectionList.add(services.get(position));
-            counterContext++;
-            updateCounter();
         } else {
             selectionList.remove(services.get(position));
-            counterContext--;
-            updateCounter();
+            invalidateOptionsMenu();
         }
-    }
-
-    public void updateCounter() {
-        Toast.makeText(this, counterContext + " item selected", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -220,16 +229,15 @@ public class Profile_createFormActivity extends AppCompatActivity implements Vie
             removeContext();
         } else {
             removeContext();
-            adapter.notifyDataSetChanged();
         }
         return true;
     }
 
     private void removeContext() {
         contextModeEnable = false;
-        counterContext = 0;
         selectionList.clear();
         adapter.notifyDataSetChanged();
+        invalidateOptionsMenu();
     }
 
 }

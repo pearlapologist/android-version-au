@@ -18,11 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10sp"
-            app:layout_constraintBottom_toTopOf="@id/executors_adapter_id"
+            app:layout_constraintBottom_toTopOf="@id/orders_adapter_layout"
             app:layout_constraintTop_toTopOf="@id/executors_adapter_name">
 
             <TextView
-                android:id="@+id/executors_adapter_id"
+                android:id="@+id/orders_adapter_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="79dp"

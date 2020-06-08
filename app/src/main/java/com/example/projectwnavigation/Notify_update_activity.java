@@ -12,8 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Notify;
 import models.Persons;
@@ -50,7 +49,7 @@ public class Notify_update_activity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long create = DataConverter.convertDataToLongWithRawString(createdDate.getText().toString());
+                Long create = MyUtils.convertDataToLongWithRawString(createdDate.getText().toString());
 
                 Notify notify = new Notify(getIntent().getIntExtra("notifyId", Integer.parseInt(id.getText().toString())),
                         Integer.parseInt(personId.getText().toString()),
@@ -89,7 +88,7 @@ public class Notify_update_activity extends AppCompatActivity {
             }else{
                 Toast.makeText(this, "no such person!", Toast.LENGTH_SHORT).show();
             }
-            String s = DataConverter.convertLongToDataString(noty.getCreatedDate());
+            String s = MyUtils.convertLongToDataString(noty.getCreatedDate());
             createdDate.setText(s);
             id.setText(noty.getId() + "");
         } else {

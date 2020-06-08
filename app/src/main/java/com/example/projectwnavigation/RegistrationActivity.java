@@ -20,8 +20,7 @@ import com.santalu.maskedittext.MaskEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Persons;
 
@@ -52,26 +51,33 @@ public class RegistrationActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(number ==null || passwd ==null || name == null || lastname == null){
+
+
+                if (number == null || passwd == null || name == null || lastname == null) {
                     Toast.makeText(RegistrationActivity.this, "Заполните все необходимые поля", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String num = number.getRawText().trim()+"";
-                String n = "+7"+num;
-                if (passwd.getText().toString().trim().equals(passwd2.getText().toString().trim())) {
+                String num = number.getRawText().trim() + "";
+                String n = "+7" + num;
+                byte[] imageByte = null;
+                if (image.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.add_a_photo_black_20dp).getConstantState()) {
+                    imageByte = MyUtils.imageViewToByte(image);
+                }
+                if (passwd.getText().toString().trim().
+                        equals(passwd2.getText().toString().trim())) {
                     Persons person = new Persons(name.getText().toString().trim(),
                             lastname.getText().toString().trim(),
                             passwd.getText().toString().trim(),
-                            provider.imageViewToByte(image),
+                            imageByte,
                             n,
                             0,
-                            DataConverter.getCurentDateInLong());
+                            MyUtils.getCurentDateInLong());
                     provider.addPerson(person);
-                 provider.setLoggedInPerson(person);
-                    Intent i = new Intent(RegistrationActivity.this,AuthorizationActivity.class);
+                    // provider.setLoggedInPerson(person);
+                    Intent i = new Intent(RegistrationActivity.this, AuthorizationActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
-                }else {
+                } else {
                     Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -81,7 +87,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(
-                        RegistrationActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},2
+                        RegistrationActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2
                 );
             }
         });
@@ -94,7 +100,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent,2);
+                startActivityForResult(intent, 2);
             } else {
                 Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
             }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/order_options_menu_savetobookm"
+        android:title="Добавить в закладки"></item>
+    <item
+        android:id="@+id/order_options_menu_edit"
+        android:title="Редактировать"></item>
+    <item
+        android:id="@+id/order_options_menu_delete"
+        android:title="Удалить"
+        android:visible="true"></item>
+    <item
+        android:id="@+id/order_options_menu_complain"
+        android:title="Пожаловаться"></item>
+</menu>

@@ -6,6 +6,7 @@ public class Review {
     private int customerId; //personId
     private String review_text;
     private int  assessment;
+    private Long createdDate;
 
     public Review(int id, int executrId, int customerId,  String review_text, int assessment) {
         this.id = id;
@@ -64,5 +65,13 @@ public class Review {
 
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
+    }
+
+    public Long getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Long createdDate) {
+        this.createdDate = createdDate;
     }
 }

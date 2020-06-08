@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Notify;
 
@@ -62,7 +61,7 @@ public class Notify_adapter extends RecyclerView.Adapter<Notify_adapter.MyViewHo
         holder.text.setText(notices.get(position).getText());
         holder.personId.setText(notices.get(position).getPersonid()+"");
         holder.id.setText(notices.get(position).getId() +"");
-        String created =  DataConverter.convertLongToDataString(notices.get(position).getCreatedDate());
+        String created =  MyUtils.convertLongToDataString(notices.get(position).getCreatedDate());
         holder.createdDate.setText(created);
 
 

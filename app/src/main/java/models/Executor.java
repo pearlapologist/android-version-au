@@ -11,15 +11,13 @@ public class Executor {
     private int sectionId;
     private String specialztn;
     private String descriptn;
+    private byte[] coverPhoto;
 
     private ArrayList<Service> services;
 
     public Executor() {
     };
 
-//    public Executor(int executorId) {
-//
-//    }
 
     public Executor(int id, int personId, int sectionId, String specialztn, String descriptn) {
         this.id = id;
@@ -91,6 +89,8 @@ public class Executor {
         this.services = services;
     }
 
+
+
     public String getServicesString() {
         String str = "";
         for (Service s : this.getServices()) {
@@ -100,5 +100,13 @@ public class Executor {
             str = str.substring(0, str.length() - 2);
         }
         return str;
+    }
+
+    public byte[] getCoverPhoto() {
+        return coverPhoto;
+    }
+
+    public void setCoverPhoto(byte[] coverPhoto) {
+        this.coverPhoto = coverPhoto;
     }
 }

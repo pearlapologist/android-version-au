@@ -4,9 +4,7 @@ import java.util.Calendar;
 
 public class Order {
 
-
-    //    private int customerId;
-//    private int orderId;
+    private int customerId;
     private int id;
     private String title;
     private int sectionId;
@@ -17,8 +15,9 @@ public class Order {
 
 public Order(){}
 
-    public Order(int id, String title, int section, double price, String description,Long deadline,  Long created_date) {
+    public Order(int id, int customerID, String title, int section, double price, String description,Long deadline,  Long created_date) {
         this.id = id;
+        this.customerId = customerID;
         this.title = title;
         this.sectionId = section;
         this.price = price;
@@ -27,8 +26,9 @@ public Order(){}
         this.description = description;
     }
 
-    public Order( String title, int section, double price, String description,Long deadline,  Long created_date) {
+    public Order( String title, int customerID, int section, double price, String description,Long deadline,  Long created_date) {
         this.title = title;
+       this.customerId = customerID;
         this.sectionId = section;
         this.price = price;
         this.created_date = created_date;
@@ -91,19 +91,12 @@ public Order(){}
         this.description = description;
     }
 
-//    public int getCustomerId() {
-//        return customerId;
-//    }
-//
-//    public void setCustomerId(int customerId) {
-//        this.customerId = customerId;
-//    }
-//
-//    public int getOrderId() {
-//        return orderId;
-//    }
-//
-//    public void setOrderId(int orderId) {
-//        this.orderId = orderId;
-//    }
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
 }

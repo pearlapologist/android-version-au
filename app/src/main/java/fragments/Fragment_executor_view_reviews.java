@@ -103,6 +103,23 @@ public class Fragment_executor_view_reviews extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO onclick method
+                /*      try {
+                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                Long curr = MyUtils.getCurentDateInLong();
+                provider.addOrder(new Order(title.getText().toString().trim(),
+                        sectionId,
+                        Double.valueOf(price.getText().toString()),
+                        descr.getText().toString(),
+                        l,
+                        curr));
+            } catch (Exception e) {
+                Log.e("Update error", e.getMessage());
+            }
+            title.setText("");
+            price.setText("");
+            deadline.setText("");
+            descr.setText("");
+            Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -112,5 +129,6 @@ public class Fragment_executor_view_reviews extends Fragment {
     void insertArray() {
         reviews = provider.getReviews();
     }
+    //TODO: вывод только опред отзывов
 
 }

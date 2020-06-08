@@ -42,12 +42,10 @@ public class Executor_services_adapter_frg extends RecyclerView.Adapter<Executor
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
-
-
         Service service = services.get(position);
 
         String title = "ничего";
-        Double price = -1.0;
+        Double price = 0.0;
 
         try {
             title = service.getTitle();

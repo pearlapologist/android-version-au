@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.projectwnavigation">
+    package="com.example.projectwnavigation" >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".Profile_myForm_activity"></activity>
+        android:usesCleartextTraffic="true" >
+        <activity android:name="fragments.PersonProfileActivity" >
+        </activity>
+        <activity android:name=".Profile_myForm_activity" />
         <activity android:name=".TestImageList" />
         <activity android:name=".TestImageActivity" />
         <activity android:name="fragments.Executors_view_activity" />
@@ -47,7 +49,7 @@
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".Navigation_activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +64,7 @@
         <activity android:name=".AuthorizationActivity" />
         <activity
             android:name=".Orders_list_activity"
-            android:label="Orders">
+            android:label="Orders" >
 
             <!--
                 <intent-filter>

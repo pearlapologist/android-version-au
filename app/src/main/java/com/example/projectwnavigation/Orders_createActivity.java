@@ -2,10 +2,7 @@ package com.example.projectwnavigation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +14,7 @@ import android.widget.Toast;
 
 import com.santalu.maskedittext.MaskEditText;
 
-import java.util.Calendar;
-
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
 
@@ -88,9 +82,10 @@ public class Orders_createActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             try {
-              Long l = DataConverter.convertPntdStringToLong(deadline.getText().toString());
-                Long curr = DataConverter.getCurentDateInLong();
+              Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                Long curr = MyUtils.getCurentDateInLong();
                 provider.addOrder(new Order(title.getText().toString().trim(),
+                        provider.getLoggedInPerson().getId(),
                         sectionId,
                         Double.valueOf(price.getText().toString()),
                         descr.getText().toString(),

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.DbHelper;
 import models.Executor;
 import models.MyDataProvider;
 
@@ -81,7 +80,7 @@ public class Executors_adapter extends RecyclerView.Adapter<Executors_adapter.My
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            executorId_txt = itemView.findViewById(R.id.executors_adapter_id);
+            executorId_txt = itemView.findViewById(R.id.orders_adapter_layout);
             personId_txt = itemView.findViewById(R.id.executors_adapter_name);
             spcltn_txt = itemView.findViewById(R.id.executors_adapter_spcl);
 

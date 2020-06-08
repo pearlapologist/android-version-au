@@ -9,11 +9,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -24,19 +24,19 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5sp"
-                    android:padding="5sp">
+                    android:layout_margin="5sp">
 
                     <TextView
                         android:id="@+id/order_view_section_act"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginStart="100dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginEnd="15dp"
-                        android:layout_marginBottom="221dp"
-                        android:text="TextView"
+                        android:layout_alignParentTop="true"
+                        android:textSize="14sp"
+                        android:text="раздел по ремонту и бытовым проблемам"
                         android:textAlignment="center" />
 
                     <TextView
@@ -46,8 +46,11 @@
                         android:layout_alignParentLeft="true"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="TextView"
+                        android:textStyle="bold"
+                        android:layout_toLeftOf="@id/order_view_price_act"
+                        android:layout_marginEnd="15dp"
+                        android:layout_below="@id/order_view_section_act"
+                        android:text="titletitletitletitletitletitletitletitletitletitletitletitletitletitletitlettitletitletitletitletitletitletitlettitletitletitletitletitletitletitlettitletitletittitletitletitletitletitletitletitlet"
                         android:textAlignment="center" />
 
 
@@ -59,7 +62,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10sp"
                         android:layout_marginEnd="10dp"
-                        android:hint="desc" />
+                        android:hint="descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription" />
 
                     <TextView
                         android:id="@+id/order_view_created_act"
@@ -69,6 +72,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="8sp"
                         android:layout_marginEnd="10dp"
+                        android:textAlignment="center"
                         android:layout_marginBottom="16dp"
                         android:text="TextView" />
 
@@ -77,22 +81,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/order_view_desc_act"
-                        android:layout_marginStart="73dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="14dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_toRightOf="@id/order_view_created_act"
-                        android:text="TextView" />
+                        android:layout_marginEnd="10dp"
+                        android:textAlignment="center"
+                        android:layout_alignParentRight="true"
+                        android:text="20/06/2020" />
 
                     <TextView
                         android:id="@+id/order_view_price_act"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_toRightOf="@id/order_view_title_act"
-                        android:text="TextView"
+                        android:layout_marginEnd="10dp"
+                        android:layout_below="@id/order_view_section_act"
+                        android:layout_alignParentRight="true"
+                        android:text="230000"
                         android:textAlignment="center" />
 
                 </RelativeLayout>
@@ -105,6 +110,7 @@
                 android:layout_below="@id/orders_view_card"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:textAllCaps="false"
                 android:text="Откликнуться"
                 android:textSize="11sp" />
 
@@ -115,6 +121,7 @@
                 android:layout_below="@id/orders_view_card"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="8dp"
+                android:textAllCaps="false"
                 android:layout_marginRight="8sp"
                 android:text="Посмотреть профиль"
                 android:textSize="11sp" />
@@ -122,10 +129,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/order_view_recycler_act"
                 android:layout_width="match_parent"
+                android:layout_marginEnd="5sp"
+                android:layout_marginStart="5sp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/order_view_btn_act"
-                android:layout_margin="10sp"
-
+                android:layout_marginTop="8sp"
                 android:orientation="vertical"></androidx.recyclerview.widget.RecyclerView>
         </RelativeLayout>
     </ScrollView>

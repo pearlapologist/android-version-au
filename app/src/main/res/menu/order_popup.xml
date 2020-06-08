@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/order_popup_bookm"
+        android:title="Добавить в закладки"></item>
+    <item
+        android:id="@+id/order_popup_edit"
+        android:title="Редактировать"></item>
+    <item
+        android:id="@+id/order_popup_delete"
+        android:title="Удалить"
+        android:visible="true"></item>
+    <item
+        android:id="@+id/order_popup_complain"
+        android:title="Пожаловаться"></item>
+</menu>

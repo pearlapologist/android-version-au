@@ -1,38 +1,36 @@
 package fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.projectwnavigation.Navigation_activity;
-import com.example.projectwnavigation.Orders_adapter;
 import com.example.projectwnavigation.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
-import models.Executor;
 import models.MyDataProvider;
 import models.Order;
-import models.Persons;
 
-public class Fragment_orders extends Fragment {
+public class Fragment_orders extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     MyDataProvider provider;
@@ -42,18 +40,18 @@ public class Fragment_orders extends Fragment {
     private String mParam2;
 
     RecyclerView recyclerView;
-   FloatingActionButton add_button;
-    ArrayList<Order> orders;
+    FloatingActionButton add_button;
+    ArrayList<Order> orders = new ArrayList<>();
     Orders_adapter_frg orders_adapter_frg;
-
-
+    Spinner spinner;
 
     public Fragment_orders(Context context) {
         this.provider = new MyDataProvider(context);
         this.context = context;
     }
 
-    public Fragment_orders(){}
+    public Fragment_orders() {
+    }
 
     public static Fragment_orders newInstance(String param1, String param2) {
         Fragment_orders fragment = new Fragment_orders();
@@ -85,12 +83,12 @@ public class Fragment_orders extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         add_button = view.findViewById(R.id.orders_listf_fb);
         recyclerView = view.findViewById(R.id.orders_listf_rv);
-
+        spinner = (Spinner) view.findViewById(R.id.orders_listf_spinner);
         insertArray();
 
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
         recyclerView.setAdapter(orders_adapter_frg);
-       recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,13 +99,39 @@ public class Fragment_orders extends Fragment {
             }
         });
 
+        ArrayList<String> sectionList = provider.getSectionListInString();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         super.onViewCreated(view, savedInstanceState);
     }
 
 
     void insertArray() {
-        orders = provider.getOrders();
+        try {
+            orders = provider.getOrders();
+        } catch (Exception e) {
+            Log.e("Error in Ordersfragment", e.getMessage());
+        }
+        if (orders == null || orders.size() <= 0) {
+            Toast.makeText(getContext(), "Пока что не было создано заказов", Toast.LENGTH_SHORT).show();
+        }
+
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(parent.getId() == R.id.orders_listf_spinner){
+            String value = parent.getItemAtPosition(position).toString();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
 
 }
 

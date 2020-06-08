@@ -9,8 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Notify;
 
@@ -35,7 +34,7 @@ public class Notify_createActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Long curr = DataConverter.getCurentDateInLong();
+                    Long curr = MyUtils.getCurentDateInLong();
                     provider.addNotify(new Notify(Integer.parseInt(personId.getText().toString()),
                             text.getText().toString().trim(),
                             curr));

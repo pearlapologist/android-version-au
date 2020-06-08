@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,9 +74,8 @@ public class Fragment_specials extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        insertArray();
+        insertExecutorsArray();
         recyclerView = view.findViewById(R.id.fargment_specials_rv);
-
         executors_adapter = new Executors_adapter_frg(getActivity(), context, executors);
         recyclerView.setAdapter(executors_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -83,12 +83,16 @@ public class Fragment_specials extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    void insertArray() {
+    void insertExecutorsArray() {
+        try{
         executors = provider.getExecutors();
-        if(executors ==null || executors.size() <= 0 ){
-            Toast.makeText(context, "list is empty", Toast.LENGTH_SHORT).show();
+       }
+        catch (Exception e){
+            Log.e("Error!!!", e.getMessage());
         }
+        if (executors == null || executors.size() <= 0) {
+            Toast.makeText(context, "Пока что не было создано специалистов", Toast.LENGTH_SHORT).show();
+        }
+
     }
-
-
 }

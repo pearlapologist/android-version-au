@@ -10,9 +10,8 @@ public class Persons {
     private String status;
     private byte[] photo;
     private String number;
-   // boolean hasAccount;
-
-
+    String desciption;
+    boolean hasAccount;
     //upd
     private Long birthday;
 
@@ -69,7 +68,7 @@ public class Persons {
         this.number = number;
         this.passwd = passwd;
         this.rating = rating;
-        Long created = DataConverter.getCurentDateInLong();
+        Long created = MyUtils.getCurentDateInLong();
         this.createdDate = created;
     }
 
@@ -116,7 +115,7 @@ public class Persons {
 
     public String getCreatedDateinString() {
         Long create = this.createdDate;
-      String str =  DataConverter.convertLongToDataString(create);
+      String str =  MyUtils.convertLongToDataString(create);
         return str;
     }
 
@@ -153,11 +152,27 @@ public class Persons {
         this.photo = photo;
     }
 
-//    public boolean isHasAccount() {
-//        return hasAccount;
-//    }
-//
-//    public void setHasAccount(boolean hasAccount) {
-//        this.hasAccount = hasAccount;
-//    }
+    public boolean isHasAccount() {
+        return hasAccount;
+    }
+
+    public void setHasAccount(boolean hasAccount) {
+        this.hasAccount = hasAccount;
+    }
+
+    public String getDesciption() {
+        return desciption;
+    }
+
+    public void setDesciption(String desciption) {
+        this.desciption = desciption;
+    }
+
+    public Long getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Long birthday) {
+        this.birthday = birthday;
+    }
 }

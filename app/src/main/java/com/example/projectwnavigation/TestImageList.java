@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import models.MyDataProvider;
+import models.MyUtils;
 import models.TestEntity;
 
 public class TestImageList extends AppCompatActivity {
@@ -121,7 +122,7 @@ public class TestImageList extends AppCompatActivity {
                 try {
                     provider.updateData(
                             edtName.getText().toString().trim(),
-                            provider.imageViewToByte(imageView),
+                            MyUtils.imageViewToByte(imageView),
                             position);
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Update successfully!", Toast.LENGTH_SHORT).show();

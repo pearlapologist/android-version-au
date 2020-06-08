@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import models.MyDataProvider;
+import models.MyUtils;
 
 public class TestImageActivity extends AppCompatActivity {
     EditText etTitle;
@@ -66,7 +67,7 @@ public class TestImageActivity extends AppCompatActivity {
                 try {
                     provider.addImage(
                             etTitle.getText().toString().trim(),
-                            provider.imageViewToByte(imageView)
+                            MyUtils.imageViewToByte(imageView)
                     );
                     Toast.makeText(getApplicationContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
                     etTitle.setText("");

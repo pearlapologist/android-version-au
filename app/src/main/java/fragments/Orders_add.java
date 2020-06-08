@@ -18,13 +18,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.projectwnavigation.Orders_createActivity;
 import com.example.projectwnavigation.R;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
 
@@ -47,7 +46,6 @@ public class Orders_add extends Fragment {
     int sectionId = 0;
 
 
-
     public Orders_add() {
     }
 
@@ -55,7 +53,6 @@ public class Orders_add extends Fragment {
         this.provider = new MyDataProvider(context);
         this.context = context;
     }
-
 
 
     public static Orders_add newInstance(String param1, String param2) {
@@ -93,7 +90,7 @@ public class Orders_add extends Fragment {
         mSpinner = view.findViewById(R.id.orders_add_section);
 
 
-        ArrayList<String> mOptions = provider.getSectionsInString();
+        ArrayList<String> mOptions = provider.getSectionListInString();
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(context,
                 android.R.layout.simple_spinner_item, mOptions);
@@ -104,17 +101,17 @@ public class Orders_add extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               String str = parent.getItemAtPosition(position).toString();
+                String str = parent.getItemAtPosition(position).toString();
                 sectionId = provider.getSectionIdByTitle(str);
 
-                    //case 0:
+                //case 0:
                 /*        sectionId = 1;
                         break;
                     case 1:
                         sectionId = 2;
                         break;*/
 
-                }
+            }
 
 
             @Override
@@ -123,31 +120,32 @@ public class Orders_add extends Fragment {
             }
         });
 
-        add.setOnClickListener(click);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                    Long curr = MyUtils.getCurentDateInLong();
+                    Order order = new Order(title.getText().toString().trim(),
+                            provider.getLoggedInPerson().getId(),
+                            sectionId,
+                            Double.valueOf(price.getText().toString()),
+                            descr.getText().toString(),
+                            l,
+                            curr);
+                    provider.addOrder(order);
+
+                } catch (Exception e) {
+                    Log.e("Update error", e.getMessage());
+                }
+                title.setText("");
+                price.setText("");
+                deadline.setText("");
+                descr.setText("");
+                Toast.makeText(context, "Заказ создан", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         super.onViewCreated(view, savedInstanceState);
     }
-
-    View.OnClickListener click = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            try {
-                Long l = DataConverter.convertPntdStringToLong(deadline.getText().toString());
-                Long curr = DataConverter.getCurentDateInLong();
-                provider.addOrder(new Order(title.getText().toString().trim(),
-                        sectionId,
-                        Double.valueOf(price.getText().toString()),
-                        descr.getText().toString(),
-                        l,
-                        curr));
-            } catch (Exception e) {
-                Log.e("Update error", e.getMessage());
-            }
-            title.setText("");
-            price.setText("");
-            deadline.setText("");
-            descr.setText("");
-            Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();
-        }
-    };
 }

@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
-import models.DbHelper;
+import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
 
@@ -40,7 +39,7 @@ public class Orders_adapter extends RecyclerView.Adapter<Orders_adapter.MyViewHo
             title = itemView.findViewById(R.id.orders_adapter_title);
             section = itemView.findViewById(R.id.orders_adapter_section);
             // sectionId_txt = itemView.findViewById(R.id.executors_adapter_);
-            id = itemView.findViewById(R.id.executors_adapter_id);
+            id = itemView.findViewById(R.id.orders_adapter_layout);
             price = itemView.findViewById(R.id.orders_adapter_price);
             descr = itemView.findViewById(R.id.orders_adapter_descr);
             deadline = itemView.findViewById(R.id.orders_adapter_deadline);
@@ -63,9 +62,9 @@ public class Orders_adapter extends RecyclerView.Adapter<Orders_adapter.MyViewHo
        holder.title.setText(orders.get(position).getTitle());
        holder.descr.setText(orders.get(position).getDescription());
         holder.price.setText(orders.get(position).getPrice() +"");
-       String created =  DataConverter.convertLongToDataString(orders.get(position).getCreated_date());
+       String created =  MyUtils.convertLongToDataString(orders.get(position).getCreated_date());
         holder.createdDate.setText(created);
-        String deadlinetext =  DataConverter.convertLongToDataString(orders.get(position).getDeadline());
+        String deadlinetext =  MyUtils.convertLongToDataString(orders.get(position).getDeadline());
         holder.deadline.setText(deadlinetext);
         holder.id.setText(orders.get(position).getId()+"");
         holder.section.setText(orders.get(position).getSection()+"");

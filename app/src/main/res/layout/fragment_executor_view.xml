@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/fragment_executor_view_relativeLayout"
@@ -21,6 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:layout_marginRight="10sp"
                 android:layout_below="@id/fragment_executor_view_carousel"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="20dp"
@@ -67,14 +68,14 @@
 
             <Button
                 android:id="@+id/fragment_executor_view_chat"
-                android:layout_width="wrap_content"
+                android:layout_width="120sp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="45sp"
                 android:layout_marginTop="10sp"
                 android:textSize="13sp"
                 android:layout_below="@id/fragment_executor_view_name"
                 android:layout_toRightOf="@id/fragment_executor_view_photo"
-                android:text="Chat" />
+                android:text="Открыть чат" />
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/fragment_executor_view_bottomnav"
@@ -90,6 +91,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
                 android:id="@+id/fragment_executor_view_frameLayout"
                 android:layout_below="@id/fragment_executor_view_bottomnav"
                 ></FrameLayout>

@@ -1,18 +1,15 @@
 package com.example.projectwnavigation;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import models.Bookmarks;
-import models.DbHelper;
 import models.MyDataProvider;
-import models.Order;
 
 public class Bookmarks_create_activity extends AppCompatActivity {
     EditText personId, executorId;

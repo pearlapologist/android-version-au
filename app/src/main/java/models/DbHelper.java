@@ -1,10 +1,8 @@
 package models;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
 
 import androidx.annotation.Nullable;
 
@@ -13,8 +11,8 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction7.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final String DATABASE_NAME = "serviceAuction11.db";
+    public static final int DATABASE_VERSION = 11;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -93,30 +91,24 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_PERSON_CREATED_DATE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
-        Long create = DataConverter.getCurentDateInLong();
-        sql = "INSERT INTO " + MyDataProvider.TABLE_PERSONS + "(" +  MyDataProvider.KEY_PERSON_NAME +
-                        ", " +  MyDataProvider.KEY_PERSON_LASTNAME + ", " +  MyDataProvider.KEY_PERSON_NUMBER +
-                        ", " +  MyDataProvider.KEY_PERSON_PASSWD +"," +  MyDataProvider.KEY_PERSON_RATING+","+
-                MyDataProvider.KEY_PERSON_CREATED_DATE + ") VALUES (" + " 'Bayan', 'Iskanova', '87084067075'," +
-                " 'asdzxc', 0, " +create + ")";
-        sqLiteDatabase.execSQL(sql);
-
         sql = "CREATE TABLE " + MyDataProvider.TABLE_ORDERS +
                 "(" + MyDataProvider.KEY_ORDER_ID + " integer primary key autoincrement, " +
+                MyDataProvider.KEY_ORDER_CUSTOMER_ID + " integer, " +
                 MyDataProvider.KEY_ORDER_TITLE + " text, " +
                 MyDataProvider.KEY_ORDER_SECTION_ID + " integer, " +
                 MyDataProvider.KEY_ORDER_PRICE + " real, " +
                 MyDataProvider.KEY_ORDER_CREATED_DATE + " integer, "
                 + MyDataProvider.KEY_ORDER_DEADLINE + " integer, " +
-                MyDataProvider.KEY_ORDER_DESCRIPTION + " text)";
+                MyDataProvider.KEY_ORDER_DESCRIPTION + " text, "+
+                MyDataProvider.KEY_ORDER_ISANONNOTE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
-        sql = "CREATE TABLE " + MyDataProvider.TABLE_EXECUTORNORDER +
-                "(" + MyDataProvider.KEY_EXECUTORNORDER_PART_ID + " integer primary key autoincrement, " +
-                MyDataProvider.KEY_EXECUTORNORDER_ORDER_ID + " INTEGER, " +
-                MyDataProvider.KEY_EXECUTORNORDER_EXECUTOR_ID + " INTEGER, " +
-                MyDataProvider.KEY_EXECUTORNORDER_CUSTOMER_ID + " INTEGER, " +
-                MyDataProvider.KEY_EXECUTORNORDER_STATUS + " TEXT)";
+        sql = "CREATE TABLE " + MyDataProvider.TABLE_ORDERNPERSON +
+                "(" + MyDataProvider.KEY_ORDERNPERSON_PART_ID + " integer primary key autoincrement, " +
+                MyDataProvider.KEY_ORDERNPERSON_ORDER_ID + " INTEGER, " +
+                MyDataProvider.KEY_ORDERNPERSON_CUSTOMER_ID + " INTEGER, " +
+                MyDataProvider.KEY_ORDERNPERSON_EXECUTOR_ID + " INTEGER, " +
+                MyDataProvider.KEY_ORDERNPERSON_STATUS + " TEXT)";
         sqLiteDatabase.execSQL(sql);
 
 
@@ -127,7 +119,7 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
 
         sql = "INSERT INTO " + MyDataProvider.TABLE_SERVICE + "(" +
-                MyDataProvider.KEY_SERVICE_TITLE + ", " + MyDataProvider.KEY_SERVICE_PRICE + ") VALUES('Перевод', '2000');";
+                MyDataProvider.KEY_SERVICE_TITLE + ", " + MyDataProvider.KEY_SERVICE_PRICE + ") VALUES ('Перевод', '2000');";
         sqLiteDatabase.execSQL(sql);
 
         sql = "INSERT INTO " + MyDataProvider.TABLE_SERVICE + "(" +
@@ -155,7 +147,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_EXECUTOR_PERSON_ID + " integer, " +
                 MyDataProvider.KEY_EXECUTOR_SECTION_ID + " integer, " +
                 MyDataProvider.KEY_EXECUTOR_SPECIALIZATION + " text, " +
-                MyDataProvider.KEY_EXECUTOR_DESCRIPTION + " text)";
+                MyDataProvider.KEY_EXECUTOR_DESCRIPTION + " text, "+
+                MyDataProvider.KEY_EXECUTOR_COVERPHOTO+ " blob)";
         sqLiteDatabase.execSQL(sql);
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_NOTIFY +
@@ -190,14 +183,16 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
 
 
-       /* sql = "insert into executorNorder (order_id, executor_id, customer_id, status) VALUES (1,1,2,'new')";
+
+        sql = "CREATE TABLE " + MyDataProvider.TABLE_RESPONSES +
+                "(" + MyDataProvider.KEY_RESPONSES_ID + " integer primary key autoincrement, " +
+                MyDataProvider.KEY_RESPONSES_ORDER_ID + " INTEGER, " +
+                MyDataProvider.KEY_RESPONSES_PERSON_ID + " INTEGER, " +
+                MyDataProvider.KEY_RESPONSES_TEXT + " TEXT, " +
+                MyDataProvider.KEY_RESPONSES_SUGGESTEDPRICE + " REAL, " +
+                MyDataProvider.KEY_RESPONSES_CREATEDDATE + " INTEGER)";
         sqLiteDatabase.execSQL(sql);
 
-        sql = "insert into executorNorder (order_id, executor_id, customer_id, status) VALUES (2,2,3,'new')";
-        sqLiteDatabase.execSQL(sql);
-
-        sql = "insert into executorNorder (order_id, executor_id, customer_id, status) VALUES (3,3,4,'new')";
-        sqLiteDatabase.execSQL(sql);*/
     }
 
     @Override

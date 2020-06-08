@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import models.MyDataProvider;
+import models.MyUtils;
 import models.TestEntity;
 
 public class Test_image_list_adapter extends BaseAdapter {
@@ -61,7 +62,7 @@ public class Test_image_list_adapter extends BaseAdapter {
         TestEntity entity = arrayList.get(position);
 
          holder.txtTitle.setText(entity.getName());
-        holder.imageView.setImageBitmap(provider.decodeByteToBitmap(entity.getImage()));
+        holder.imageView.setImageBitmap(MyUtils.decodeByteToBitmap(entity.getImage()));
 
         return row;
     }

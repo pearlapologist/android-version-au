@@ -1,9 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".Profile_myForm_activity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5sp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_margin="5sp"
+            android:padding="5sp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/myForm_tvsection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Раздел"
+                android:layout_marginStart="15sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/myForm_btn_addCoverPh"
+                android:textSize="13sp"></TextView>
+
+            <Spinner
+                android:id="@+id/myForm_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myForm_tvsection"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginEnd="10sp"
+                ></Spinner>
+
+            <Button
+                android:id="@+id/myForm_btn_addCoverPh"
+                android:layout_width="wrap_content"
+                android:layout_height="38sp"
+                android:layout_below="@id/myForm_carousel"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10sp"
+                android:textSize="13sp"
+                android:layout_marginBottom="10sp"
+                android:text="Изменить фото ообложки"></Button>
+
+            <com.synnapps.carouselview.CarouselView
+                android:id="@+id/myForm_carousel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginEnd="4sp"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4sp"
+                app:fillColor="@color/gray"
+                app:pageColor="@color/gray"
+                app:radius="6sp"
+                app:slideInterval="8000"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1sp">
+            </com.synnapps.carouselview.CarouselView>
+
+            <EditText
+                android:id="@+id/myForm_spec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myForm_spinner"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="15sp"
+                android:layout_marginEnd="10sp"
+                android:hint="Специализация"
+                android:inputType="text"></EditText>
+
+            <Button
+                android:id="@+id/myForm_btn_addService"
+                android:layout_width="wrap_content"
+                android:layout_height="38sp"
+                android:layout_below="@id/myForm_rv"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10sp"
+                android:textSize="15sp"
+                android:text="Добавить услугу"></Button>
+
+            <EditText
+                android:id="@+id/myForm_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myForm_spec"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="15sp"
+                android:layout_marginEnd="10sp"
+                android:hint="Описание"
+                android:inputType="text"
+                android:maxLength="1000"
+                android:textSize="18sp"></EditText>
+
+
+
+            <Button
+                android:id="@+id/myForm_btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myForm_btn_addService"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginEnd="10sp"
+                android:text="Сохранить"
+
+                ></Button>
+
+            <TextView
+                android:id="@+id/myForm_tvservices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Услуги"
+                android:layout_marginStart="15sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/myForm_desc"
+                android:textSize="13sp"></TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/myForm_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/myForm_tvservices"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

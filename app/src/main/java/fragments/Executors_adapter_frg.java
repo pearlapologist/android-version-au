@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import models.Executor;
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Persons;
 
 public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapter_frg.MyViewHolder> {
@@ -32,7 +33,6 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         this.activity = activity;
         this.executors = executors;
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView name, spcltn_txt;
@@ -67,17 +67,14 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         Executor executor = executors.get(position);
 
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        String nametxt = "";
         Persons p = provider.getPerson(executor.getPersonId());
-        if (p!=null ) {
-            nametxt = p.getName();
-           holder.photo.setImageBitmap(provider.decodeByteToBitmap(p.getPhoto()));
+        if (p.getPhoto() == null ) {
+            holder.photo.setImageResource(R.drawable.executors_default_image);
         }
         else{
-            holder.photo.setImageResource(R.drawable.ic_add);
+            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
-
-        holder.name.setText(nametxt);
+        holder.name.setText(p.getName());
 
         final int id = executor.getId();
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {

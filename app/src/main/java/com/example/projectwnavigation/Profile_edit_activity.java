@@ -20,6 +20,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Persons;
 
 public class Profile_edit_activity extends AppCompatActivity {
@@ -63,7 +64,7 @@ public class Profile_edit_activity extends AppCompatActivity {
                     pers.setName(etName.getText().toString().trim());
                     pers.setLastname(etLastname.getText().toString().trim());
                     pers.setNumber(etNumber.getText().toString().trim());
-                    pers.setPhoto(provider.imageViewToByte(image));
+                    pers.setPhoto(MyUtils.imageViewToByte(image));
                     provider.updatePerson(pers);
                     Toast.makeText(Profile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
                     image.setImageResource(R.mipmap.ic_add_image);
@@ -78,7 +79,7 @@ public class Profile_edit_activity extends AppCompatActivity {
     private void initData() {
         Persons person = provider.getLoggedInPerson();
         if (person.getPhoto() != null) {
-            image.setImageBitmap(provider.decodeByteToBitmap(person.getPhoto()));
+            image.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
         etName.setText(person.getName());
         etLastname.setText(person.getLastname());

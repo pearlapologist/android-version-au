@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Persons;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button btn_orders, btn_form, btn_reviews;
     ImageView photo;
     MyDataProvider provider;
+    Persons person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,14 @@ public class ProfileActivity extends AppCompatActivity {
         btn_form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent form = new Intent(ProfileActivity.this, Profile_createFormActivity.class);
-                startActivity(form);
+                if (provider.getPersonIsExecutorField(person.getId()) == false) {
+                    Intent form = new Intent(ProfileActivity.this, Profile_createFormActivity.class);
+                    startActivity(form);
+                }
+                else{
+                    Intent r = new Intent(ProfileActivity.this, Profile_myForm_activity.class);
+                    startActivity(r);
+                }
             }
         });
 
@@ -65,9 +73,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Persons person = provider.getLoggedInPerson();
+        person = provider.getLoggedInPerson();
         if (person.getPhoto() != null) {
-            photo.setImageBitmap(provider.decodeByteToBitmap(person.getPhoto()));
+            photo.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
         tv_name.setText(person.getName() + " " + person.getLastname());
         int rating = person.getRating();
@@ -89,7 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.profile_menu_edit:
                 Intent edit = new Intent(ProfileActivity.this, Profile_edit_activity.class);

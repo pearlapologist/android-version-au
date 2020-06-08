@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import models.DataConverter;
-import models.DbHelper;
 import models.MyDataProvider;
 import models.Service;
 

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_createresponse_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/dialog_createresponse_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10sp"
+        android:hint="Описание"
+        android:maxLength="200"
+        android:padding="10sp"></EditText>
+
+    <EditText
+        android:id="@+id/dialog_createresponse_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_createresponse_desc"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10sp"
+        android:hint="Цена"
+        android:inputType="number|numberDecimal"
+        android:padding="10sp"></EditText>
+
+    <Button
+        android:id="@+id/dialog_createresponse_btnsave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_createresponse_price"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="15sp"
+        android:padding="10sp"
+        android:text="Сохранить"></Button>
+
+    <Button
+        android:id="@+id/dialog_createresponse_btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_createresponse_price"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="15sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10sp"
+        android:padding="10sp"
+        android:text="Отменить"></Button>
+
+</RelativeLayout>

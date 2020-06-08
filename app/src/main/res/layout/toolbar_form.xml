@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:id="@+id/toolbar_form"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/itemCounter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ic_reviews_background"
+            android:textSize="20dp" />
+    </RelativeLayout>
+</Toolbar>

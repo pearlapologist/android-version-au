@@ -8,25 +8,36 @@
     android:layout_height="match_parent"
     tools:context="fragments.Fragment_orders">
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/orders_listf_fb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="33dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="5sp"
         android:clickable="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/add_order"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orders_listf_rv"
-        app:layout_constraintVertical_bias="0.806" />
+        android:src="@drawable/add_order"/>
 
-    <Spinner
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="7dp"
+            android:text="TextView"
+            android:layout_alignParentTop="true"
+            />
+
+        <Spinner
         android:id="@+id/orders_listf_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -35,33 +46,17 @@
         android:layout_marginTop="10dp"
        ></Spinner>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="7dp"
-        android:text="TextView"
-        android:layout_alignParentTop="true"
-        />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/orders_listf_rv"
-        android:layout_width="match_parent"
-        android:layout_height="592dp"
-        android:layout_below="@id/orders_listf_spinner"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="-153dp"
-        android:padding="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orders_listf_spinner"
-        app:layout_constraintVertical_bias="0.444">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/orders_listf_rv"
+            android:layout_width="match_parent"
+            android:layout_height="592dp"
+            android:layout_below="@id/orders_listf_spinner"
+        android:layout_margin="5sp"
+            android:layout_marginBottom="-153dp"
+            android:padding="4sp">
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-
+        </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+</ScrollView>
 </RelativeLayout>

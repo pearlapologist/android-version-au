@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,7 +73,11 @@ public class Executors_list_activity extends AppCompatActivity {
     }
 
     void insertArray() {
-        executors = provider.getExecutors();
+        try{
+        executors = provider.getExecutors();}
+        catch(Exception e){
+            Log.e("Error!", e.getMessage());
+        }
     }
 
 

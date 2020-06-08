@@ -1,5 +1,6 @@
 package com.example.projectwnavigation;
 
+import android.app.Person;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import fragments.Fragment_orders;
 import fragments.Fragment_settings;
 import fragments.Fragment_specials;
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Persons;
 
 public class Navigation_activity extends AppCompatActivity {
@@ -48,7 +50,6 @@ public class Navigation_activity extends AppCompatActivity {
     Fragment_settings fragment_settings;
     TextView headerPersonName;
     ImageView headerImageView;
-    Persons currentPerson;
 
 
     @Override
@@ -59,8 +60,18 @@ public class Navigation_activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         provider = new MyDataProvider(this);
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(navListener);
+        fragment_specials = new Fragment_specials(getApplicationContext());
+        fragment_orders = new Fragment_orders(getApplicationContext());
+        fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
+        fragment_notification = new Fragment_notification(getApplicationContext());
+        fragment_settings = new Fragment_settings(getApplicationContext());
+       /* DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
+        drawer2.closeDrawer(GravityCompat.START);*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         final ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.open, R.string.close);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -71,13 +82,12 @@ public class Navigation_activity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-
                 toogle.onDrawerOpened(drawerView);
-                headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
-                if (currentPerson.getPhoto() != null) {
-                    headerImageView.setImageBitmap(provider.decodeByteToBitmap(currentPerson.getPhoto()));
+                Persons cur = provider.getLoggedInPerson();
+                headerPersonName.setText(cur.getName() + " " + cur.getLastname());
+                if (cur.getPhoto() != null) {
+                    headerImageView.setImageBitmap(MyUtils.decodeByteToBitmap(cur.getPhoto()));
                 }
-                //  lastsynced.setText(lastsynced());
                 invalidateOptionsMenu();
             }
 
@@ -94,30 +104,18 @@ public class Navigation_activity extends AppCompatActivity {
         });
         toogle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(navListener);
-        fragment_specials = new Fragment_specials(getApplicationContext());
-        fragment_orders = new Fragment_orders(getApplicationContext());
-        fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
-        fragment_notification = new Fragment_notification(getApplicationContext());
-        fragment_settings = new Fragment_settings(getApplicationContext());
-
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
                 R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
         transaction.replace(R.id.fram, fragment_orders).commit();
         setTitle("Заказы");
-        DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
-        drawer2.closeDrawer(GravityCompat.START);
-        currentPerson = provider.getLoggedInPerson();
-
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
         View headerView = navigationView.getHeaderView(0);
         headerPersonName = headerView.findViewById(R.id.header_textView_profileName);
+        headerImageView = headerView.findViewById(R.id.header_imageView);
 
         headerPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +126,7 @@ public class Navigation_activity extends AppCompatActivity {
             }
         });
 
-        headerImageView = headerView.findViewById(R.id.header_imageView);
+
         headerImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,30 +135,18 @@ public class Navigation_activity extends AppCompatActivity {
             }
         });
 
-
     }
-
     @Override
     protected void onStart() {
-        super.onStart();
-
+        Persons currentPerson = provider.getLoggedInPerson();
         if (currentPerson == null) {
             Intent intent = new Intent(this, FirstActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return;
         }
-
+        super.onStart();
     }
-
-   /* @Override
-    protected void onResume() {
-        headerPersonName.setText(currentPerson.getName() + " " + currentPerson.getLastname());
-        if (currentPerson.getPhoto() != null) {
-            headerImageView.setImageBitmap(provider.decodeByteToBitmap(currentPerson.getPhoto()));
-        }
-        super.onResume();
-    }*/
 
 
     @Override
@@ -168,7 +154,6 @@ public class Navigation_activity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
     /*@Override
     public boolean onSupportNavigateUp() {
@@ -197,14 +182,14 @@ public class Navigation_activity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_exit) {
             provider.setLoggedInPerson(null);
-            onStart();
+        onStart();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    private NavigationView.OnNavigationItemSelectedListener navListener
-            = new NavigationView.OnNavigationItemSelectedListener() {
+    private NavigationView.OnNavigationItemSelectedListener navListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int id = item.getItemId();

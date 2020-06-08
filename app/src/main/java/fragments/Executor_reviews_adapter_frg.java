@@ -25,8 +25,8 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
     private Context context;
     Activity activity;
     MyDataProvider provider;
-    ArrayList<Review> reviews;
 
+    ArrayList<Review> reviews;
     public Executor_reviews_adapter_frg(Activity activity, Context context,  ArrayList<Review> reviews) {
         this.context = context;
         this.activity = activity;
@@ -45,7 +45,6 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
-
 
         Review  review = reviews.get(position);
         int personId = review.getCustomerId();
