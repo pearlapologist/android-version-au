@@ -3,6 +3,7 @@ package com.example.projectwnavigation;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +28,7 @@ import models.Order;
 
 public class Orders_list_activity extends AppCompatActivity {
     RecyclerView recyclerView;
-    Button add_button, btnBack;
+    Button add_button;
     MyDataProvider provider;
     ArrayList<Order> orders;
     Orders_adapter orders_adapter;
@@ -58,16 +59,6 @@ public class Orders_list_activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Orders_list_activity.this, Profile_edit_activity.class);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-
         registerForContextMenu(recyclerView);
     }
 
@@ -83,7 +74,7 @@ public class Orders_list_activity extends AppCompatActivity {
     }
 
     void insertArray() {
-        orders = provider.getOrders();
+            orders = provider.getOrders();
     }
 
 
@@ -97,21 +88,21 @@ public class Orders_list_activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.delete_menu ) {
+        if (item.getItemId() == R.id.delete_menu) {
             confirmDialog();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    void confirmDialog(){
+    void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete all?" );
+        builder.setTitle("Delete all?");
         builder.setMessage("Are you sure you want to delete all data ?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(Orders_list_activity.this, "Delete", Toast.LENGTH_SHORT).show();
-                provider.deleteAllOrders();
+                    provider.deleteAllOrders();
                 Intent intent = new Intent(Orders_list_activity.this, Executors_list_activity.class);
                 startActivity(intent);
                 finish();

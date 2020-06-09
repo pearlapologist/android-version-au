@@ -52,8 +52,8 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
         holder.price.setText(respons.getPrice() + "");
         String created = MyUtils.convertLongToDataString(respons.getCreatedDate());
         holder.date.setText(created);
-        final int id = respons.getId();
-        Persons person = provider.getPerson(provider.getPersonIdByResponseId(id));
+        int responsId = respons.getId();
+        final Persons person = provider.getPerson(provider.getPersonIdByResponseId(responsId));
         if(person.getPhoto()!= null){
         holder.image.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
@@ -61,7 +61,7 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PersonProfileActivity.class);
-                intent.putExtra("responseAdapter", id);
+                intent.putExtra("responseAdapter", person.getId());
 
                 activity.startActivityForResult(intent, 1);
             }

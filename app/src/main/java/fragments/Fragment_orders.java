@@ -28,33 +28,28 @@ import models.MyDataProvider;
 import models.Order;
 
 public class Fragment_orders extends Fragment implements AdapterView.OnItemSelectedListener {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM_CHANGED = "change_param";
     MyDataProvider provider;
     Context context;
-
-    private String mParam1;
-    private String mParam2;
 
     RecyclerView recyclerView;
     FloatingActionButton add_button;
     ArrayList<Order> orders = new ArrayList<>();
     Orders_adapter_frg orders_adapter_frg;
     Spinner spinner;
+    boolean datachanged = false;
 
     public Fragment_orders(Context context) {
-        this.provider = new MyDataProvider(context);
         this.context = context;
     }
 
     public Fragment_orders() {
     }
 
-    public static Fragment_orders newInstance(String param1, String param2) {
+    public static Fragment_orders newInstance(boolean changed) {
         Fragment_orders fragment = new Fragment_orders();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(ARG_PARAM_CHANGED, changed);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +59,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+           datachanged = getArguments().getBoolean(ARG_PARAM_CHANGED);
         }
     }
 
@@ -80,7 +74,8 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         add_button = view.findViewById(R.id.orders_listf_fb);
         recyclerView = view.findViewById(R.id.orders_listf_rv);
-        spinner = (Spinner) view.findViewById(R.id.orders_listf_spinner);
+        spinner = view.findViewById(R.id.orders_listf_spinner);
+        provider = new MyDataProvider(context);
         insertArray();
 
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
@@ -97,7 +92,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         });
 
         ArrayList<String> sectionList = provider.getSectionListInString();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -106,15 +101,20 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
 
 
     void insertArray() {
-        try {
             orders = provider.getOrders();
-        } catch (Exception e) {
-            Log.e("Error in Ordersfragment", e.getMessage());
-        }
         if (orders == null || orders.size() <= 0) {
             Toast.makeText(getContext(), "Пока что не было создано заказов", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    @Override
+    public void onStart() {
+        if(datachanged ==true){
+            orders.clear();
+            insertArray();
+            datachanged =false;
+        }
+        super.onStart();
     }
 
     @Override

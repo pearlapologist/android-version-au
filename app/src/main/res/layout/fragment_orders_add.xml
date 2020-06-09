@@ -137,14 +137,28 @@
 
 
             <Button
-                android:id="@+id/orders_add_btnOk"
-                android:layout_width="match_parent"
+                android:id="@+id/dialog_orders_add_btnOk"
+                android:layout_width="185dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25sp"
                 android:layout_marginBottom="20sp"
-                android:text="Отправить"
+                android:text="Сохранить"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/orders_add_checkDeadl"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+            <Button
+                android:id="@+id/dialog_orders_add_btnCancel"
+                android:layout_width="185dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:layout_marginBottom="20sp"
+                android:text="Отменить"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:layout_alignParentLeft="true"
                 android:layout_below="@id/orders_add_checkDeadl"
                 android:textAllCaps="false"
                 android:textSize="18sp" />

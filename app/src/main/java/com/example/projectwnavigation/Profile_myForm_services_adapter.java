@@ -53,7 +53,7 @@ public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profil
 
         @Override
         public void onClick(View v) {
-            checkBox.setChecked(!checkBox.isChecked());
+            checkBox.setChecked(checkBox.isChecked());
             profile_myForm_activity.setSelection(v, getAdapterPosition());
         }
     }

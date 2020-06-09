@@ -167,7 +167,8 @@ public class MyDataProvider {
             person.setId(maxId);
             sqLiteDb.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("Error1!", e.getMessage());
+            Log.e("Error!", e.getMessage());
+            e.printStackTrace();
         } finally {
             sqLiteDb.endTransaction();
         }
@@ -449,24 +450,13 @@ public class MyDataProvider {
             executor.setId(maxId);
 
             onExecutorCreate(executor);
-            try {
-                createExecutorServices(executor);
-            } catch (Exception e) {
-                Log.e("Error in executorcreate", e.getMessage());
-            }
-            try {
-                onExecutorServicesCreate(executor);
-            } catch (Exception e) {
-                Log.e("Error in executorcreate", e.getMessage());
-            }
-            try {
-                setPersonIsExecutorField(executor.getPersonId(), true);
-            } catch (Exception e) {
-                Log.e("Error in executorcreate", e.getMessage());
-            }
+            createExecutorServices(executor);
+            onExecutorServicesCreate(executor);
+            setPersonIsExecutorField(executor.getPersonId(), true);
             sqLiteDb.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e("Error in executorcreate", e.getMessage());
+            e.printStackTrace();
         } finally {
             sqLiteDb.endTransaction();
         }
@@ -514,6 +504,7 @@ public class MyDataProvider {
                 }
             } catch (Exception e) {
                 Log.e("Error!", e.getMessage());
+                e.printStackTrace();
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
@@ -554,6 +545,7 @@ where executor_services.executor_id = 1
             }
         } catch (Exception e) {
             Log.e("getExecutorServices", e.getMessage());
+            e.printStackTrace();
         } finally {
             sqLiteDb.endTransaction();
         }
@@ -597,6 +589,7 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e("Error in executorupdate", e.getMessage());
+            e.printStackTrace();
         } finally {
             sqLiteDb.endTransaction();
         }
@@ -936,70 +929,74 @@ where executor_services.executor_id = 1
 
     //region Order
     //CREATE ORDER
-    public void addOrder(Order order) {
+    public void addOrder(Order order){
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
-        String sql = "INSERT INTO " + TABLE_ORDERS + "("  + KEY_ORDER_CUSTOMER_ID+ ", " + KEY_ORDER_TITLE +
-                ", " + KEY_ORDER_SECTION_ID + ", " + KEY_ORDER_PRICE + ", "
-                + KEY_ORDER_DESCRIPTION + ", " + KEY_ORDER_DEADLINE + ", " + KEY_ORDER_CREATED_DATE +
-                ") VALUES (" + order.getCustomerId() + ", '" + order.getTitle() + "', " + order.getSection() + " , "
-                + order.getPrice() + " , '"
-                + order.getDescription() + "' , "
-                + order.getDeadline() + " , "
-                + MyUtils.getCurentDateInLong() + ")";
-        sqLiteDatabase.execSQL(sql);
+        try {
+            String sql = "INSERT INTO " + TABLE_ORDERS + "(" + KEY_ORDER_CUSTOMER_ID + ", " + KEY_ORDER_TITLE +
+                    ", " + KEY_ORDER_SECTION_ID + ", " + KEY_ORDER_PRICE + ", "
+                    + KEY_ORDER_DESCRIPTION + ", " + KEY_ORDER_DEADLINE + ", " + KEY_ORDER_CREATED_DATE +
+                    ") VALUES (" + order.getCustomerId() + ", '" + order.getTitle() + "', " + order.getSection() + " , "
+                    + order.getPrice() + " , '"
+                    + order.getDescription() + "' , "
+                    + order.getDeadline() + " , "
+                    + MyUtils.getCurentDateInLong() + ")";
+            sqLiteDatabase.execSQL(sql);
 
-        String sqlMaxId = "SELECT MAX(" + KEY_ORDER_ID + ") FROM " +
-                TABLE_ORDERS;
-        int maxId = 0;
-        Cursor c = sqLiteDatabase.rawQuery(sqlMaxId, null);
-        if (c.moveToFirst()) {
-            maxId = c.getInt(0);
+            String sqlMaxId = "SELECT MAX(" + KEY_ORDER_ID + ") FROM " +
+                    TABLE_ORDERS;
+            int maxId = 0;
+            Cursor c = sqLiteDatabase.rawQuery(sqlMaxId, null);
+            if (c.moveToFirst()) {
+                maxId = c.getInt(0);
+            }
+            order.setId(maxId);
+            onOrderCreate(order);
+            sqLiteDatabase.setTransactionSuccessful();
+        } finally {
+            sqLiteDatabase.endTransaction();
         }
-        order.setId(maxId);
-        onOrderCreate(order);
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
 
     }
 
     //READ ORDER
-    public Order getOrder(int orderId) {
+    public Order getOrder(int orderId){
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        Order order = null;
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_ORDERS + " where " + " " + KEY_ORDER_ID + "=" + orderId,
                     null);
             if (c.moveToFirst()) {
-                Order order = getOrderFromCursor(c);
+                order = getOrderFromCursor(c);
                 return order;
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
+            return order;
         }
-        return null;
     }
 
 
     private Order getOrderFromCursor(Cursor c) {
         int id = c.getInt(c.getColumnIndex(KEY_ORDER_ID));
         String title = c.getString(c.getColumnIndex(KEY_ORDER_TITLE));
-        int customerId =  c.getInt(c.getColumnIndex(KEY_ORDER_CUSTOMER_ID));
+        int customerId = c.getInt(c.getColumnIndex(KEY_ORDER_CUSTOMER_ID));
         int sectionId = c.getInt(c.getColumnIndex(KEY_ORDER_SECTION_ID));
         double price = c.getDouble(c.getColumnIndex(KEY_ORDER_PRICE));
         String dscrp = c.getString(c.getColumnIndex(KEY_ORDER_DESCRIPTION));
         Long deadline = c.getLong(c.getColumnIndex(KEY_ORDER_DEADLINE));
         Long createdDate = c.getLong(c.getColumnIndex(KEY_ORDER_CREATED_DATE));
 
-        Order order = new Order(id,customerId, title, sectionId, price, dscrp, deadline, createdDate);
+        Order order = new Order(id, customerId, title, sectionId, price, dscrp, deadline, createdDate);
         return order;
     }
 
 
-    public ArrayList<Order> getOrders() {
+    public ArrayList<Order> getOrders()  {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         ArrayList<Order> result = new ArrayList<>();
@@ -1009,15 +1006,14 @@ where executor_services.executor_id = 1
                     " desc", null);
             while (c.moveToNext()) {
                 Order order = getOrderFromCursor(c);
-                //loadExecutorServices(executor);
                 result.add(order);
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
+            return result;
         }
-        return result;
     }
 
     public ArrayList<Order> getOrders(Order_search search) {
@@ -1056,7 +1052,7 @@ where executor_services.executor_id = 1
     }
 
     //UPDATE ORDER
-    public void updateOrder(Order order) {
+    public void updateOrder(Order order){
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -1075,7 +1071,7 @@ where executor_services.executor_id = 1
     }
     //DELETE ORDER
 
-    public void deleteOrder(int orderId) {
+    public void deleteOrder(int orderId){
         SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
@@ -1092,7 +1088,7 @@ where executor_services.executor_id = 1
     }
 
 
-    public void deleteAllOrders() {
+    public void deleteAllOrders()  {
         SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
@@ -1771,7 +1767,7 @@ where executor_services.executor_id = 1
         return null;
     }
 
-    public int getCustomerIdByOrderId(int orderId) {
+    public int getCustomerIdByOrderId(int orderId){
         Order order = this.getOrder(orderId);
         if (order == null) {
             return -1;
@@ -1794,9 +1790,10 @@ where executor_services.executor_id = 1
             }
             sqLiteDb.setTransactionSuccessful();
             cursor.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e("getCustomerIdByOrderId", e.getMessage());
-        }finally {
+            e.printStackTrace();
+        } finally {
             sqLiteDb.endTransaction();
         }
         return -1;
@@ -1986,6 +1983,7 @@ where executor_services.executor_id = 1
             cursor.close();
         } catch (Exception e) {
             Log.e("getPersonByResponse", e.getMessage());
+            e.printStackTrace();
         } finally {
             sqLiteDb.endTransaction();
         }
@@ -2012,7 +2010,7 @@ where executor_services.executor_id = 1
         return null;
     }
 
-    public ArrayList<Integer> getRespondedPersonsIdListByOrderId(int orderId) {
+    public ArrayList<Integer> getRespondedPersonsIdListByOrderId(int orderId)  {
         Order order = this.getOrder(orderId);
         if (order == null) {
             return null;
@@ -2033,6 +2031,7 @@ where executor_services.executor_id = 1
             return arrID;
         } catch (Exception e) {
             Log.e("get responded personsid", e.getMessage());
+            e.printStackTrace();
             return null;
         } finally {
             database.endTransaction();

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,7 @@ import models.MyDataProvider;
 import models.Order;
 
 public class Orders_update_activity extends AppCompatActivity {
-    EditText title, price,  descr, id;
+    EditText title, price, descr, id;
     MaskEditText deadline;
     TextView createdDate;
     Button add, delete;
@@ -68,12 +69,6 @@ public class Orders_update_activity extends AppCompatActivity {
                         sectionId = 3;
                     case 4:
                         sectionId = 4;
-                    case 5:
-                        sectionId = 5;
-                    case 6:
-                        sectionId = 6;
-                    case 7:
-                        sectionId = 7;
                 }
             }
 
@@ -89,11 +84,11 @@ public class Orders_update_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Order ord = new Order();
-                ord.setId(getIntent().getIntExtra( "orderId", Integer.parseInt(id.getText().toString())));
+                ord.setId(getIntent().getIntExtra("orderId", Integer.parseInt(id.getText().toString())));
                 ord.setTitle(title.getText().toString());
                 ord.setSection(sectionId);
                 ord.setPrice(Double.parseDouble(price.getText().toString()));
-                ord.setDescription(  descr.getText().toString());
+                ord.setDescription(descr.getText().toString());
                 Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
                 ord.setDeadline(l);
                 provider.updateOrder(ord);
@@ -120,7 +115,8 @@ public class Orders_update_activity extends AppCompatActivity {
     void getAndSetOrderIntentData() {
         if (getIntent().hasExtra("orderId")) {
             final int gettedId = getIntent().getIntExtra("orderId", -1);
-            Order cur = provider.getOrder(gettedId);
+            Order cur = new Order();
+                cur = provider.getOrder(gettedId);
             mSpinner.setSelection(cur.getSection());
 
             title.setText(cur.getTitle());
@@ -134,16 +130,17 @@ public class Orders_update_activity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
-    void confirmDialog(){
+    void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete this order?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                provider.deleteOrder(getIntent().getIntExtra("orderId", Integer.parseInt(id.getText().toString())));
+                    provider.deleteOrder(getIntent().getIntExtra("orderId", Integer.parseInt(id.getText().toString())));
                 finish();
             }
         });

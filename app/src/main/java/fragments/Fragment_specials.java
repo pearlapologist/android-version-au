@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.projectwnavigation.Executors_adapter;
@@ -24,7 +27,7 @@ import models.Executor;
 import models.MyDataProvider;
 
 
-public class Fragment_specials extends Fragment {
+public class Fragment_specials extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     MyDataProvider provider;
@@ -36,6 +39,7 @@ public class Fragment_specials extends Fragment {
 
     RecyclerView recyclerView;
     Executors_adapter_frg executors_adapter;
+    Spinner spinner;
     ArrayList<Executor> executors;
 
 
@@ -79,6 +83,13 @@ public class Fragment_specials extends Fragment {
         executors_adapter = new Executors_adapter_frg(getActivity(), context, executors);
         recyclerView.setAdapter(executors_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        spinner = view.findViewById(R.id.fargment_specials_spinner);
+
+        ArrayList<String> sectionList = provider.getSectionListInString();
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -93,6 +104,18 @@ public class Fragment_specials extends Fragment {
         if (executors == null || executors.size() <= 0) {
             Toast.makeText(context, "Пока что не было создано специалистов", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(parent.getId() == R.id.orders_listf_spinner){
+            String value = parent.getItemAtPosition(position).toString();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }

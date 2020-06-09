@@ -18,15 +18,15 @@
                 android:layout_marginEnd="4sp"
                 android:text="Раздел"
                 android:layout_marginTop="25sp"
-                android:id="@+id/orders_update_tvsection"
+                android:id="@+id/dialog_orders_update_tvsection"
                 android:textSize="16sp"></TextView>
 
             <Spinner
-                android:id="@+id/orders_update_section"
+                android:id="@+id/dialog_orders_update_section"
                 android:layout_width="match_parent"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:layout_below="@id/orders_update_tvsection"
+                android:layout_below="@id/dialog_orders_update_tvsection"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"></Spinner>
 
@@ -36,17 +36,17 @@
                 android:layout_height="wrap_content"
                 android:text="Название"
                 android:layout_marginTop="25sp"
-                android:layout_below="@id/orders_update_section"
+                android:layout_below="@id/dialog_orders_update_section"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:id="@+id/orders_update_tvtitle"
+                android:id="@+id/dialog_orders_update_tvtitle"
                 android:textSize="16sp"></TextView>
 
             <EditText
-                android:id="@+id/orders_update_title"
+                android:id="@+id/dialog_orders_update_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/orders_update_tvtitle"
+                android:layout_below="@id/dialog_orders_update_tvtitle"
                 android:layout_marginTop="10sp"
                 android:ems="10"
                 android:layout_marginStart="4sp"
@@ -61,42 +61,42 @@
                 android:layout_height="wrap_content"
                 android:text="Описание"
                 android:layout_marginTop="25sp"
-                android:layout_below="@id/orders_update_title"
+                android:layout_below="@id/dialog_orders_update_title"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:id="@+id/orders_update_tvdesc"
+                android:id="@+id/dialog_orders_update_tvdesc"
                 android:textSize="16sp"></TextView>
 
             <EditText
                 android:layout_width="match_parent"
-                android:id="@+id/orders_update_descr"
+                android:id="@+id/dialog_orders_update_descr"
                 android:layout_marginTop="10sp"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
                 android:layout_height="wrap_content"
                 android:hint=""
-                android:layout_below="@id/orders_update_tvdesc"></EditText>
+                android:layout_below="@id/dialog_orders_update_tvdesc"></EditText>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Бюджет"
                 android:layout_marginTop="25sp"
-                android:layout_below="@id/orders_update_descr"
+                android:layout_below="@id/dialog_orders_update_descr"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:id="@+id/orders_update_tvprice"
+                android:id="@+id/dialog_orders_update_tvprice"
                 android:textSize="16sp"></TextView>
 
             <EditText
-                android:id="@+id/orders_update_price"
+                android:id="@+id/dialog_orders_update_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:ems="10"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:layout_below="@id/orders_update_tvprice"
+                android:layout_below="@id/dialog_orders_update_tvprice"
                 android:hint=""
                 android:inputType="number"
                 android:textSize="18sp" />
@@ -106,21 +106,21 @@
                 android:layout_height="wrap_content"
                 android:text="Сроки до"
                 android:layout_marginTop="25sp"
-                android:layout_below="@id/orders_update_price"
+                android:layout_below="@id/dialog_orders_update_price"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:id="@+id/orders_update_tvdeadline"
+                android:id="@+id/dialog_orders_update_tvdeadline"
                 android:textSize="16sp"></TextView>
 
 
             <com.santalu.maskedittext.MaskEditText
-                android:id="@+id/orders_update_deadlinee"
+                android:id="@+id/dialog_orders_update_deadlinee"
                 app:met_mask="##.##.####"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:ems="10"
-                android:layout_below="@id/orders_update_tvdeadline"
+                android:layout_below="@id/dialog_orders_update_tvdeadline"
                 android:hint=""
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
@@ -128,24 +128,39 @@
                 android:textSize="18sp" />
 
             <CheckBox
-                android:id="@+id/orders_update_checkDeadl"
+                android:id="@+id/dialog_orders_update_checkDeadl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/orders_update_deadlinee"
+                android:layout_below="@id/dialog_orders_update_deadlinee"
                 android:layout_marginTop="10sp"
                 android:text="Не ограничены" />
 
 
             <Button
-                android:id="@+id/orders_update_btnOk"
-                android:layout_width="match_parent"
+                android:id="@+id/dialog_orders_update_btnOk"
+                android:layout_width="185dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25sp"
                 android:layout_marginBottom="20sp"
-                android:text="Отправить"
+                android:text="Сохранить"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
-                android:layout_below="@id/orders_update_checkDeadl"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/dialog_orders_update_checkDeadl"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/dialog_orders_update_btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25sp"
+                android:layout_marginBottom="20sp"
+                android:text="Отменить"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/dialog_orders_update_checkDeadl"
                 android:textAllCaps="false"
                 android:textSize="18sp" />
 

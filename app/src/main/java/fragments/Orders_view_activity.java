@@ -81,7 +81,8 @@ public class Orders_view_activity extends AppCompatActivity {
         btn_viewprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int personId = provider.getCustomerIdByOrderId(cur.getId());
+                int personId = -1;
+                  personId = provider.getCustomerIdByOrderId(cur.getId());
                 Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
                 intent.putExtra("orderview_PersonId", personId);
 
@@ -96,7 +97,12 @@ public class Orders_view_activity extends AppCompatActivity {
     protected void onStart() {
         boolean b = false;
         Persons person = provider.getLoggedInPerson();
-        ArrayList<Integer> arrId = provider.getRespondedPersonsIdListByOrderId(cur.getId());
+        ArrayList<Integer> arrId = new ArrayList<>();
+        try {
+            arrId = provider.getRespondedPersonsIdListByOrderId(cur.getId());
+        } catch (Exception e) {
+            Log.e("Orders view activity", e.getMessage());
+        }
         for (int i : arrId) {
             if (person.getId() == i) {
                 b = true;
@@ -110,31 +116,30 @@ public class Orders_view_activity extends AppCompatActivity {
     }
 
 
-
     void getAndSetOrderIntentData() {
         try {
             responses = provider.getAllResponses();
 
-        if (getIntent().hasExtra("orderIdFragment")) {
-            final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
-            if (gettedId != -1) {
-                cur = provider.getOrder(gettedId);
-                Section_of_services section = provider.getSection(cur.getSection());
-               spinnerSection.setText(section.getTitle());
+            if (getIntent().hasExtra("orderIdFragment")) {
+                final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
+                if (gettedId != -1) {
+                    cur = provider.getOrder(gettedId);
+                    Section_of_services section = provider.getSection(cur.getSection());
+                    spinnerSection.setText(section.getTitle());
 
-                title.setText(cur.getTitle());
-                price.setText("Бюджет: "+cur.getPrice());
-                descr.setText(cur.getDescription());
-                String s = MyUtils.convertLongToDataString(cur.getDeadline());
-                deadline.setText("До: "+s);
-                String d = MyUtils.convertLongToDataString(cur.getCreated_date());
-                createdDate.setText(d);
+                    title.setText(cur.getTitle());
+                    price.setText("Бюджет: " + cur.getPrice());
+                    descr.setText(cur.getDescription());
+                    String s = MyUtils.convertLongToDataString(cur.getDeadline());
+                    deadline.setText("До: " + s);
+                    String d = MyUtils.convertLongToDataString(cur.getCreated_date());
+                    createdDate.setText(d);
+                } else {
+                    Toast.makeText(this, "orderid invalid", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "orderid invalid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
-        }
         } catch (Exception e) {
             Log.e("Error in Ordersfragment", e.getMessage());
         }
@@ -192,7 +197,6 @@ public class Orders_view_activity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         options_menu = menu;
@@ -205,8 +209,8 @@ public class Orders_view_activity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         checkIfCreator();
         if (options_menu != null) {
-           options_menu.findItem(R.id.order_options_menu_edit).setVisible(isCreator);
-          options_menu.findItem(R.id.order_options_menu_delete).setVisible(isCreator);
+            options_menu.findItem(R.id.order_options_menu_edit).setVisible(isCreator);
+            options_menu.findItem(R.id.order_options_menu_delete).setVisible(isCreator);
         }
         return true;
     }

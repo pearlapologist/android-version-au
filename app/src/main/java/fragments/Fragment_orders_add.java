@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class Fragment_orders_add extends Fragment {
 
     EditText title, price, descr;
     MaskEditText deadline;
-    Button add;
+    Button add, cancel;
     Spinner mSpinner;
 
     int sectionId = 0;
@@ -86,9 +87,9 @@ public class Fragment_orders_add extends Fragment {
         price = view.findViewById(R.id.orders_add_price);
         descr = view.findViewById(R.id.orders_add_descr);
         deadline = view.findViewById(R.id.orders_add_deadlinee);
-        add = view.findViewById(R.id.orders_add_btnOk);
+        add = view.findViewById(R.id.dialog_orders_add_btnOk);
         mSpinner = view.findViewById(R.id.orders_add_section);
-
+        cancel = view.findViewById(R.id.dialog_orders_add_btnCancel);
 
         ArrayList<String> mOptions = provider.getSectionListInString();
 
@@ -103,14 +104,6 @@ public class Fragment_orders_add extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String str = parent.getItemAtPosition(position).toString();
                 sectionId = provider.getSectionIdByTitle(str);
-
-                //case 0:
-                /*        sectionId = 1;
-                        break;
-                    case 1:
-                        sectionId = 2;
-                        break;*/
-
             }
 
 
@@ -123,7 +116,6 @@ public class Fragment_orders_add extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
                     Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
                     Long curr = MyUtils.getCurentDateInLong();
                     Order order = new Order(title.getText().toString().trim(),
@@ -134,10 +126,6 @@ public class Fragment_orders_add extends Fragment {
                             l,
                             curr);
                     provider.addOrder(order);
-
-                } catch (Exception e) {
-                    Log.e("Update error", e.getMessage());
-                }
                 title.setText("");
                 price.setText("");
                 deadline.setText("");
@@ -146,6 +134,14 @@ public class Fragment_orders_add extends Fragment {
             }
         });
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment_orders fragment = new Fragment_orders(context);
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.fram, fragment).commit();
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
 }

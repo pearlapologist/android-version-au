@@ -44,6 +44,9 @@ public class PersonProfileActivity extends AppCompatActivity {
         if (getIntent().hasExtra("orderview_PersonId")) {
             curPersonId = getIntent().getIntExtra("orderview_PersonId", -1);
         }
+        if (getIntent().hasExtra("responseAdapter")) {
+            curPersonId = getIntent().getIntExtra("responseAdapter", -1);
+        }
 
         frg_person_profile_info = Fragment_person_profile_info.newInstance(curPersonId);
         frg_person_profile_reviews = Fragment_person_profile_reviews.newInstance(curPersonId);
@@ -83,7 +86,7 @@ public class PersonProfileActivity extends AppCompatActivity {
             Fragment selected = frg_person_profile_info;
             switch (menuItem.getItemId()) {
                 case R.id.menu_profile_info:
-                    selected = frg_person_profile_reviews;
+                    selected = frg_person_profile_info;
                     break;
                 case R.id.menu_profile_reviews:
                     selected = frg_person_profile_reviews;
