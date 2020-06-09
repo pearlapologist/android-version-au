@@ -71,7 +71,7 @@ public class TestImageActivity extends AppCompatActivity {
                     );
                     Toast.makeText(getApplicationContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
                     etTitle.setText("");
-                    imageView.setImageResource(R.mipmap.ic_add_image);
+                    imageView.setImageResource(R.drawable.executors_default_image);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

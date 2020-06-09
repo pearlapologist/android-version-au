@@ -114,22 +114,19 @@ public class Orders_view_activity extends AppCompatActivity {
     void getAndSetOrderIntentData() {
         try {
             responses = provider.getAllResponses();
-        } catch (Exception e) {
-            Log.e("Error in Ordersfragment", e.getMessage());
-        }
+
         if (getIntent().hasExtra("orderIdFragment")) {
             final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
             if (gettedId != -1) {
                 cur = provider.getOrder(gettedId);
                 Section_of_services section = provider.getSection(cur.getSection());
-                //   spinnerSection.setText(section.getTitle());
-                spinnerSection.setText(cur.getSection() + "");
+               spinnerSection.setText(section.getTitle());
 
                 title.setText(cur.getTitle());
-                price.setText(cur.getPrice() + "");
+                price.setText("Бюджет: "+cur.getPrice());
                 descr.setText(cur.getDescription());
                 String s = MyUtils.convertLongToDataString(cur.getDeadline());
-                deadline.setText(s);
+                deadline.setText("До: "+s);
                 String d = MyUtils.convertLongToDataString(cur.getCreated_date());
                 createdDate.setText(d);
             } else {
@@ -137,6 +134,9 @@ public class Orders_view_activity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+        }
+        } catch (Exception e) {
+            Log.e("Error in Ordersfragment", e.getMessage());
         }
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/orders_adapter_fragment_row_layout"
@@ -7,105 +7,88 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4sp"
-        android:layout_marginTop="5sp"
-        android:padding="5dp">
 
+            <TextView
+                android:id="@+id/orders_adapter_fragment_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10sp"
+                android:layout_toLeftOf="@id/orders_adapter_fragment_deadline"
+                android:hint="раздел по ремонту и бытовым проблемам"/>
 
-       <RelativeLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-
-           >
-
-           <TextView
-               android:id="@+id/orders_adapter_fragment_section"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_alignParentLeft="true"
-               android:layout_marginTop="15dp"
-               android:layout_marginEnd="10dp"
-               android:layout_marginStart="10dp"
-               android:layout_below="@id/orders_adapter_fragment_desc"
-               android:hint="section"
-               android:textAlignment="center" />
-
-           <TextView
+            <TextView
                 android:id="@+id/orders_adapter_fragment_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-               android:textSize="14sp"
-               android:text="title"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="10dp"
                 android:hint="title"
                 android:textAlignment="center"
-                android:layout_alignParentLeft="true"
 
-                />
+                android:textSize="14sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/orders_adapter_fragment_desc"
-                android:layout_width="376dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_price"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10sp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="4sp"
-                android:hint="desc"
-          android:layout_below="@id/orders_adapter_fragment_title"/>
+                android:hint="descDescriptionDescEditTextEditTextrip</RelativeLayout></RelativeLayout></RelativeLayout></RelativeLayout>tionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" ></EditText>
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-             android:layout_toLeftOf="@id/orders_adapter_fragment_btn_popup"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="20sp"
+                android:layout_marginEnd="10sp"
+                android:layout_toLeftOf="@id/orders_adapter_fragment_btn_popup"
                 android:hint="08/06/2020"
                 android:textAlignment="center"
 
                 />
 
-            <!--<TextView
+            <TextView
                 android:id="@+id/orders_adapter_fragment_deadline"
-                android:layout_width="145dp"
-                android:layout_height="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_alignParentRight="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10sp"
                 android:hint="deadline"
-                android:textAlignment="center"/>-->
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/orders_adapter_fragment_price"
                 android:layout_width="63dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="10dp"
+                android:layout_below="@id/orders_adapter_fragment_title"
+                android:layout_alignParentLeft="true"
                 android:layout_marginStart="10dp"
-                android:hint="textView"
-                android:textAlignment="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="price" />
+
+            <Button
+                android:id="@+id/orders_adapter_fragment_btn_popup"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-             android:layout_below="@id/orders_adapter_fragment_desc"/>
-
-           <ImageView
-               android:id="@+id/orders_adapter_fragment_btn_popup"
-               android:layout_width="20sp"
-               android:layout_height="20sp"
-               android:layout_alignParentTop="true"
-               android:layout_alignParentRight="true"
-               android:layout_marginTop="10dp"
-               android:layout_marginEnd="10sp"
-               android:clickable="true"
-               app:srcCompat="@drawable/three_dots" />
-
-       </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-</LinearLayout>
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10sp"
+                android:background="@drawable/three_dots"
+                android:clickable="true"></Button>
+</RelativeLayout>

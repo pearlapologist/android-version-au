@@ -12,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -93,7 +90,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Orders_add addFrg = new Orders_add(context);
+                Fragment_orders_add addFrg = new Fragment_orders_add(context);
                 FragmentManager manager = getFragmentManager();
                 manager.beginTransaction().replace(R.id.fram, addFrg).commit();
             }

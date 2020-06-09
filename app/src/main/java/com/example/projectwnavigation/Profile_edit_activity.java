@@ -67,7 +67,7 @@ public class Profile_edit_activity extends AppCompatActivity {
                     pers.setPhoto(MyUtils.imageViewToByte(image));
                     provider.updatePerson(pers);
                     Toast.makeText(Profile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
-                    image.setImageResource(R.mipmap.ic_add_image);
+                    image.setImageResource(R.drawable.executors_default_image);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(Profile_edit_activity.this, "error", Toast.LENGTH_SHORT).show();

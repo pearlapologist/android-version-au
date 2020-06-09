@@ -28,7 +28,7 @@ import models.MyDataProvider;
 import models.Order;
 
 
-public class Orders_add extends Fragment {
+public class Fragment_orders_add extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -46,17 +46,17 @@ public class Orders_add extends Fragment {
     int sectionId = 0;
 
 
-    public Orders_add() {
+    public Fragment_orders_add() {
     }
 
-    public Orders_add(Context context) {
+    public Fragment_orders_add(Context context) {
         this.provider = new MyDataProvider(context);
         this.context = context;
     }
 
 
-    public static Orders_add newInstance(String param1, String param2) {
-        Orders_add fragment = new Orders_add();
+    public static Fragment_orders_add newInstance(String param1, String param2) {
+        Fragment_orders_add fragment = new Fragment_orders_add();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
