@@ -6,13 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-//import android.support.annotation.Nullable;
 
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction13.db";
-    public static final int DATABASE_VERSION = 13;
+    public static final String DATABASE_NAME = "serviceAuction16.db";
+    public static final int DATABASE_VERSION = 16;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -176,7 +175,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_REVIEW_EXECUTOR_ID + " integer, " +
                 MyDataProvider.KEY_REVIEW_CUSTOMER_ID + " integer, " +
                 MyDataProvider.KEY_REVIEW_REVIEW_TEXT + " text, " +
-                MyDataProvider.KEY_REVIEW_ASSESSMENT + " integer)";
+                MyDataProvider.KEY_REVIEW_ASSESSMENT + " integer, " +
+                MyDataProvider.KEY_REVIEW_CREATED_DATE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
         sql = "CREATE TABLE test_image( _id integer primary key autoincrement, title varchar, image blob)";
@@ -192,6 +192,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_RESPONSES_SUGGESTEDPRICE + " REAL, " +
                 MyDataProvider.KEY_RESPONSES_CREATEDDATE + " INTEGER)";
         sqLiteDatabase.execSQL(sql);
+
 
     }
 

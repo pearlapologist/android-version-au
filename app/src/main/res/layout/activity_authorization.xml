@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10sp"
-    android:layout_margin="10sp"
-    android:layout_marginTop="20sp"
     tools:context=".AuthorizationActivity">
 
       <!--  android:layout_width="match_parent"

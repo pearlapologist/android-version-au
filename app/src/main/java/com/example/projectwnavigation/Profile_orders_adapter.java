@@ -1,10 +1,9 @@
-package fragments;
+package com.example.projectwnavigation;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,30 +13,27 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projectwnavigation.Navigation_activity;
-import com.example.projectwnavigation.R;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
-import models.MyUtils;
+import fragments.Orders_view_activity;
 import models.MyDataProvider;
+import models.MyUtils;
 import models.Order;
 import models.Persons;
 import models.Section_of_services;
 
-public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.MyViewHolder> {
+public class Profile_orders_adapter extends RecyclerView.Adapter<Profile_orders_adapter.MyViewHolder> {
     Context context;
     Activity activity;
     MyDataProvider provider;
@@ -47,7 +43,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
     private Menu popup_menu;
     boolean isCreator = false;
 
-    public Orders_adapter_frg(Activity activity, Context context, ArrayList<Order> orders) {
+    public Profile_orders_adapter(Activity activity, Context context, ArrayList<Order> orders) {
         this.context = context;
         this.activity = activity;
         this.orders = orders;
@@ -62,28 +58,27 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.orders_adapter_fragment_title);
-            section = itemView.findViewById(R.id.orders_adapter_fragment_section);
-            price = itemView.findViewById(R.id.orders_adapter_fragment_price);
-            descr = itemView.findViewById(R.id.orders_adapter_fragment_desc);
-            deadline = itemView.findViewById(R.id.orders_adapter_fragment_deadline);
-            createdDate = itemView.findViewById(R.id.orders_adapter_fragment_created);
-            btn_popup_menu = itemView.findViewById(R.id.orders_adapter_fragment_btn_popup);
+            title = itemView.findViewById(R.id.activity_profile_orders_adapter_title);
+            section = itemView.findViewById(R.id.activity_profile_orders_adapter_section);
+            price = itemView.findViewById(R.id.activity_profile_orders_adapter_price);
+            descr = itemView.findViewById(R.id.activity_profile_orders_adapter_desc);
+            deadline = itemView.findViewById(R.id.activity_profile_orders_adapter_deadline);
+            createdDate = itemView.findViewById(R.id.activity_profile_orders_adapter_created);
+            btn_popup_menu = itemView.findViewById(R.id.activity_profile_orders_adapter_btn_popup);
 
-            adapter_layout = itemView.findViewById(R.id.orders_adapter_fragment_row_layout);
+            adapter_layout = itemView.findViewById(R.id.activity_profile_orders_adapter_layout);
         }
     }
-
     @NonNull
     @Override
-    public Orders_adapter_frg.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.fragment_orders_adapter, parent, false);
-        return new Orders_adapter_frg.MyViewHolder(view);
+        View view = inflater.inflate(R.layout.activity_profile_orders_adapter, parent, false);
+        return new Profile_orders_adapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Orders_adapter_frg.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
 
         final Order order = orders.get(position);
@@ -115,11 +110,10 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                                 Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.order_popup_edit:
-                                showDialogUpdate(order.getId());
+                                showDialogUpdate(orders.get(position).getId());
                                 return true;
                             case R.id.order_popup_delete:
-                                    provider.deleteOrder(order.getId());
-                                    notifyDataSetChanged();
+                                provider.deleteOrder(order.getId());
                                 return true;
                             case R.id.order_popup_complain:
                                 //TODO: доделать методы
@@ -149,9 +143,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 activity.startActivityForResult(intent, 1);
             }
         });
-
     }
-
     int sectionId = -1;
 
     private void showDialogUpdate(final int orderId) {
@@ -174,8 +166,8 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String str = parent.getItemAtPosition(position).toString();
-                    sectionId = provider.getSectionIdByTitle(str);
+                String str = parent.getItemAtPosition(position).toString();
+                sectionId = provider.getSectionIdByTitle(str);
             }
 
             @Override
@@ -196,16 +188,16 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
-                    order.setSection(sectionId);
-                    order.setDescription(descr.getText().toString().trim());
-                    order.setTitle(title.getText().toString().trim());
-                    order.setPrice(Double.valueOf(price.getText().toString()));
-                    order.setDeadline(l);
+                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                order.setSection(sectionId);
+                order.setDescription(descr.getText().toString().trim());
+                order.setTitle(title.getText().toString().trim());
+                order.setPrice(Double.valueOf(price.getText().toString()));
+                order.setDeadline(l);
 
-                    provider.updateOrder(order);
-                    notifyDataSetChanged();
-                    Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
+                provider.updateOrder(order);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -227,4 +219,5 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         }
         return orders.size();
     }
+
 }

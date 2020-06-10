@@ -125,7 +125,6 @@ public class Executors_view_activity extends AppCompatActivity {
 
 
             int sectionId = cur.getSectionId();
-            // Section_of_services f = provider.getSection(sectionId);
             section.setText(sectionId + "");
         } else {
             Toast.makeText(Executors_view_activity.this, "error", Toast.LENGTH_SHORT).show();

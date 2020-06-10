@@ -70,10 +70,12 @@ public class Fragment_person_profile_info extends Fragment {
 
         String description = person.getDesciption();
         if(description == null){
-            description = "Нет описания";
+            description = "(Пользователь не указал о себе ничего)";
+            desc.setText(description);
+            desc.setTextColor(getResources().getColor(R.color.colorMutedText));
+        }else {
+            desc.setText(description);
         }
-        desc.setText(description);
-
         contacts.setText(person.getNumber());
         super.onViewCreated(view, savedInstanceState);
     }

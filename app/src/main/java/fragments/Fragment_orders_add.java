@@ -90,6 +90,7 @@ public class Fragment_orders_add extends Fragment {
         add = view.findViewById(R.id.dialog_orders_add_btnOk);
         mSpinner = view.findViewById(R.id.orders_add_section);
         cancel = view.findViewById(R.id.dialog_orders_add_btnCancel);
+        this.provider = new MyDataProvider(context);
 
         ArrayList<String> mOptions = provider.getSectionListInString();
 
@@ -126,10 +127,10 @@ public class Fragment_orders_add extends Fragment {
                             l,
                             curr);
                     provider.addOrder(order);
-                title.setText("");
-                price.setText("");
-                deadline.setText("");
-                descr.setText("");
+               Fragment_orders fragment_orders = new Fragment_orders(context);
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
+
                 Toast.makeText(context, "Заказ создан", Toast.LENGTH_SHORT).show();
             }
         });

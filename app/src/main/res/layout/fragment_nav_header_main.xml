@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/minecraft"
-    android:gravity="bottom"
+    android:gravity="center_vertical"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
@@ -13,25 +13,28 @@
         android:id="@+id/header_imageView"
         android:layout_width="110sp"
         android:layout_height="110sp"
-        android:clickable="true"
-    android:layout_marginStart="46dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="17dp"
+        android:clickable="true"
         app:srcCompat="@drawable/executors_default_image" />
 
     <TextView
         android:id="@+id/header_textView_profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
+        android:layout_below="@id/header_imageView"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="15dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Имя фамилия"
+        android:textColor="@color/colorWhite"
+        android:layout_marginStart="46dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="16dp"
-        android:layout_below="@id/header_imageView"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

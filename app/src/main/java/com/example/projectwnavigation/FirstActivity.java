@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class FirstActivity extends AppCompatActivity {
-Button btn_auth, btn_regist, btn_next;
+Button btn_auth, btn_regist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,7 +16,6 @@ Button btn_auth, btn_regist, btn_next;
 
         btn_auth = findViewById(R.id.first_auth);
         btn_regist = findViewById(R.id.first_registr);
-        btn_next = findViewById(R.id.first_next);
 
         btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override

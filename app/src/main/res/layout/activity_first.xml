@@ -26,25 +26,8 @@
         android:layout_marginEnd="112dp"
         android:layout_marginBottom="95dp"
         android:text="Зарегистрироваться"
-        app:layout_constraintBottom_toTopOf="@+id/first_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/first_auth" />
-
-    <Button
-        android:id="@+id/first_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="131dp"
-        android:layout_marginBottom="117dp"
-        android:text="Войти как гость"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_registr" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,9 @@
     android:layout_margin="5sp"
     android:padding="5sp"
     tools:context="fragments.Fragment_person_profile_reviews">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,6 +24,17 @@
             android:padding="5sp"
             android:text="40" />
 
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/fragment_person_profile_reviews_view"
+            android:background="@color/gray"
+            android:padding="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_below="@id/fragment_person_profile_reviews_rating"
+            android:layout_height="0.5sp">
+
+        </View>
+
         <TextView
             android:id="@+id/fragment_person_profile_reviews_tvrating"
             android:layout_width="wrap_content"
@@ -36,32 +50,32 @@
             android:layout_height="wrap_content"
             android:layout_margin="5sp"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/fragment_person_profile_reviews_tvrating"
+            android:layout_below="@id/fragment_person_profile_reviews_view"
             android:padding="5sp"
-            android:text="Отзывы" />
+            android:text="Все отзывы" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_person_profile_reviews_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fragment_person_profile_reviews_tvreviews"
-            android:layout_marginTop="10sp" />
+            android:layout_below="@id/fragment_person_profile_reviews_tvreviews" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_person_profile_reviews_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="5sp"
-            android:layout_marginLeft="5sp"
-            android:layout_marginTop="5sp"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="0dp"
-            android:clickable="true"
-            android:src="@drawable/ic_add" />
+    </RelativeLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_person_profile_reviews_fb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5sp"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginEnd="5sp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="0dp"
+        android:clickable="true"
+        android:src="@drawable/ic_add" />
     </RelativeLayout>
 
 </FrameLayout>

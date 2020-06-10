@@ -24,7 +24,6 @@
                 android:layout_width="272dp"
                 android:layout_height="wrap_content"
                 android:text="text"
-                android:layout_margin="7sp"
                 android:padding="5sp"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5sp"
     android:padding="5sp"
     tools:context="fragments.Fragment_executor_view_reviews">
 

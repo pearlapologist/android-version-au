@@ -42,6 +42,10 @@
                 android:id="@+id/profile_form_serv_adapter_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:outlineAmbientShadowColor="@color/colorWhite"
+                android:textColorLink="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:outlineSpotShadowColor="@color/colorWhite"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="3dp" />
 

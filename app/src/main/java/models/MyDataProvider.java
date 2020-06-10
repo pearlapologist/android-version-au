@@ -105,14 +105,11 @@ public class MyDataProvider {
     public static final String KEY_ORDERNPERSON_STATUS = "status";
 
     public static final String KEY_REVIEW_PART_ID = "_id";
-    public static final String KEY_REVIEW_EXECUTOR_ID = "executor_id";
-    public static final String KEY_REVIEW_CUSTOMER_ID = "customer_id";
+    public static final String KEY_REVIEW_EXECUTOR_ID = "review_executor_id";
+    public static final String KEY_REVIEW_CUSTOMER_ID = "review_customer_id";
     public static final String KEY_REVIEW_REVIEW_TEXT = "review_text";
-    public static final String KEY_REVIEW_ASSESSMENT = "assessment";
-
-    public static final String KEY_LIST_OF_EXECUTORS_PART_ID = "_id";
-    public static final String KEY_LIST_OF_EXECUTOR_ID = "excutor_id";
-    public static final String KEY_LIST_OF_EXECUTORS_SPECIALIZATION = "specialization";
+    public static final String KEY_REVIEW_ASSESSMENT = "review_assessment";
+    public static final String KEY_REVIEW_CREATED_DATE = "review_created_date";
 
 
     public static final String KEY_EXECUTORNSERVICES_EXECUTOR_ID = "executorId";
@@ -410,6 +407,50 @@ public class MyDataProvider {
         return false;
     }
 
+
+    public int getPersonRatingById(int id) {
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        int rating = -1;
+        try {
+            String sql = "select (select sum("+ KEY_REVIEW_ASSESSMENT+") from "+ TABLE_REVIEWS + " where "+ KEY_REVIEW_EXECUTOR_ID+
+                    " = "+id+")/(select count("+KEY_REVIEW_CUSTOMER_ID+") from " + TABLE_REVIEWS + " where "+KEY_REVIEW_EXECUTOR_ID+
+                    " = "+id+")";
+            Cursor c = sqLiteDb.rawQuery(sql, null);
+            if (c.moveToFirst()) {
+                rating = c.getInt(0);
+            }
+            sqLiteDb.setTransactionSuccessful();
+            c.close();
+        } finally {
+            sqLiteDb.endTransaction();
+            return rating;
+        }
+
+    }
+
+
+    public void updatePersonRatingById(int personId) {
+        int rating = getPersonRatingById(personId);
+        SQLiteDatabase sqlDatabase = db.getWritableDatabase();
+        sqlDatabase.beginTransaction();
+        try {
+            String sql = "UPDATE " + TABLE_PERSONS + " SET " +
+                    KEY_PERSON_RATING + "= ?" +
+                    " WHERE " + KEY_PERSON_ID + "= ?";
+            SQLiteStatement statement = sqlDatabase.compileStatement(sql);
+
+            statement.bindDouble(1, rating);
+            statement.bindDouble(2,personId);
+            statement.execute();
+            sqlDatabase.setTransactionSuccessful();
+        } finally {
+            sqlDatabase.endTransaction();
+            sqlDatabase.close();
+        }
+    }/*select count(customer_id) from reviews where executor_id = 2
+select (select sum(assessment) from reviews where executor_id  = 2)/2
+    select sum(assessment) from reviews where executor_id  = 2*/
 
     //DELETE PERSON
     public void deletePerson(int personId) {
@@ -1002,7 +1043,27 @@ where executor_services.executor_id = 1
         ArrayList<Order> result = new ArrayList<>();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_ORDERS + " order by " + KEY_ORDER_ID +
+                    + TABLE_ORDERS + " order by " + KEY_ORDER_CREATED_DATE +
+                    " desc", null);
+            while (c.moveToNext()) {
+                Order order = getOrderFromCursor(c);
+                result.add(order);
+            }
+            c.close();
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+            return result;
+        }
+    }
+
+    public ArrayList<Order> getPersonOrdersById(int personId)  {
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        ArrayList<Order> result = new ArrayList<>();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_ORDERS +" where " + KEY_ORDER_CUSTOMER_ID + "= " + personId + " order by " + KEY_ORDER_CREATED_DATE +
                     " desc", null);
             while (c.moveToNext()) {
                 Order order = getOrderFromCursor(c);
@@ -1350,9 +1411,9 @@ where executor_services.executor_id = 1
         sqLiteDatabase.beginTransaction();
         String sql = "INSERT INTO " + TABLE_REVIEWS + "(" + KEY_REVIEW_EXECUTOR_ID +
                 ", " + KEY_REVIEW_CUSTOMER_ID + ", " + KEY_REVIEW_REVIEW_TEXT + ", "
-                + KEY_REVIEW_ASSESSMENT + ") VALUES (" + review.getExecutrId() + ", " + review.getCustomerId() + " , '"
-                + review.getReview_text() + "' , "
-                + review.getAssessment() + ")";
+                + KEY_REVIEW_ASSESSMENT + ", "+  KEY_REVIEW_CREATED_DATE + ") VALUES (" + review.getExecutrId() + ", " + review.getCustomerId() + ", '"
+                + review.getReview_text() + "', "
+                + review.getAssessment() + ", " + review.getCreatedDate() + ")";
         sqLiteDatabase.execSQL(sql);
 
         String sqlMaxId = "SELECT MAX(" + KEY_REVIEW_PART_ID + ") FROM " +
@@ -1410,7 +1471,6 @@ where executor_services.executor_id = 1
                     " desc", null);
             while (c.moveToNext()) {
                 Review review = getReviewFromCursor(c);
-                //loadExecutorServices(executor);
                 result.add(review);
             }
             c.close();
@@ -1419,6 +1479,52 @@ where executor_services.executor_id = 1
             sqLiteDb.endTransaction();
         }
         return result;
+    }
+
+    public ArrayList<Review> getAllPersonReviewByPersonId(int personId) {
+        ArrayList<Review> result = new ArrayList<>();
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_REVIEWS + " where " + KEY_REVIEW_EXECUTOR_ID +" = " + personId + " order by "
+                    + KEY_REVIEW_CREATED_DATE +
+                    " asc", null);
+            while (c.moveToNext()) {
+                Review r = getReviewFromCursor(c);
+                result.add(r);
+            }
+            sqLiteDb.setTransactionSuccessful();
+            c.close();
+        } finally {
+            sqLiteDb.endTransaction();
+            return result;
+        }
+
+    }
+
+
+    public ArrayList<Integer> getLeavedReviewPersonsIdList(int personId)  {
+       Persons person = getPerson(personId);
+        if (person == null) {
+            return null;
+        }
+        ArrayList<Integer> arrID = new ArrayList();
+        SQLiteDatabase database = db.getReadableDatabase();
+        database.beginTransaction();
+        try {
+            String sql = "SELECT " + KEY_REVIEW_CUSTOMER_ID + " FROM " + TABLE_REVIEWS + " WHERE " +
+                    KEY_REVIEW_EXECUTOR_ID + "=" + personId;
+            Cursor c = database.rawQuery(sql, null);
+            while (c.moveToNext()) {
+                arrID.add(c.getInt(0));
+            }
+            database.setTransactionSuccessful();
+            c.close();
+            return arrID;
+        } finally {
+            database.endTransaction();
+        }
     }
 
     //UPDATE Review
@@ -1772,31 +1878,21 @@ where executor_services.executor_id = 1
         if (order == null) {
             return -1;
         }
+        int personId= -1;
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor cursor = sqLiteDb.rawQuery("SELECT " + KEY_ORDERNPERSON_CUSTOMER_ID +
                     " FROM " + TABLE_ORDERNPERSON + " WHERE " + KEY_ORDERNPERSON_ORDER_ID + "= " + orderId, null);
             if (cursor.moveToFirst()) {
-                int personId = cursor.getInt(0);
-                //TODO delete this chech
-
-                Persons person = getPerson(personId);
-                if (person == null) {
-                    return -1;
-                } else {
-                    return personId;
-                }
+              personId = cursor.getInt(0);
             }
             sqLiteDb.setTransactionSuccessful();
             cursor.close();
-        } catch (Exception e) {
-            Log.e("getCustomerIdByOrderId", e.getMessage());
-            e.printStackTrace();
-        } finally {
+        }  finally {
             sqLiteDb.endTransaction();
+            return personId;
         }
-        return -1;
     }
 
     public ArrayList<OrderNPerson> getAllOrderNPersons() {
@@ -2046,6 +2142,26 @@ where executor_services.executor_id = 1
             Cursor c = sqLiteDb.rawQuery("select * from "
                     + TABLE_RESPONSES + " order by " + KEY_RESPONSES_CREATEDDATE +
                     " desc", null);
+            while (c.moveToNext()) {
+                Respons r = getResponsFromCursor(c);
+                result.add(r);
+            }
+            sqLiteDb.setTransactionSuccessful();
+            c.close();
+        } finally {
+            sqLiteDb.endTransaction();
+        }
+        return result;
+    }
+
+    public ArrayList<Respons> getAllOrderResponsesByOrderId(int orderId) {
+        ArrayList<Respons> result = new ArrayList<>();
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_RESPONSES + " where " + KEY_RESPONSES_ORDER_ID +" = " + orderId + " order by " + KEY_RESPONSES_CREATEDDATE +
+                    " asc", null);
             while (c.moveToNext()) {
                 Respons r = getResponsFromCursor(c);
                 result.add(r);

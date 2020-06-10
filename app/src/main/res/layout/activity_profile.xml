@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Theme.AppCompat.DayNight.DarkActionBar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
 
@@ -23,7 +23,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="40sp"
                 android:layout_marginStart="30sp"
-                android:src="@drawable/add_a_photo_black_20dp" />
+                android:src="@drawable/executors_default_image" />
 
             <TextView
                 android:id="@+id/profile_name"

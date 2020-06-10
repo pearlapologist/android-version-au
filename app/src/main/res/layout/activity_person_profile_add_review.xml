@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fragments.PersonProfile_AddReviewActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/person_profile_add_review_btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="30sp"
+                android:layout_below="@id/person_profile_add_review_etText"
+                android:text="Отменить"
+                android:textAllCaps="false"></Button>
+
+            <Button
+                android:id="@+id/person_profile_add_review_btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="Отправить"
+                android:layout_marginTop="30sp"
+                android:textAllCaps="false"></Button>
+
+            <TextView
+                android:id="@+id/person_profile_add_review_tvassessment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="45sp"
+                android:layout_marginEnd="4sp"
+                android:text="Оценка по 100 бальной шкале"
+                android:textAlignment="center"
+                android:textSize="16sp"></TextView>
+
+            <EditText
+                android:id="@+id/person_profile_add_review_etAssessment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/person_profile_add_review_tvassessment"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginEnd="4sp"
+                android:ems="10"
+                android:hint=""
+                android:inputType="number|numberDecimal"
+                android:maxLength="3"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:id="@+id/person_profile_add_review_tvtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/person_profile_add_review_etAssessment"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="25sp"
+                android:layout_marginEnd="4sp"
+                android:text="Обоснования"
+                android:textAlignment="center"
+                android:textSize="16sp"></TextView>
+
+            <EditText
+                android:id="@+id/person_profile_add_review_etText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/person_profile_add_review_tvtext"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginEnd="4sp"
+                android:hint=""
+                android:inputType="text"></EditText>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

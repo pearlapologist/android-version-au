@@ -28,7 +28,6 @@ import models.MyDataProvider;
 import models.Order;
 
 public class Fragment_orders extends Fragment implements AdapterView.OnItemSelectedListener {
-    private static final String ARG_PARAM_CHANGED = "change_param";
     MyDataProvider provider;
     Context context;
 
@@ -37,7 +36,6 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     ArrayList<Order> orders = new ArrayList<>();
     Orders_adapter_frg orders_adapter_frg;
     Spinner spinner;
-    boolean datachanged = false;
 
     public Fragment_orders(Context context) {
         this.context = context;
@@ -46,21 +44,21 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public Fragment_orders() {
     }
 
-    public static Fragment_orders newInstance(boolean changed) {
+   /** public static Fragment_orders newInstance(boolean changed) {
         Fragment_orders fragment = new Fragment_orders();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM_CHANGED, changed);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+       /* if (getArguments() != null) {
            datachanged = getArguments().getBoolean(ARG_PARAM_CHANGED);
-        }
+        }*/
     }
 
     @Override
@@ -81,7 +79,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
         recyclerView.setAdapter(orders_adapter_frg);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
+        orders_adapter_frg.notifyDataSetChanged( );
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,20 +106,9 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     }
 
     @Override
-    public void onStart() {
-        if(datachanged ==true){
-            orders.clear();
-            insertArray();
-            datachanged =false;
-        }
-        super.onStart();
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getId() == R.id.orders_listf_spinner){
-            String value = parent.getItemAtPosition(position).toString();
-        }
+        String str = parent.getItemAtPosition(position).toString();
+       int sectionId = provider.getSectionIdByTitle(str);
     }
 
     @Override

@@ -131,6 +131,7 @@
                 android:id="@+id/orders_add_checkDeadl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:layout_below="@id/orders_add_deadlinee"
                 android:layout_marginTop="10sp"
                 android:text="Не ограничены" />

@@ -63,7 +63,7 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
                 Intent intent = new Intent(context, PersonProfileActivity.class);
                 intent.putExtra("responseAdapter", person.getId());
 
-                activity.startActivityForResult(intent, 1);
+                activity.startActivity(intent);
             }
         });
 

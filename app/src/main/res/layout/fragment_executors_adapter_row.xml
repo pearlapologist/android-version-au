@@ -17,7 +17,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5sp">
+            android:background="@color/colorBackground"
+           android:padding="5sp">
 
             <TextView
                 android:id="@+id/executors_adapter_frg_name"
@@ -25,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:textColor="@color/colorMutedGray2"
                 android:layout_marginEnd="10dp"
                 android:layout_toRightOf="@id/executors_adapter_frg_photo"
                 android:text="name" />
@@ -38,12 +40,14 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="20sp"
                 android:layout_marginBottom="8dp"
+                android:textColor="@color/colorMutedGray2"
                 android:layout_toRightOf="@id/executors_adapter_frg_photo"
                 android:text="specialization" />
 
             <ImageView
                 android:id="@+id/executors_adapter_frg_photo"
                 android:layout_width="80dp"
+                android:src="@drawable/executors_default_image"
                 android:layout_height="80dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginStart="30dp"

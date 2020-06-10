@@ -8,9 +8,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray"
         android:layout_marginTop="10sp"
         android:text="section1"
+        android:textColor="@color/colorMutedGray2"
         android:textAlignment="center"
         android:id="@+id/spinner_layout_textview"
 ></TextView>

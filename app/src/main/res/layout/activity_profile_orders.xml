@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4sp"
     tools:context=".Profile_orders_activity">
 
 
@@ -17,31 +16,30 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
-                android:layout_width="fill_parent"
+                android:id="@+id/activity_profile_orders_tv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginBottom="7dp"
-                android:text="TextView"
                 android:layout_alignParentTop="true"
-                />
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="7dp"
+                android:text="TextView" />
 
             <Spinner
-                android:id="@+id/profile_orders_spinner"
+                android:id="@+id/activity_profile_orders_spinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
-                android:layout_below="@id/textView"
+                android:layout_below="@id/activity_profile_orders_tv"
                 android:layout_marginTop="10dp"
                 ></Spinner>
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/orders_listf_rv"
+                android:id="@+id/activity_profile_orders_rv"
                 android:layout_width="match_parent"
                 android:layout_height="592dp"
-                android:layout_below="@id/profile_orders_spinner"
+                android:layout_below="@id/activity_profile_orders_spinner"
                 android:layout_margin="5sp"
                 android:layout_marginBottom="-153dp"
                 android:padding="4sp">

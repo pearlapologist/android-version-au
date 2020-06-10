@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projectwnavigation.ProfileActivity;
 import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ public class Orders_view_activity extends AppCompatActivity {
     Orders_responses_adapter adapter;
     Order cur;
 
-    int orderId;
     Persons curPerson;
     boolean isCreator = false;
     private Menu options_menu;
@@ -64,9 +64,6 @@ public class Orders_view_activity extends AppCompatActivity {
 
         getAndSetOrderIntentData();
 
-        orderId = cur.getId();
-        curPerson = provider.getLoggedInPerson();
-
         adapter = new Orders_responses_adapter(this, this, responses);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -82,66 +79,60 @@ public class Orders_view_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int personId = -1;
-                  personId = provider.getCustomerIdByOrderId(cur.getId());
+                personId = provider.getCustomerIdByOrderId(cur.getId());
+                if (personId == curPerson.getId()) {
+                    Intent intent = new Intent(Orders_view_activity.this, ProfileActivity.class);
+                    intent.putExtra("orderview_PersonId", personId);
+                    startActivity(intent);
+                }else{
                 Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
                 intent.putExtra("orderview_PersonId", personId);
-
-                startActivityForResult(intent, 1);
+                startActivity(intent);}
             }
         });
 
     }
 
-
-    @Override
-    protected void onStart() {
-        boolean b = false;
-        Persons person = provider.getLoggedInPerson();
-        ArrayList<Integer> arrId = new ArrayList<>();
-        try {
-            arrId = provider.getRespondedPersonsIdListByOrderId(cur.getId());
-        } catch (Exception e) {
-            Log.e("Orders view activity", e.getMessage());
-        }
-        for (int i : arrId) {
-            if (person.getId() == i) {
-                b = true;
-            }
-        }
-        if (b == true) {
-            btn_response.setEnabled(false);
-        }
-
-        super.onStart();
-    }
-
-
     void getAndSetOrderIntentData() {
-        try {
-            responses = provider.getAllResponses();
+        if (getIntent().hasExtra("orderIdFragment")) {
+            final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
+            if (gettedId != -1) {
+                cur = provider.getOrder(gettedId);
+                Section_of_services section = provider.getSection(cur.getSection());
+                spinnerSection.setText(section.getTitle());
 
-            if (getIntent().hasExtra("orderIdFragment")) {
-                final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
-                if (gettedId != -1) {
-                    cur = provider.getOrder(gettedId);
-                    Section_of_services section = provider.getSection(cur.getSection());
-                    spinnerSection.setText(section.getTitle());
+                title.setText(cur.getTitle());
+                price.setText("Бюджет: " + cur.getPrice());
+                descr.setText(cur.getDescription());
+                String s = MyUtils.convertLongToDataString(cur.getDeadline());
+                deadline.setText("До: " + s);
+                String d = MyUtils.convertLongToDataString(cur.getCreated_date());
+                createdDate.setText(d);
 
-                    title.setText(cur.getTitle());
-                    price.setText("Бюджет: " + cur.getPrice());
-                    descr.setText(cur.getDescription());
-                    String s = MyUtils.convertLongToDataString(cur.getDeadline());
-                    deadline.setText("До: " + s);
-                    String d = MyUtils.convertLongToDataString(cur.getCreated_date());
-                    createdDate.setText(d);
-                } else {
-                    Toast.makeText(this, "orderid invalid", Toast.LENGTH_SHORT).show();
+                responses = provider.getAllOrderResponsesByOrderId(cur.getId());
+                curPerson = provider.getLoggedInPerson();
+
+                boolean b = false;
+                ArrayList<Integer> arrId = new ArrayList<>();
+                try {
+                    arrId = provider.getRespondedPersonsIdListByOrderId(gettedId);
+                } catch (Exception e) {
+                    Log.e("Orders view activity", e.getMessage());
                 }
+                for (int i : arrId) {
+                    if (curPerson.getId() == i) {
+                        b = true;
+                    }
+                }
+                if (b == true || curPerson.getId() == cur.getCustomerId()) {
+                    btn_response.setEnabled(false);
+                }
+
             } else {
-                Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "orderid invalid", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            Log.e("Error in Ordersfragment", e.getMessage());
+        } else {
+            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -166,7 +157,7 @@ public class Orders_view_activity extends AppCompatActivity {
 
                 Long date = MyUtils.getCurentDateInLong();
                 try {
-                    Respons respons = new Respons(orderId, curPerson.getId(),
+                    Respons respons = new Respons(cur.getId(), curPerson.getId(),
                             edDesc.getText().toString().trim(),
                             Double.parseDouble(edPrice.getText().toString().trim()),
                             date);

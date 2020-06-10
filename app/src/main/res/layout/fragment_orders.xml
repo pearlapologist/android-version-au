@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context="fragments.Fragment_orders">
 
@@ -12,7 +11,7 @@
         android:id="@+id/orders_listf_fb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="5sp"
         android:clickable="true"
         android:layout_alignParentRight="true"
@@ -28,11 +27,11 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="7dp"
+            android:layout_marginStart="5sp"
+            android:layout_marginEnd="5sp"
+            android:layout_marginTop="10dp"
             android:text="TextView"
             android:layout_alignParentTop="true"
             />
@@ -41,7 +40,8 @@
         android:id="@+id/orders_listf_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
+       android:layout_marginStart="5sp"
+       android:layout_marginEnd="5sp"
         android:layout_below="@id/textView"
         android:layout_marginTop="10dp"
        ></Spinner>
@@ -50,12 +50,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/orders_listf_rv"
             android:layout_width="match_parent"
-            android:layout_height="592dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/orders_listf_spinner"
-        android:layout_margin="5sp"
-            android:layout_marginBottom="-153dp"
+            android:layout_marginTop="5sp"
             android:padding="4sp">
-
         </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 </ScrollView>

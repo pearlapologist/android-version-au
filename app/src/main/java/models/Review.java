@@ -14,6 +14,15 @@ public class Review {
         this.customerId = customerId;
         this.review_text = review_text;
         this.assessment = assessment;
+        this.createdDate = MyUtils.getCurentDateInLong();
+    }
+
+    public Review(int executrId, int customerId,  String review_text, int assessment) {
+        this.executrId = executrId;
+        this.customerId = customerId;
+        this.review_text = review_text;
+        this.assessment = assessment;
+        this.createdDate = MyUtils.getCurentDateInLong();
     }
 
 
