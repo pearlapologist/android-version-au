@@ -1,5 +1,7 @@
 package models;
 
+import java.util.ArrayList;
+
 public class Review {
     private  int id;
     private int executrId;
@@ -7,6 +9,7 @@ public class Review {
     private String review_text;
     private int  assessment;
     private Long createdDate;
+    private ArrayList<Answer> answers;
 
     public Review(int id, int executrId, int customerId,  String review_text, int assessment) {
         this.id = id;
@@ -82,5 +85,13 @@ public class Review {
 
     public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public ArrayList<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<Answer> answers) {
+        this.answers = answers;
     }
 }

@@ -1,10 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5sp"
-    tools:context="fragments.Fragment_executor_view_reviews">
+    tools:context="fragments.Fragment_myprofile_reviews">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,22 +12,22 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/fragment_executor_view_reviews_rating"
+            android:id="@+id/fragment_myprofile_reviews_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10sp"
             android:layout_marginTop="5sp"
             android:layout_marginEnd="30sp"
-            android:layout_toRightOf="@id/fragment_executor_view_reviews_rating_txt"
+            android:layout_toRightOf="@id/fragment_myprofile_reviews_txtrating"
             android:padding="5sp"
             android:text="review fragment"
             android:textStyle="bold" />
 
         <View
-            android:id="@+id/fragment_executor_view_reviews_view"
+            android:id="@+id/fragment_myprofile_reviews_view"
             android:layout_width="match_parent"
             android:layout_height="0.5sp"
-            android:layout_below="@id/fragment_executor_view_reviews_rating"
+            android:layout_below="@id/fragment_myprofile_reviews_rating"
             android:layout_marginTop="5sp"
             android:background="@color/gray"
             android:padding="5sp">
@@ -35,44 +35,30 @@
         </View>
 
         <TextView
-            android:id="@+id/fragment_executor_view_reviews_rating_txt"
+            android:id="@+id/fragment_myprofile_reviews_txtrating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_margin="5sp"
             android:padding="5sp"
-            android:text="Рейтинг:" />
+            android:text="Ваш рейтинг:" />
 
         <TextView
-            android:id="@+id/fragment_executor_view_reviews_txt_allreviews"
+            android:id="@+id/fragment_myprofile_reviews_txtallreviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fragment_executor_view_reviews_rating_txt"
+            android:layout_below="@id/fragment_myprofile_reviews_txtrating"
             android:layout_alignParentLeft="true"
             android:layout_margin="5sp"
             android:padding="5sp"
             android:text="Все отзывы" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragment_executor_view_reviews_rv"
+            android:id="@+id/fragment_myprofile_reviews_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fragment_executor_view_reviews_txt_allreviews" />
+            android:layout_below="@id/fragment_myprofile_reviews_txtallreviews" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_executor_view_reviews_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="5sp"
-            android:layout_marginLeft="5sp"
-            android:layout_marginTop="5sp"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="7dp"
-            android:layout_marginBottom="27dp"
-            android:clickable="true"
-            android:src="@drawable/ic_add" />
     </RelativeLayout>
 
 

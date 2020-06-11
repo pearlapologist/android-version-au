@@ -1,4 +1,4 @@
-package com.example.projectwnavigation;
+package fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,11 +13,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.projectwnavigation.MyProfile_edit_activity;
+import com.example.projectwnavigation.MyProfile_myForm_activity;
+import com.example.projectwnavigation.MyProfile_reviews_activity;
+import com.example.projectwnavigation.MyProfile_createFormActivity;
+import com.example.projectwnavigation.R;
+
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class ProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity {
     TextView tv_name, tv_rating, tv_status, tv_registr;
     Button btn_orders, btn_form, btn_reviews;
     ImageView photo;
@@ -44,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         btn_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent orders = new Intent(ProfileActivity.this, Profile_orders_activity.class);
+                Intent orders = new Intent(MyProfileActivity.this, MyProfile_orders_activity.class);
                 startActivity(orders);
             }
         });
@@ -52,11 +58,11 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (provider.getPersonIsExecutorField(person.getId()) == false) {
-                    Intent form = new Intent(ProfileActivity.this, Profile_createFormActivity.class);
+                    Intent form = new Intent(MyProfileActivity.this, MyProfile_createFormActivity.class);
                     startActivity(form);
                 }
                 else{
-                    Intent r = new Intent(ProfileActivity.this, Profile_myForm_activity.class);
+                    Intent r = new Intent(MyProfileActivity.this, MyProfile_myForm_activity.class);
                     startActivity(r);
                 }
             }
@@ -65,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
         btn_reviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent reviews = new Intent(ProfileActivity.this, Profile_reviews_activity.class);
+                Intent reviews = new Intent(MyProfileActivity.this, MyProfile_reviews_activity.class);
                 startActivity(reviews);
             }
         });
@@ -99,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile_menu_edit:
-                Intent edit = new Intent(ProfileActivity.this, Profile_edit_activity.class);
+                Intent edit = new Intent(MyProfileActivity.this, MyProfile_edit_activity.class);
                 startActivityForResult(edit, 1);
                 return true;
             default:

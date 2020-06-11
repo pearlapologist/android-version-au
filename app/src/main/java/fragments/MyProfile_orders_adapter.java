@@ -1,4 +1,4 @@
-package com.example.projectwnavigation;
+package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -22,18 +22,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projectwnavigation.R;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
-import fragments.Orders_view_activity;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Order;
 import models.Persons;
 import models.Section_of_services;
 
-public class Profile_orders_adapter extends RecyclerView.Adapter<Profile_orders_adapter.MyViewHolder> {
+public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_orders_adapter.MyViewHolder> {
     Context context;
     Activity activity;
     MyDataProvider provider;
@@ -43,7 +43,7 @@ public class Profile_orders_adapter extends RecyclerView.Adapter<Profile_orders_
     private Menu popup_menu;
     boolean isCreator = false;
 
-    public Profile_orders_adapter(Activity activity, Context context, ArrayList<Order> orders) {
+    public MyProfile_orders_adapter(Activity activity, Context context, ArrayList<Order> orders) {
         this.context = context;
         this.activity = activity;
         this.orders = orders;
@@ -74,7 +74,7 @@ public class Profile_orders_adapter extends RecyclerView.Adapter<Profile_orders_
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.activity_profile_orders_adapter, parent, false);
-        return new Profile_orders_adapter.MyViewHolder(view);
+        return new MyProfile_orders_adapter.MyViewHolder(view);
     }
 
     @Override

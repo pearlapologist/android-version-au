@@ -35,9 +35,9 @@ public class MyDataProvider {
     public static final String TABLE_ORDERS = "orders";
     public static final String TABLE_ORDERNPERSON = "ordernperson";
     public static final String TABLE_EXECUTOR = "executor";
-    public static final String TABLE_EXECUTORS = "executors";
+   // public static final String TABLE_EXECUTORS = "executors";
     public static final String TABLE_SERVICE = "service";
-    public static final String TABLE_SERVICES = "services";
+  //  public static final String TABLE_SERVICES = "services";
     // public static final String TABLE_SECTION = "section";
     public static final String TABLE_SECTIONS = "sections";
     public static final String TABLE_BOOKMARKS = "bookmarks";
@@ -46,17 +46,18 @@ public class MyDataProvider {
     public static final String TABLE_NOTIFY = "notifications";
     public static final String TABLE_EXECUTORNPERSON = "executor_person";
     public static final String TABLE_RESPONSES = "responses";
+    public static final String TABLE_ANSWERS = "answers";
 
 
-    public static final String KEY_PERSON_ID = "_id";
-    public static final String KEY_ORDER_ID = "_id";
-    public static final String KEY_EXECUTOR_ID = "_id";
-    public static final String KEY_SERVICE_ID = "_id";
-    public static final String KEY_SECTION_ID = "_id";
-    public static final String KEY_EXECUTORNSERVICES_ID = "_id";
-    public static final String KEY_NOTIFY_ID = "_id";
-    public static final String KEY_ORDERNPERSON_PART_ID = "_id";
-    public static final String KEY_EXECUTORNPERSON_ID = "_id";
+    public static final String KEY_PERSON_ID = "person_id";
+    public static final String KEY_ORDER_ID = "order_id";
+    public static final String KEY_EXECUTOR_ID = "executor_id";
+    public static final String KEY_SERVICE_ID = "service_id";
+    public static final String KEY_SECTION_ID = "section_id";
+    public static final String KEY_EXECUTORNSERVICES_ID = "executnservice_id";
+    public static final String KEY_NOTIFY_ID = "notify_id";
+    public static final String KEY_ORDERNPERSON_PART_ID = "ordernperson_id";
+    public static final String KEY_EXECUTORNPERSON_ID = "executnperson_id";
     public static final String KEY_RESPONSES_ID = "responses_id";
 
 
@@ -94,7 +95,7 @@ public class MyDataProvider {
 
     public static final String KEY_SECTION_TITLE = "section_title";
 
-    public static final String KEY_BOOKMARK_PART_ID = "_id";
+    public static final String KEY_BOOKMARK_PART_ID = "bookm_id";
     public static final String KEY_BOOKMARK_PERSON_ID = "person_id";
     public static final String KEY_BOOKMARK_EXECUTOR_ID = "executor_id";
 
@@ -104,12 +105,19 @@ public class MyDataProvider {
     public static final String KEY_ORDERNPERSON_EXECUTOR_ID = "executor_id";
     public static final String KEY_ORDERNPERSON_STATUS = "status";
 
-    public static final String KEY_REVIEW_PART_ID = "_id";
+    public static final String KEY_REVIEW_PART_ID = "review_id";
     public static final String KEY_REVIEW_EXECUTOR_ID = "review_executor_id";
     public static final String KEY_REVIEW_CUSTOMER_ID = "review_customer_id";
     public static final String KEY_REVIEW_REVIEW_TEXT = "review_text";
     public static final String KEY_REVIEW_ASSESSMENT = "review_assessment";
     public static final String KEY_REVIEW_CREATED_DATE = "review_created_date";
+
+    public static final String KEY_ANSWER_PART_ID = "answer_id";
+    public static final String KEY_ANSWER_REVIEW_ID = "answer_reviewid";
+    public static final String KEY_ANSWER_EXECUTOR_ID = "answer_executor_id";
+    public static final String KEY_ANSWER_CUSTOMER_ID = "answer_customer_id";
+    public static final String KEY_ANSWER_TEXT = "answer_text";
+    public static final String KEY_ANSWER_CREATED_DATE = "answer_created_date";
 
 
     public static final String KEY_EXECUTORNSERVICES_EXECUTOR_ID = "executorId";
@@ -1455,8 +1463,10 @@ where executor_services.executor_id = 1
         int customerId = c.getInt(c.getColumnIndex(KEY_REVIEW_CUSTOMER_ID));
         String text = c.getString(c.getColumnIndex(KEY_REVIEW_REVIEW_TEXT));
         int assessment = c.getInt(c.getColumnIndex(KEY_REVIEW_ASSESSMENT));
+        Long createddate =  c.getLong(c.getColumnIndex(KEY_REVIEW_CREATED_DATE));
 
         Review review = new Review(id, executorId, customerId, text, assessment);
+        review.setCreatedDate(createddate);
         return review;
     }
 
@@ -1533,10 +1543,8 @@ where executor_services.executor_id = 1
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_REVIEWS + " SET " +
-                    KEY_REVIEW_EXECUTOR_ID + "=" + review.getExecutrId() + ", " +
-                    KEY_REVIEW_CUSTOMER_ID + "=" + review.getCustomerId() + ", " +
-                    KEY_REVIEW_REVIEW_TEXT + "='" + review.getReview_text() + "'', " +
-                    KEY_REVIEW_ASSESSMENT + "=" + review.getAssessment() + ", " +
+                    KEY_REVIEW_REVIEW_TEXT + "='" + review.getReview_text() + "', " +
+                    KEY_REVIEW_ASSESSMENT + "=" + review.getAssessment() +
                     " WHERE " + KEY_REVIEW_PART_ID + " = " + review.getId();
             sqLiteDb.execSQL(sql);
             sqLiteDb.setTransactionSuccessful();
@@ -1551,7 +1559,7 @@ where executor_services.executor_id = 1
         SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
-            int result = sqL.delete(TABLE_ORDERS, KEY_REVIEW_PART_ID + " = " + id, null);
+            int result = sqL.delete(TABLE_REVIEWS, KEY_REVIEW_PART_ID + " = " + id, null);
             if (result == -1) {
                 Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
             } else {
@@ -1618,6 +1626,7 @@ where executor_services.executor_id = 1
         if (person == null) {
             return -1;
         }
+        int id = 0;
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -1627,17 +1636,18 @@ where executor_services.executor_id = 1
                 int executorId = cursor.getInt(0);
                 Executor executor = getExecutor(executorId);
                 if (executor == null) {
-                    return -2;
+                    id = -1;
                 } else {
-                    return executorId;
+                    id = executorId;
                 }
             }
             sqLiteDb.setTransactionSuccessful();
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
+            return id;
         }
-        return -1;
+
     }
 
     public int getPersonIdByExecutorId(int executorId) {
@@ -2233,4 +2243,142 @@ where executor_services.executor_id = 1
         }
     }
     //endregion
+
+
+    //region Answer
+    //CREATE Answer
+    public void addAnswer(Answer answer) {
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String sql = "INSERT INTO " + TABLE_ANSWERS + "(" + KEY_ANSWER_REVIEW_ID +
+                ", " + KEY_ANSWER_EXECUTOR_ID + ", " + KEY_ANSWER_CUSTOMER_ID + ", "
+                + KEY_ANSWER_TEXT + ", "+  KEY_ANSWER_CREATED_DATE + ") VALUES (" + answer.getReviewId() + ", " + answer.getExecutorId()+ ", "
+                +answer.getCustomerId() + ", '"
+                + answer.getText() + "', " +answer.getCreatedDate() + ")";
+        sqLiteDatabase.execSQL(sql);
+
+        String sqlMaxId = "SELECT MAX(" + KEY_ANSWER_PART_ID + ") FROM " +
+                TABLE_ANSWERS;
+        int maxId = 0;
+        Cursor c = sqLiteDatabase.rawQuery(sqlMaxId, null);
+        if (c.moveToFirst()) {
+            maxId = c.getInt(0);
+        }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
+        answer.setId(maxId);
+    }
+
+    //READ Answer
+    public Answer getAnswer(int id) {
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        Answer answer = new Answer();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                            + TABLE_REVIEWS + " where " + " " + KEY_REVIEW_PART_ID + "=" + id,
+                    null);
+            if (c.moveToFirst()) {
+                answer = getAnswerFromCursor(c);
+
+            }
+            c.close();
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+            return answer;
+        }
+    }
+
+
+    private Answer getAnswerFromCursor(Cursor c) {
+        int id = c.getInt(c.getColumnIndex(KEY_ANSWER_PART_ID));
+        int reviewId = c.getInt(c.getColumnIndex(KEY_ANSWER_REVIEW_ID));
+        int executorId = c.getInt(c.getColumnIndex(KEY_ANSWER_EXECUTOR_ID));
+        int customerId = c.getInt(c.getColumnIndex(KEY_ANSWER_CUSTOMER_ID));
+        String text = c.getString(c.getColumnIndex(KEY_ANSWER_TEXT));
+        Long created = c.getLong(c.getColumnIndex(KEY_ANSWER_CREATED_DATE));
+
+        Answer answer = new Answer(id,reviewId, executorId, customerId, text, created);
+        return answer;
+    }
+
+
+    public ArrayList<Answer> getAnswers() {
+        ArrayList<Answer> result = new ArrayList<>();
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_ANSWERS + " order by " + KEY_ANSWER_CREATED_DATE +
+                    " desc", null);
+            while (c.moveToNext()) {
+                Answer answer = getAnswerFromCursor(c);
+                result.add(answer);
+            }
+            c.close();
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+            return result;
+        }
+    }
+
+    public ArrayList<Answer> getAllReviewAnswersByReviewId(int reviewId) {
+        ArrayList<Answer> result = new ArrayList<>();
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_ANSWERS + " where " + KEY_ANSWER_REVIEW_ID +" = " + reviewId + " order by "
+                    + KEY_ANSWER_CREATED_DATE +
+                    " desc", null);
+            while (c.moveToNext()) {
+                Answer answer = getAnswerFromCursor(c);
+                result.add(answer);
+            }
+            sqLiteDb.setTransactionSuccessful();
+            c.close();
+        } finally {
+            sqLiteDb.endTransaction();
+            return result;
+        }
+
+    }
+
+
+    //UPDATE Answer
+    public void updateAnswer(Answer answer) {
+        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+        sqLiteDb.beginTransaction();
+        try {
+            String sql = "UPDATE " + TABLE_ANSWERS + " SET " +
+                    KEY_ANSWER_TEXT + "='" + answer.getText() + "', " +
+                    " WHERE " + KEY_ANSWER_PART_ID + " = " + answer.getId();
+            sqLiteDb.execSQL(sql);
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+        }
+    }
+
+    //DELETE Answer
+
+    public void deleteAnswer(int id) {
+        SQLiteDatabase sqL = db.getWritableDatabase();
+        sqL.beginTransaction();
+        try {
+            int result = sqL.delete(TABLE_ANSWERS, KEY_ANSWER_PART_ID + " = " + id, null);
+            if (result == -1) {
+                Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(db.context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+            }
+            sqL.setTransactionSuccessful();
+        } finally {
+            sqL.endTransaction();
+        }
+    }
+
 }

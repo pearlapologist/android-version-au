@@ -92,12 +92,11 @@ public class Fragment_orders_add extends Fragment {
         cancel = view.findViewById(R.id.dialog_orders_add_btnCancel);
         this.provider = new MyDataProvider(context);
 
-        ArrayList<String> mOptions = provider.getSectionListInString();
-
         ArrayAdapter arrayAdapter = new ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, mOptions);
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
+        mSpinner.setSelection(1);
 
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

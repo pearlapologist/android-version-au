@@ -1,6 +1,5 @@
 package com.example.projectwnavigation;
 
-import android.app.Person;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,19 +18,17 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.ui.NavigationUI;
 
 import fragments.Fragment_bkmrk;
 import fragments.Fragment_notification;
 import fragments.Fragment_orders;
 import fragments.Fragment_settings;
 import fragments.Fragment_specials;
+import fragments.MyProfileActivity;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -120,7 +117,7 @@ public class Navigation_activity extends AppCompatActivity {
         headerPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_profile = new Intent(Navigation_activity.this, ProfileActivity.class);
+                Intent intent_profile = new Intent(Navigation_activity.this, MyProfileActivity.class);
                 startActivity(intent_profile);
                 setTitle("profile");
             }
@@ -130,7 +127,7 @@ public class Navigation_activity extends AppCompatActivity {
         headerImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_profile = new Intent(Navigation_activity.this, ProfileActivity.class);
+                Intent intent_profile = new Intent(Navigation_activity.this, MyProfileActivity.class);
                 startActivity(intent_profile);
             }
         });

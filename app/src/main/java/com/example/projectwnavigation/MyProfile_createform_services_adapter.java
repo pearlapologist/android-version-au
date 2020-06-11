@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import models.MyDataProvider;
 import models.Service;
 
-public class Profile_form_services_adapter extends RecyclerView.Adapter<Profile_form_services_adapter.MyViewHolder> {
+public class MyProfile_createform_services_adapter extends RecyclerView.Adapter<MyProfile_createform_services_adapter.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
 
-    Profile_createFormActivity profile_createFormActivity;
+    MyProfile_createFormActivity profile_createFormActivity;
     ArrayList<Service> services;
 
-    public Profile_form_services_adapter(Profile_createFormActivity profile_createFormActivity, Context context, ArrayList<Service> services) {
+    public MyProfile_createform_services_adapter(MyProfile_createFormActivity profile_createFormActivity, Context context, ArrayList<Service> services) {
         this.context = context;
         this.profile_createFormActivity = profile_createFormActivity;
         this.services = services;
@@ -35,7 +35,7 @@ public class Profile_form_services_adapter extends RecyclerView.Adapter<Profile_
         CheckBox checkBox;
         View view;
 
-        public MyViewHolder(@NonNull View itemView, Profile_createFormActivity activity) {
+        public MyViewHolder(@NonNull View itemView, MyProfile_createFormActivity activity) {
             super(itemView);
 
             title = itemView.findViewById(R.id.profile_form_serv_adapter_title);
@@ -61,7 +61,7 @@ public class Profile_form_services_adapter extends RecyclerView.Adapter<Profile_
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.activity_profile_form_services_adapter_row, parent, false);
-        return new Profile_form_services_adapter.MyViewHolder(view, profile_createFormActivity);
+        return new MyProfile_createform_services_adapter.MyViewHolder(view, profile_createFormActivity);
     }
 
     @Override

@@ -15,16 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="fragments.PersonProfile_AddReviewActivity"></activity>
-        <activity android:name="fragments.PersonProfileActivity"></activity>
-        <activity android:name=".Profile_myForm_activity" />
+        <activity android:name="fragments.PersonProfile_AddReviewActivity"
+            android:label="Написать отзыв"
+            ></activity>
+        <activity android:name="fragments.PersonProfileActivity"
+            android:label="Профиль пользователя"
+            ></activity>
+        <activity android:name=".MyProfile_myForm_activity"
+            android:label="Редактировать анкету"/>
         <activity android:name=".TestImageList" />
         <activity android:name=".TestImageActivity" />
-        <activity android:name="fragments.Executors_view_activity" />
+        <activity android:name="fragments.Executors_view_activity"
+            android:label="Профиль специалиста"
+            />
         <activity android:name=".TestJsonActivity" />
-        <activity android:name="fragments.Orders_view_activity" />
+        <activity android:name="fragments.Orders_view_activity"
+            android:label="Заказ"
+            />
         <activity android:name=".Service_update_activity" />
-        <activity android:name=".FirstActivity" />
+        <activity android:name=".FirstActivity"
+            android:label="Вход"/>
         <activity android:name=".Bookmarks_update_activity" />
         <activity
             android:name=".Notify_update_activity"
@@ -40,13 +50,16 @@
             android:parentActivityName=".TestActivity" />
         <activity android:name=".Service_list_activity" />
         <activity
-            android:name=".Notify_list_activity"
-            android:parentActivityName=".Navigation_activity" />
+            android:name=".Notify_list_activity"/>
         <activity android:name=".TestActivity" />
-        <activity android:name=".Profile_reviews_activity" />
-        <activity android:name=".Profile_orders_activity" />
-        <activity android:name=".Profile_edit_activity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MyProfile_reviews_activity"
+            android:label="Отзывы и вопросы"/>
+        <activity android:name="fragments.MyProfile_orders_activity"
+            android:label="Мои заказы"/>
+        <activity android:name=".MyProfile_edit_activity"
+            android:label="Редактировать личную информацию"/>
+        <activity android:name="fragments.MyProfileActivity"
+            android:label="Мой профиль"/>
         <activity
             android:name=".Navigation_activity"
             android:theme="@style/woutActionBar">
@@ -56,11 +69,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Profile_createFormActivity"
-            android:label="Добавить анкету" />
-        <activity android:name=".RegistrationActivity" />
+            android:name=".MyProfile_createFormActivity"
+            android:label="Создать анкету" />
+        <activity android:name=".RegistrationActivity"
+            android:label="Зарегистрироваться"
+            />
         <activity android:name=".Executors_list_activity" />
-        <activity android:name=".AuthorizationActivity" />
+        <activity android:name=".AuthorizationActivity"
+            android:label="Авторизоваться"
+            />
         <activity
             android:name=".Orders_list_activity"
             android:label="Orders">

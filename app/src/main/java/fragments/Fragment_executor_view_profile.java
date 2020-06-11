@@ -99,7 +99,15 @@ public class Fragment_executor_view_profile extends Fragment {
         }
         contacts.setText(numb);
 
-        desc.setText(executor.getDescriptn());
+        String description = executor.getDescriptn();
+        if(description == null){
+            description = "(Пользователь не указал о себе ничего)";
+            desc.setText(description);
+            desc.setTextColor(getResources().getColor(R.color.colorMutedText));
+        }else {
+            desc.setText(description);
+        }
+
         super.onViewCreated(view, savedInstanceState);
     }
 

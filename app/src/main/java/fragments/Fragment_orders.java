@@ -89,10 +89,11 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
             }
         });
 
-        ArrayList<String> sectionList = provider.getSectionListInString();
-        ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(1);
 
         super.onViewCreated(view, savedInstanceState);
     }

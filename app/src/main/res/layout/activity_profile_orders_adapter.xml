@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:textStyle="bold"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="44dp"
         android:layout_marginTop="10dp"
@@ -68,7 +69,7 @@
 
     <TextView
         android:id="@+id/activity_profile_orders_adapter_price"
-        android:layout_width="63dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_profile_orders_adapter_title"
         android:layout_alignParentLeft="true"

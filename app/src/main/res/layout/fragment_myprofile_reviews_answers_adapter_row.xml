@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout android:id="@+id/myprofile_reviews_answers_adapter_row_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/executor_reviews_adapter_frg_layout"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:padding="5sp">
+        android:id="@+id/myprofile_reviews_answers_adapter_row_cardview"
+        android:layout_marginTop="8sp"
+        android:padding="4sp">
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:background="@color/colorBackground"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/executor_reviews_adapter_frg_text"
+                android:id="@+id/myprofile_reviews_answers_adapter_row_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="desciptiondesciptiondesciption"
@@ -26,23 +27,12 @@
                 android:layout_marginTop="10sp"
                 android:layout_marginStart="10sp"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/executor_reviews_adapter_frg_photo"
+                android:layout_below="@id/myprofile_reviews_answers_adapter_row_photo"
                 />
 
-            <TextView
-                android:id="@+id/executor_reviews_adapter_frg_assessment"
-                android:layout_width="wrap_content"
-                android:layout_toLeftOf="@id/executor_reviews_adapter_frg_btn_popup"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10sp"
-                android:text="rating"
-                android:padding="5sp"
-                android:textStyle="bold"
-                android:textAlignment="center"/>
 
             <ImageView
-                android:id="@+id/executor_reviews_adapter_frg_photo"
+                android:id="@+id/myprofile_reviews_answers_adapter_row_photo"
                 android:layout_width="60sp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="10dp"
@@ -52,16 +42,16 @@
                 app:srcCompat="@drawable/executors_default_image" />
 
             <TextView
-                android:id="@+id/executor_reviews_adapter_frg_name"
+                android:id="@+id/myprofile_reviews_answers_adapter_row_name"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@id/executor_reviews_adapter_frg_photo"
+                android:layout_toRightOf="@id/myprofile_reviews_answers_adapter_row_photo"
                 android:layout_marginTop="15dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10sp"
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/executor_reviews_adapter_frg_created_date"
+                android:id="@+id/myprofile_reviews_answers_adapter_row_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10sp"
@@ -69,11 +59,11 @@
                 android:textColor="@color/colorMutedText"
                 android:textSize="13sp"
                 android:textAlignment="center"
-                android:layout_below="@id/executor_reviews_adapter_frg_name"
-                android:layout_toRightOf="@id/executor_reviews_adapter_frg_photo"
+                android:layout_below="@id/myprofile_reviews_answers_adapter_row_name"
+                android:layout_toRightOf="@id/myprofile_reviews_answers_adapter_row_photo"
                 android:text="20/06/2020" />
             <Button
-                android:id="@+id/executor_reviews_adapter_frg_btn_popup"
+                android:id="@+id/myprofile_reviews_answers_adapter_row_btn_popup"
                 android:layout_width="20sp"
                 android:layout_height="20sp"
                 android:layout_alignParentTop="true"
@@ -88,5 +78,4 @@
 
     </androidx.cardview.widget.CardView>
 
-
-</LinearLayout>
+</RelativeLayout>

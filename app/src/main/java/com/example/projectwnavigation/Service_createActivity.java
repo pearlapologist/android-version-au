@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import models.DbHelper;
 import models.MyDataProvider;
 import models.Service;
 
@@ -44,7 +42,7 @@ public class Service_createActivity extends AppCompatActivity {
 
                 Bundle extra = new Bundle();
                 extra.putSerializable("servicesCreate2", services);
-                Intent i = new Intent(Service_createActivity.this, Profile_createFormActivity.class);
+                Intent i = new Intent(Service_createActivity.this, MyProfile_createFormActivity.class);
                 i.putExtra("extraServicesCreate2", extra);
                 setResult(RESULT_OK, i);
 

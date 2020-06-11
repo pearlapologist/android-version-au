@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Profile_createFormActivity">
+    tools:context=".MyProfile_createFormActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
             <Spinner
                 android:id="@+id/createform_spinnerid"
                 android:layout_width="match_parent"
+                android:spinnerMode="dialog"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/createform_tvSection"
                 android:layout_centerHorizontal="true"

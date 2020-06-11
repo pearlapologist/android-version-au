@@ -1,6 +1,7 @@
 package fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,8 @@ public class Fragment_executor_view_reviews extends Fragment {
 
     MyDataProvider provider;
     Context context;
+
+    Persons curPerson;
 
     public Fragment_executor_view_reviews() {
     }
@@ -82,16 +86,15 @@ public class Fragment_executor_view_reviews extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         reviewsRv = view.findViewById(R.id.fragment_executor_view_reviews_rv);
+        rating = view.findViewById(R.id.fragment_executor_view_reviews_rating);
+        btn_add = view.findViewById(R.id.fragment_executor_view_reviews_fb);
+
         insertArray();
         executor_reviews_adapter_frg = new Executor_reviews_adapter_frg(getActivity(), context, reviews);
         reviewsRv.setAdapter(executor_reviews_adapter_frg);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
         Executor executor = provider.getExecutor(executorId);
-        rating = view.findViewById(R.id.fragment_executor_view_reviews_rating);
-        btn_add = view.findViewById(R.id.fragment_executor_view_reviews_fb);
-
-
         Persons p = provider.getPerson(executor.getPersonId());
         int rat = -1;
         if (p != null) {
@@ -102,24 +105,9 @@ public class Fragment_executor_view_reviews extends Fragment {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO onclick method
-                /*      try {
-                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
-                Long curr = MyUtils.getCurentDateInLong();
-                provider.addOrder(new Order(title.getText().toString().trim(),
-                        sectionId,
-                        Double.valueOf(price.getText().toString()),
-                        descr.getText().toString(),
-                        l,
-                        curr));
-            } catch (Exception e) {
-                Log.e("Update error", e.getMessage());
-            }
-            title.setText("");
-            price.setText("");
-            deadline.setText("");
-            descr.setText("");
-            Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();*/
+                Intent intent = new Intent(context, PersonProfile_AddReviewActivity.class);
+                intent.putExtra("addReview", executorId);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -127,8 +115,34 @@ public class Fragment_executor_view_reviews extends Fragment {
     }
 
     void insertArray() {
-        reviews = provider.getReviews();
+        curPerson = provider.getLoggedInPerson();
+        reviews = provider.getAllPersonReviewByPersonId(executorId);
+
+
+        boolean b = false;
+        ArrayList<Integer> arrId = new ArrayList<>();
+        try {
+            arrId = provider.getLeavedReviewPersonsIdList(executorId);
+        } catch (Exception e) {
+            Log.e("profile reviews frag", e.getMessage());
+        }
+        for (int i : arrId) {
+            if (curPerson.getId() == i) {
+                b = true;
+            }
+        }
+        if (b == true || curPerson.getId() == executorId) {
+            btn_add.hide();
+        }
     }
-    //TODO: вывод только опред отзывов
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == 1){
+            if(resultCode == -1){
+                executor_reviews_adapter_frg.notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 }

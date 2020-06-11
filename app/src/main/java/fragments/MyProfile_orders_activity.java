@@ -1,10 +1,9 @@
-package com.example.projectwnavigation;
+package fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
@@ -20,11 +19,11 @@ import models.MyDataProvider;
 import models.Order;
 import models.Persons;
 
-public class Profile_orders_activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MyProfile_orders_activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     MyDataProvider provider;
     RecyclerView recyclerView;
     ArrayList<Order> orders = new ArrayList<>();
-    Profile_orders_adapter profile_orders_adapter;
+    MyProfile_orders_adapter profile_orders_adapter;
     Spinner spinner;
     Persons loggedPerson;
     @Override
@@ -36,7 +35,7 @@ public class Profile_orders_activity extends AppCompatActivity implements Adapte
         provider = new MyDataProvider(this);
         insertArray();
 
-        profile_orders_adapter = new Profile_orders_adapter(this, this, orders);
+        profile_orders_adapter = new MyProfile_orders_adapter(this, this, orders);
         recyclerView.setAdapter(profile_orders_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

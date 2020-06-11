@@ -54,7 +54,7 @@ public class Executor_services_adapter_frg extends RecyclerView.Adapter<Executor
             e.printStackTrace();
         }
         holder.title.setText(title);
-        holder.price.setText(price + "");
+        holder.price.setText(" -"+ price);
     }
 
     @Override

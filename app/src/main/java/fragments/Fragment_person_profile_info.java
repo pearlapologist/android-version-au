@@ -22,7 +22,6 @@ public class Fragment_person_profile_info extends Fragment {
     private static final String P_ARG_ID = "argPersonId";
 
     TextView desc, contacts;
-    Executor_services_adapter_frg executor_services_adapter_frg;
     Button btn_call;
 
     MyDataProvider provider;

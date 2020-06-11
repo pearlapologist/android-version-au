@@ -22,4 +22,22 @@
     <string name="profile_orders">Мои заказы</string>
     <string name="profile_edit">Редактировать</string>
     <string name="menu_delete_all">Delete all</string>
+
+
+    <string-array name="sections">
+        <item>Стройка</item>
+        <item>Грузоперевозки</item>
+        <item>Ремонт и сервис</item>
+        <item>Дизайн и фото</item>
+        <item>Красота</item>
+        <item>Образование и спорт</item>
+        <item>Здоровье</item>
+        <item>Бытовые услуги</item>
+        <item>Авто</item>
+        <item>Рукоделие</item>
+        <item>Недвижимость</item>
+        <item>Животные</item>
+        <item>Ит и реклама</item>
+        <item>Прочее</item>
+    </string-array>
 </resources>

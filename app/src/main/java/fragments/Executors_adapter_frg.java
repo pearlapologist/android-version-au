@@ -43,7 +43,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
             super(itemView);
 
             name = itemView.findViewById(R.id.executors_adapter_frg_name);
-            spcltn_txt = itemView.findViewById(R.id.executors_adapter_frg_desc);
+            spcltn_txt = itemView.findViewById(R.id.executors_adapter_frg_spec);
             photo = itemView.findViewById(R.id.executors_adapter_frg_photo);
 
             adapter_layout = itemView.findViewById(R.id.executors_adapter_frg_layout);
@@ -62,7 +62,6 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
     @Override
     public void onBindViewHolder(@NonNull Executors_adapter_frg.MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
-
 
         Executor executor = executors.get(position);
 
@@ -83,7 +82,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                 Intent intent = new Intent(context, Executors_view_activity.class);
                 intent.putExtra("executorIdFragment", id);
 
-                activity.startActivityForResult(intent, 1);
+                activity.startActivity(intent);
             }
         });
 

@@ -78,6 +78,9 @@ public class Fragment_person_profile_reviews extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         reviewsRv = view.findViewById(R.id.fragment_person_profile_reviews_rv);
+        btn_add = view.findViewById(R.id.fragment_person_profile_reviews_fb);
+        rating = view.findViewById(R.id.fragment_person_profile_reviews_rating);
+
         provider = new MyDataProvider(context);
         insertArray();
         fragment_person_reviews_adapter = new Fragment_person_reviews_adapter(getActivity(), context, reviews);
@@ -85,15 +88,11 @@ public class Fragment_person_profile_reviews extends Fragment {
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
        Persons person = provider.getPerson(executorId);
-        rating = view.findViewById(R.id.fragment_person_profile_reviews_rating);
-        btn_add = view.findViewById(R.id.fragment_person_profile_reviews_fb);
-
         rating.setText(person.getRating() +"");
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                Intent intent = new Intent(context, PersonProfile_AddReviewActivity.class);
                intent.putExtra("addReview", executorId);
                 startActivityForResult(intent, 1);
@@ -105,6 +104,7 @@ public class Fragment_person_profile_reviews extends Fragment {
     }
 
     void insertArray() {
+        curPerson = provider.getLoggedInPerson();
         reviews = provider.getAllPersonReviewByPersonId(executorId);
 
         boolean b = false;

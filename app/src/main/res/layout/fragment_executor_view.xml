@@ -21,11 +21,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:layout_marginRight="10sp"
+                android:layout_marginEnd="10sp"
+                android:textSize="12sp"
+                android:layout_marginStart="10sp"
                 android:layout_below="@id/fragment_executor_view_carousel"
                 android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/fragment_executor_view_name"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:text="раздел по ит и рекламеsfsfsdfffdsfdsfsdfsdfsf" />
 
             <ImageView
                 android:id="@+id/fragment_executor_view_photo"
@@ -40,14 +43,13 @@
 
             <TextView
                 android:id="@+id/fragment_executor_view_name"
-                android:layout_width="wrap_content"
+                android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fragment_executor_view_carousel"
-                android:layout_marginStart="33dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="20sp"
                 android:layout_toRightOf="@id/fragment_executor_view_photo"
-                android:text="Name"
-                android:textAlignment="center" />
+                android:text="Bayan "/>
 
             <com.synnapps.carouselview.CarouselView
                 android:id="@+id/fragment_executor_view_carousel"
@@ -68,11 +70,11 @@
 
             <Button
                 android:id="@+id/fragment_executor_view_chat"
-                android:layout_width="120sp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45sp"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:layout_marginStart="30sp"
                 android:layout_marginTop="10sp"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:layout_below="@id/fragment_executor_view_name"
                 android:layout_toRightOf="@id/fragment_executor_view_photo"
                 android:text="Открыть чат" />

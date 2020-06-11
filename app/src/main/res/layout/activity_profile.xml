@@ -5,7 +5,7 @@
     style="@style/Theme.AppCompat.DayNight.DarkActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context="fragments.MyProfileActivity">
 
 
     <ScrollView

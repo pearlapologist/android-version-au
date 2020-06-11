@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction16.db";
-    public static final int DATABASE_VERSION = 16;
+    public static final String DATABASE_NAME = "serviceAuction17.db";
+    public static final int DATABASE_VERSION = 17;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,9 +56,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Бытовые услуги');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ремонт и сервис');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Авто');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
@@ -71,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Животные');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ит услуги и реклама');";
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ит и реклама');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Разное');";
@@ -178,6 +175,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_REVIEW_ASSESSMENT + " integer, " +
                 MyDataProvider.KEY_REVIEW_CREATED_DATE + " integer)";
         sqLiteDatabase.execSQL(sql);
+
+        sql = "CREATE TABLE " + MyDataProvider.TABLE_ANSWERS +
+                "(" + MyDataProvider.KEY_ANSWER_PART_ID + " integer primary key autoincrement, " +
+                MyDataProvider.KEY_ANSWER_REVIEW_ID+ " integer, " +
+                MyDataProvider.KEY_ANSWER_EXECUTOR_ID + " integer, " +
+                MyDataProvider.KEY_ANSWER_CUSTOMER_ID + " integer, " +
+                MyDataProvider.KEY_ANSWER_TEXT + " text, " +
+                MyDataProvider.KEY_ANSWER_CREATED_DATE + " integer)";
+        sqLiteDatabase.execSQL(sql);
+
+
+
 
         sql = "CREATE TABLE test_image( _id integer primary key autoincrement, title varchar, image blob)";
         sqLiteDatabase.execSQL(sql);

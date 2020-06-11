@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navbar_profile_reviews_to_me"
+        android:title="Отзывы на вас" />
+   <!-- <item
+    android:id="@+id/navbar_profile_reviews_my"
+    android:title="Мои" /> -->
+</menu>

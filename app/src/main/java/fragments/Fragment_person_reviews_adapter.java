@@ -40,9 +40,6 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
     private Menu review_popupMenu;
     boolean isCustomer = false;
 
-    boolean hasReview = false;
-
-
     public Fragment_person_reviews_adapter( Activity activity,Context context, ArrayList<Review> reviews) {
         this.context = context;
         this.activity = activity;
@@ -108,11 +105,11 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
                             case R.id.review_popup_menu_edit:
                                showDialogUpdate(review.getId());
                                 return true;
-                            case R.id.order_popup_delete:
+                            case R.id.review_popup_menu_delete:
                                 provider.deleteReview(position);
                                 notifyDataSetChanged();
                                 return true;
-                            case R.id.order_popup_complain:
+                            case R.id.review_popup_menu_complain:
                                 //TODO: доделать методы
                                 Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
                                 return true;
@@ -137,7 +134,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
         final Dialog dialog = new Dialog(activity);
 
         dialog.setContentView(R.layout.dialog_review_update);
-        dialog.setTitle("Редактировать заказ");
+        dialog.setTitle("Редактировать отзыв");
 
         final EditText txtAssessment = dialog.findViewById(R.id.dialog_review_update_etAssessm);
         final EditText txtText = dialog.findViewById(R.id.dialog_review_update_etText);

@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.projectwnavigation.ProfileActivity;
 import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
@@ -80,11 +79,19 @@ public class Orders_view_activity extends AppCompatActivity {
             public void onClick(View v) {
                 int personId = -1;
                 personId = provider.getCustomerIdByOrderId(cur.getId());
+
+                int executorId = provider.getExecutorIdByPersonId(personId);
                 if (personId == curPerson.getId()) {
-                    Intent intent = new Intent(Orders_view_activity.this, ProfileActivity.class);
+                    Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
                     intent.putExtra("orderview_PersonId", personId);
                     startActivity(intent);
-                }else{
+                }
+                else if(executorId != 0 && executorId != -1){
+                    Intent intent = new Intent(Orders_view_activity.this,  Executors_view_activity.class);
+                    intent.putExtra("executorIdFragment", executorId);
+                    startActivity(intent);
+                }
+                else{
                 Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
                 intent.putExtra("orderview_PersonId", personId);
                 startActivity(intent);}
@@ -102,10 +109,10 @@ public class Orders_view_activity extends AppCompatActivity {
                 spinnerSection.setText(section.getTitle());
 
                 title.setText(cur.getTitle());
-                price.setText("Бюджет: " + cur.getPrice());
+                price.setText(""+cur.getPrice());
                 descr.setText(cur.getDescription());
                 String s = MyUtils.convertLongToDataString(cur.getDeadline());
-                deadline.setText("До: " + s);
+                deadline.setText(s);
                 String d = MyUtils.convertLongToDataString(cur.getCreated_date());
                 createdDate.setText(d);
 

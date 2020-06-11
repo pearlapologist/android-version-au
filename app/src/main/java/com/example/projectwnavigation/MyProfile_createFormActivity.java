@@ -1,10 +1,5 @@
 package com.example.projectwnavigation;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,92 +8,103 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
+import fragments.MyProfileActivity;
 import models.Executor;
 import models.MyDataProvider;
-import models.Persons;
 import models.Service;
 
-public class Profile_myForm_activity extends AppCompatActivity implements View.OnLongClickListener {
+public class MyProfile_createFormActivity extends AppCompatActivity implements View.OnLongClickListener {
+    EditText spclztn, descrp;
+    Button add_executor, add_service;
     MyDataProvider provider;
-
-    EditText spec, descrp;
-    Button save, add_service;
     Spinner mSpinner;
-    String[] mOptions = {"Стройка", "Здоровье", "Авто", "Рукоделие"};
     int sectionId = 0;
     RecyclerView recyclerView;
-    Profile_myForm_services_adapter adapter;
+    MyProfile_createform_services_adapter adapter;
     public Boolean contextModeEnable = false;
 
     ArrayList<Service> services;
     ArrayList<Service> selectionList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_my_form);
+        setContentView(R.layout.activity_profile_create_form);
+
+        spclztn = findViewById(R.id.createform_et_spcl);
+        descrp = findViewById(R.id.createform_et_descr);
+
+        add_executor = findViewById(R.id.createform_btn_save);
+        add_service = findViewById(R.id.createform_btn_addService);
+        mSpinner = findViewById(R.id.createform_spinnerid);
+        recyclerView = findViewById(R.id.createform_recycler);
 
         provider = new MyDataProvider(this);
-        Persons p = provider.getLoggedInPerson();
-        int personId = p.getId();
-        int executorId = provider.getExecutorIdByPersonId(personId);
-        final Executor r = provider.getExecutor(executorId);
-
-        recyclerView = findViewById(R.id.myForm_rv);
-        try {
-            services = r.getServices();
-        } catch (NullPointerException e) {
-            Log.e("insertArray", e.getMessage());
-        }
-        adapter = new Profile_myForm_services_adapter(Profile_myForm_activity.this, this, services);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        spec = findViewById(R.id.myForm_spec);
-        descrp = findViewById(R.id.myForm_desc);
-        save = findViewById(R.id.myForm_btn_save);
-        add_service = findViewById(R.id.myForm_btn_addService);
-        mSpinner = findViewById(R.id.myForm_spinner);
-
 
         selectionList = new ArrayList<>();
 
-        spec.setText(r.getSpecialztn());
-        descrp.setText(r.getDescriptn());
-        descrp.setText(r.getDescriptn());
 
 
-        save.setOnClickListener(new View.OnClickListener() {
+        insertArray();
+        adapter = new MyProfile_createform_services_adapter(MyProfile_createFormActivity.this, this, services);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        provider = new MyDataProvider(this);
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
+
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(arrayAdapter);
+        mSpinner.setSelection(1);
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+             String[] choose = getResources().getStringArray(R.array.sections);
+              sectionId = provider.getSectionIdByTitle(choose[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        add_executor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String specializtn = spec.getText().toString().trim();
-                String descriptn = descrp.getText().toString().trim();
-
-                if (specializtn.length() >=7 && descriptn != null && descriptn.length() >=7  && services.size()>=1) {
-                    r.setSectionId(sectionId);
-                    r.setSpecialztn(specializtn);
-                    r.setDescriptn(descriptn);
-                    r.setPersonId(provider.getLoggedInPerson().getId());
-                    r.setServices(services);
-                    try {
-                        provider.updateExecutor(r);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    Toast.makeText(Profile_myForm_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(Profile_myForm_activity.this, ProfileActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+                Executor exec = new Executor();
+                exec.setSectionId(sectionId);
+                exec.setSpecialztn(spclztn.getText().toString().trim());
+                exec.setDescriptn(descrp.getText().toString().trim());
+                exec.setPersonId(provider.getLoggedInPerson().getId());
+                exec.setServices(services);
+                try {
+                    provider.addExecutor(exec);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                Toast.makeText(MyProfile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MyProfile_createFormActivity.this, MyProfileActivity.class);
+                startActivity(i);
             }
         });
 
@@ -110,9 +116,12 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
         });
     }
 
+    void insertArray() {
+        services = new ArrayList<>();
+    }
 
     private void showDialogCreate() {
-        final Dialog dialog = new Dialog(Profile_myForm_activity.this);
+        final Dialog dialog = new Dialog(MyProfile_createFormActivity.this);
         dialog.setContentView(R.layout.createform_service_dialog);
         dialog.setTitle("Добавить услугу");
 
@@ -121,8 +130,8 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
         Button btnSave = dialog.findViewById(R.id.createform_service_dialog_btnCreate);
         Button btnCancel = dialog.findViewById(R.id.createform_service_dialog_btnCancel);
 
-        dialog.getWindow().setLayout(720, 800);
-        dialog.setCancelable(true);
+        dialog.getWindow().setLayout(720, 1280);
+        dialog.setCancelable(false);
         dialog.show();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +142,10 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
                             Double.parseDouble(edPrice.getText().toString().trim()));
                     services.add(service);
                 } catch (Exception error) {
-                    Log.e("error", error.getMessage());
+                    Log.e("Create error", error.getMessage());
                 }
                 adapter.notifyDataSetChanged();
+                Toast.makeText(MyProfile_createFormActivity.this, "Created", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -151,6 +161,7 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // getMenuInflater().inflate(R.menu.main, menu);
         selectMenu(menu);
         return true;
     }
@@ -175,11 +186,15 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
     public boolean onLongClick(View v) {
         contextModeEnable = true;
         invalidateOptionsMenu();
+        //  toolbar.getMenu().clear();
+        // toolbar.inflateMenu(R.menu.services_multiply_choice);
+
         adapter.notifyDataSetChanged();
         return true;
     }
 
     public void setSelection(View v, int position) {
+        //selectionList.add(services.get(position));
         if (((CheckBox) v).isChecked()) {
             selectionList.add(services.get(position));
         } else {
@@ -205,4 +220,5 @@ public class Profile_myForm_activity extends AppCompatActivity implements View.O
         adapter.notifyDataSetChanged();
         invalidateOptionsMenu();
     }
+
 }

@@ -1,8 +1,6 @@
 package fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.Person;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,10 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,61 +22,57 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.Answer;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
-import models.Review;
 
-public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_reviews_adapter_frg.MyViewHolder>{
+public class Fragment_myprofile_reviews_answers_adapter  extends RecyclerView.Adapter<Fragment_myprofile_reviews_answers_adapter.MyViewHolder>{
     private Context context;
     Activity activity;
     MyDataProvider provider;
-    ArrayList<Review> reviews;
+    ArrayList<Answer> answers;
 
-    Persons curPerson;
     private Menu review_popupMenu;
-    boolean isCustomer = false;
+    Persons curPerson;
 
-    public Executor_reviews_adapter_frg(Activity activity, Context context,  ArrayList<Review> reviews) {
+    public Fragment_myprofile_reviews_answers_adapter(Activity activity, Context context,  ArrayList<Answer> answers) {
         this.context = context;
         this.activity = activity;
-        this.reviews = reviews;
+        this.answers = answers;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.fragment_executor_reviews_adapter_row, parent, false);
-        return new Executor_reviews_adapter_frg.MyViewHolder(view);
+        View view = inflater.inflate(R.layout.fragment_myprofile_reviews_answers_adapter_row, parent, false);
+        return new Fragment_myprofile_reviews_answers_adapter.MyViewHolder(view);
     }
 
-
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
 
-        final Review  review = reviews.get(position);
-        int personId = review.getCustomerId();
-        final Persons p = provider.getPerson(personId);
+        final Answer answer = answers.get(position);
+        int executorId = answer.getExecutorId();
+        final Persons p = provider.getPerson(executorId);
         String text = "";
         int rating = -1;
 
         try {
-            text = review.getReview_text();
-            rating =review.getAssessment();
+            text = answer.getText();
         }catch (Exception e){
             e.printStackTrace();
         }
 
         holder.text.setText(text);
-        holder.assessment.setText("Оценка: "+rating);
         holder.name.setText(p.getName()+ " "+p.getLastname());
 
         if(p.getPhoto()!= null){
             holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
-        Long l = review.getCreatedDate();
+        Long l = answer.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
 
         holder.photo.setOnClickListener(new View.OnClickListener() {
@@ -91,11 +84,6 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                 activity.startActivity(intent);
             }
         });
-
-        curPerson = provider.getLoggedInPerson();
-        if (review.getCustomerId() == curPerson.getId()) {
-            isCustomer = true;
-        }
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,72 +122,28 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         });
     }
 
-    private void showDialogUpdate(int id) {
-        final Dialog dialog = new Dialog(activity);
-
-        dialog.setContentView(R.layout.dialog_review_update);
-        dialog.setTitle("Редактировать отзыв");
-
-        final EditText txtAssessment = dialog.findViewById(R.id.dialog_review_update_etAssessm);
-        final EditText txtText = dialog.findViewById(R.id.dialog_review_update_etText);
-        Button btnSave = dialog.findViewById(R.id.dialog_review_update_btn_save);
-        Button btnCancel = dialog.findViewById(R.id.dialog_review_update_btn_cancel);
-
-        dialog.getWindow().setLayout(720, 1300);
-        dialog.setCancelable(false);
-        dialog.show();
-        final Review review = provider.getReview(id);
-        txtAssessment.setText(review.getAssessment() + "");
-        txtText.setText(review.getReview_text());
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                review.setReview_text(txtText.getText().toString().trim());
-                review.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
-
-                provider.updateReview(review);
-                notifyDataSetChanged();
-                Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
-
     @Override
     public int getItemCount() {
-        if(reviews == null){
-            return 0;
-        }
-        return reviews.size();
+        return 0;
     }
-
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView text, assessment, name, date;
+        private TextView text, name, date;
         ImageView photo;
         Button btn_popup_menu;
-        LinearLayout adapter_layout;
+        RelativeLayout adapter_layout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            text = itemView.findViewById(R.id.executor_reviews_adapter_frg_text);
-            assessment = itemView.findViewById(R.id.executor_reviews_adapter_frg_assessment);
-            name = itemView.findViewById(R.id.executor_reviews_adapter_frg_name);
-            photo = itemView.findViewById(R.id.executor_reviews_adapter_frg_photo);
-            date = itemView.findViewById(R.id.executor_reviews_adapter_frg_created_date);
-            btn_popup_menu = itemView.findViewById(R.id.executor_reviews_adapter_frg_btn_popup);
+            text = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_text);
+            name = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_name);
+            photo = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_photo);
+            date = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_created);
+            btn_popup_menu = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_btn_popup);
 
-            adapter_layout = itemView.findViewById(R.id.executor_reviews_adapter_frg_layout);
+            adapter_layout = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_layout);
 
         }
     }

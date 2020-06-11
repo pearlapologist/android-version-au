@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-    tools:context=".Profile_createFormActivity">
+    tools:context=".MyProfile_createFormActivity">
 
     <TextView
         android:id="@+id/executor_update_tv_section"
-        android:layout_width="104dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:text="Раздел:"
@@ -104,7 +104,6 @@
         android:layout_marginBottom="223dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/executor_update_services" />
 

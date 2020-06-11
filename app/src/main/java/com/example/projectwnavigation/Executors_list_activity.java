@@ -2,15 +2,12 @@ package com.example.projectwnavigation;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -21,11 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
-import models.DbHelper;
 import models.Executor;
 import models.MyDataProvider;
 
@@ -56,7 +50,7 @@ public class Executors_list_activity extends AppCompatActivity {
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Executors_list_activity.this, Profile_createFormActivity.class);
+                Intent intent = new Intent(Executors_list_activity.this, MyProfile_createFormActivity.class);
                 startActivity(intent);
             }
         });

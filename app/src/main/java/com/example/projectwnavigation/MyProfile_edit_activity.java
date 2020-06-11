@@ -23,7 +23,7 @@ import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class Profile_edit_activity extends AppCompatActivity {
+public class MyProfile_edit_activity extends AppCompatActivity {
     Button btnOk, btnCh;
     ImageView image;
     MyDataProvider provider;
@@ -50,7 +50,7 @@ public class Profile_edit_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(
-                        Profile_edit_activity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MyProfile_edit_activity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         999
                 );
             }
@@ -66,11 +66,11 @@ public class Profile_edit_activity extends AppCompatActivity {
                     pers.setNumber(etNumber.getText().toString().trim());
                     pers.setPhoto(MyUtils.imageViewToByte(image));
                     provider.updatePerson(pers);
-                    Toast.makeText(Profile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyProfile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
                     image.setImageResource(R.drawable.executors_default_image);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(Profile_edit_activity.this, "error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyProfile_edit_activity.this, "error", Toast.LENGTH_SHORT).show();
                 }
             }
         });

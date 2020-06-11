@@ -16,15 +16,15 @@ import java.util.ArrayList;
 import models.MyDataProvider;
 import models.Service;
 
-public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profile_myForm_services_adapter.MyViewHolder> {
+public class MyProfile_myForm_services_adapter extends RecyclerView.Adapter<MyProfile_myForm_services_adapter.MyViewHolder> {
 
     Context context;
     MyDataProvider provider;
 
-    Profile_myForm_activity profile_myForm_activity;
+    MyProfile_myForm_activity profile_myForm_activity;
     ArrayList<Service> services;
 
-    public Profile_myForm_services_adapter(Profile_myForm_activity profile_myForm_activity, Context context, ArrayList<Service> services) {
+    public MyProfile_myForm_services_adapter(MyProfile_myForm_activity profile_myForm_activity, Context context, ArrayList<Service> services) {
         this.context = context;
         this.profile_myForm_activity = profile_myForm_activity;
         this.services = services;
@@ -37,7 +37,7 @@ public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profil
         View view;
         LinearLayout adapter_layout;
 
-        public MyViewHolder(@NonNull View itemView, Profile_myForm_activity activity) {
+        public MyViewHolder(@NonNull View itemView, MyProfile_myForm_activity activity) {
             super(itemView);
 
             title = itemView.findViewById(R.id.profile_myForm_services_title);
@@ -53,7 +53,7 @@ public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profil
 
         @Override
         public void onClick(View v) {
-            checkBox.setChecked(checkBox.isChecked());
+            //checkBox.setChecked(!checkBox.isChecked());
             profile_myForm_activity.setSelection(v, getAdapterPosition());
         }
     }
@@ -64,7 +64,7 @@ public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profil
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.activity_profile_myform_services_adapter, parent, false);
-        return new Profile_myForm_services_adapter.MyViewHolder(view, profile_myForm_activity);
+        return new MyProfile_myForm_services_adapter.MyViewHolder(view, profile_myForm_activity);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Profile_myForm_services_adapter extends RecyclerView.Adapter<Profil
             holder.checkBox.setVisibility(View.GONE);
         } else {
             holder.checkBox.setVisibility(View.VISIBLE);
-            holder.checkBox.setChecked(false);
+            //holder.checkBox.setChecked(false);
         }
     }
 
