@@ -14,12 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.Answer;
 import models.MyDataProvider;
 import models.Persons;
 import models.Review;
@@ -29,7 +33,8 @@ import models.Review;
  * Use the {@link Fragment_myprofile_reviews#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_myprofile_reviews extends Fragment implements View.OnClickListener {
+public class Fragment_myprofile_reviews extends Fragment {
+// implements View.OnLongClickListener
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -43,8 +48,6 @@ public class Fragment_myprofile_reviews extends Fragment implements View.OnClick
     RecyclerView reviewsRv;
     Fragment_myprofile_reviews_adapter fragment_myprofile_reviews_adapter;
     ArrayList<Review> reviews;
-
-   // int statusId = 0;
 
     MyDataProvider provider;
     Context context;
@@ -93,7 +96,7 @@ public class Fragment_myprofile_reviews extends Fragment implements View.OnClick
 
         curPerson = provider.getLoggedInPerson();
         insertArray();
-        fragment_myprofile_reviews_adapter = new Fragment_myprofile_reviews_adapter(this, context, reviews);
+        fragment_myprofile_reviews_adapter = new Fragment_myprofile_reviews_adapter(context, reviews);
         reviewsRv.setAdapter(fragment_myprofile_reviews_adapter);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
@@ -111,23 +114,9 @@ public class Fragment_myprofile_reviews extends Fragment implements View.OnClick
 
     void insertArray() {
         reviews = provider.getAllPersonReviewByPersonId(curPerson.getId());
+        if(reviews == null){
+            Toast.makeText(context, "Вам пока не оставили отзыв", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    public void onClick(View v) {
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.createform_service_dialog);
-        dialog.setTitle("Добавить услугу");
-/*
-
-        final EditText edTitle = dialog.findViewById(R.id.createform_service_dialog_title);
-        final EditText edPrice = dialog.findViewById(R.id.createform_service_dialog_price);
-        Button btnSave = dialog.findViewById(R.id.createform_service_dialog_btnCreate);
-        Button btnCancel = dialog.findViewById(R.id.createform_service_dialog_btnCancel);
-*/
-
-        dialog.getWindow().setLayout(720, 800);
-        dialog.setCancelable(true);
-        dialog.show();
-    }
 }

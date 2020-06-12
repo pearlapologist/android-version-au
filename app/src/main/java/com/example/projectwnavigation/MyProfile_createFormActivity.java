@@ -46,10 +46,8 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_create_form);
-
         spclztn = findViewById(R.id.createform_et_spcl);
         descrp = findViewById(R.id.createform_et_descr);
-
         add_executor = findViewById(R.id.createform_btn_save);
         add_service = findViewById(R.id.createform_btn_addService);
         mSpinner = findViewById(R.id.createform_spinnerid);
@@ -59,13 +57,10 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
 
         selectionList = new ArrayList<>();
 
-
-
         insertArray();
         adapter = new MyProfile_createform_services_adapter(MyProfile_createFormActivity.this, this, services);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        provider = new MyDataProvider(this);
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));

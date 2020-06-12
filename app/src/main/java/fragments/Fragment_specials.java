@@ -80,7 +80,7 @@ public class Fragment_specials extends Fragment implements AdapterView.OnItemSel
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         insertExecutorsArray();
         recyclerView = view.findViewById(R.id.fargment_specials_rv);
-        executors_adapter = new Executors_adapter_frg(getActivity(), context, executors);
+        executors_adapter = new Executors_adapter_frg(context, executors);
         recyclerView.setAdapter(executors_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         spinner = view.findViewById(R.id.fargment_specials_spinner);

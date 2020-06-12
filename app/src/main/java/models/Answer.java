@@ -3,22 +3,30 @@ package models;
 public class Answer {
     private  int id;
     int reviewId;
-    private int executorId;
-    private int customerId; //personId
+    private int whoanswersId;
+    private int whopostedId; //personId
     private String text;
     private Long createdDate;
 
 
-    public Answer(int id, int reviewId, int executorId, int customerId, String review_text, Long createdDate) {
+    public Answer(int id, int reviewId, int whoanswersId, int whopostedId, String review_text, Long createdDate) {
         this.id = id;
         this.reviewId = reviewId;
-        this.executorId = executorId;
-        this.customerId = customerId;
+        this.whoanswersId = whoanswersId;
+        this.whopostedId = whopostedId;
         this.text = review_text;
         this.createdDate = createdDate;
     }
 
     public Answer() {
+    }
+
+    public Answer(int reviewId, int whoanswersId, int whopostedId, String text, Long createdDate) {
+        this.reviewId = reviewId;
+        this.whoanswersId = whoanswersId;
+        this.whopostedId = whopostedId;
+        this.text = text;
+        this.createdDate = createdDate;
     }
 
     public int getId() {
@@ -29,20 +37,20 @@ public class Answer {
         this.id = id;
     }
 
-    public int getExecutorId() {
-        return executorId;
+    public int getWhoanswersId() {
+        return whoanswersId;
     }
 
-    public void setExecutorId(int executorId) {
-        this.executorId = executorId;
+    public void setWhoanswersId(int whoanswersId) {
+        this.whoanswersId = whoanswersId;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getWhopostedId() {
+        return whopostedId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setWhopostedId(int whopostedId) {
+        this.whopostedId = whopostedId;
     }
 
     public String getText() {

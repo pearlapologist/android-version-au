@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction17.db";
-    public static final int DATABASE_VERSION = 17;
+    public static final String DATABASE_NAME = "serviceAuction19.db";
+    public static final int DATABASE_VERSION = 19;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -179,13 +179,17 @@ public class DbHelper extends SQLiteOpenHelper {
         sql = "CREATE TABLE " + MyDataProvider.TABLE_ANSWERS +
                 "(" + MyDataProvider.KEY_ANSWER_PART_ID + " integer primary key autoincrement, " +
                 MyDataProvider.KEY_ANSWER_REVIEW_ID+ " integer, " +
-                MyDataProvider.KEY_ANSWER_EXECUTOR_ID + " integer, " +
-                MyDataProvider.KEY_ANSWER_CUSTOMER_ID + " integer, " +
+                MyDataProvider.KEY_ANSWER_WHOANSWERS_ID + " integer, " +
+                MyDataProvider.KEY_ANSWER_WHOPOSTED_ID + " integer, " +
                 MyDataProvider.KEY_ANSWER_TEXT + " text, " +
                 MyDataProvider.KEY_ANSWER_CREATED_DATE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
-
+        sql = "create table " + MyDataProvider.TABLE_REVIEWNANSWERS + "(" +
+                MyDataProvider.KEY_REVIEWNANSWERS_ID+ " integer primary key autoincrement, " +
+                MyDataProvider.KEY_REVIEWNANSWERS_REVIEW_ID + " integer, " +
+                MyDataProvider.KEY_REVIEWNANSWERS_ANSWER_ID + " integer)";
+        sqLiteDatabase.execSQL(sql);
 
 
         sql = "CREATE TABLE test_image( _id integer primary key autoincrement, title varchar, image blob)";

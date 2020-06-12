@@ -24,25 +24,23 @@ import models.Persons;
 
 public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapter_frg.MyViewHolder> {
     private Context context;
-    Activity activity;
     MyDataProvider provider;
     ArrayList<Executor> executors;
 
-    Executors_adapter_frg(Activity activity, Context context, ArrayList<Executor> executors) {
+    Executors_adapter_frg(Context context, ArrayList<Executor> executors) {
         this.context = context;
-        this.activity = activity;
         this.executors = executors;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView name, spcltn_txt;
+        private TextView name, spcltn_txt,rating;
         ImageView photo;
         LinearLayout adapter_layout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             name = itemView.findViewById(R.id.executors_adapter_frg_name);
+            rating = itemView.findViewById(R.id.executors_adapter_frg_rating);
             spcltn_txt = itemView.findViewById(R.id.executors_adapter_frg_spec);
             photo = itemView.findViewById(R.id.executors_adapter_frg_photo);
 
@@ -67,30 +65,35 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
 
         holder.spcltn_txt.setText(executor.getSpecialztn());
         Persons p = provider.getPerson(executor.getPersonId());
-        if (p.getPhoto() == null ) {
+        if (p.getPhoto() == null) {
             holder.photo.setImageResource(R.drawable.executors_default_image);
-        }
-        else{
+        } else {
             holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
         holder.name.setText(p.getName());
+        holder.rating.setText(p.getRating()+"");
 
         final int id = executor.getId();
+
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Executors_view_activity.class);
-                intent.putExtra("executorIdFragment", id);
-
-                activity.startActivity(intent);
+                if (id == provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId())) {
+                    Intent intent = new Intent(context, MyProfileActivity.class);
+                    context.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(context, Executors_view_activity.class);
+                    intent.putExtra("executorIdFragment", id);
+                    context.startActivity(intent);
+                }
             }
         });
-
     }
+
 
     @Override
     public int getItemCount() {
-        if(executors == null){
+        if (executors == null) {
             return 0;
         }
         return executors.size();

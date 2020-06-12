@@ -29,7 +29,7 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
     ArrayList<Respons> responses;
 
 
-    public Orders_responses_adapter( Activity activity, Context context, ArrayList<Respons> responses) {
+    public Orders_responses_adapter(Activity activity, Context context, ArrayList<Respons> responses) {
         this.context = context;
         this.activity = activity;
         this.responses = responses;
@@ -54,16 +54,29 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
         holder.date.setText(created);
         int responsId = respons.getId();
         final Persons person = provider.getPerson(provider.getPersonIdByResponseId(responsId));
-        if(person.getPhoto()!= null){
-        holder.image.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
+        holder.personName.setText(person.getName() + " "+ person.getLastname());
+        if (person.getPhoto() != null) {
+            holder.image.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
+
+        final int personId = person.getId();
+        final int executorId = provider.getExecutorIdByPersonId(personId);
+
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PersonProfileActivity.class);
-                intent.putExtra("responseAdapter", person.getId());
-
-                activity.startActivity(intent);
+                if (person.getId() == provider.getLoggedInPerson().getId()) {
+                    Intent intent = new Intent(context, MyProfileActivity.class);
+                    activity.startActivity(intent);
+                }   else if(executorId != 0 && executorId != -1){
+                    Intent intent = new Intent(context,  Executors_view_activity.class);
+                    intent.putExtra("executorIdFragment", executorId);
+                    context.startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(context, PersonProfileActivity.class);
+                    intent.putExtra("orderview_PersonId", personId);
+                    context.startActivity(intent);}
             }
         });
 
@@ -71,18 +84,21 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
 
     @Override
     public int getItemCount() {
-        if(responses == null){return 0;}
+        if (responses == null) {
+            return 0;
+        }
         return responses.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView text, date, price;
+        private TextView text, date, price, personName;
         ImageView image;
         LinearLayout adapter_layout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            personName = itemView.findViewById(R.id.order_responses_adapter_pname);
             text = itemView.findViewById(R.id.order_responses_adapter_text);
             price = itemView.findViewById(R.id.order_responses_adapter_price);
             date = itemView.findViewById(R.id.order_responses_adapter_date);

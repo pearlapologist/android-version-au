@@ -77,13 +77,11 @@ public class Orders_view_activity extends AppCompatActivity {
         btn_viewprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int personId = -1;
-                personId = provider.getCustomerIdByOrderId(cur.getId());
-
+                int personId = provider.getCustomerIdByOrderId(cur.getId());
                 int executorId = provider.getExecutorIdByPersonId(personId);
+
                 if (personId == curPerson.getId()) {
                     Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
-                    intent.putExtra("orderview_PersonId", personId);
                     startActivity(intent);
                 }
                 else if(executorId != 0 && executorId != -1){

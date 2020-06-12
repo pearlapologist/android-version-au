@@ -117,4 +117,14 @@
         app:layout_constraintTop_toBottomOf="@+id/test_image"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/add_a_photo_black_20dp" />
+
+    <Button
+        android:id="@+id/testbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="67dp"
+        android:layout_marginBottom="58dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

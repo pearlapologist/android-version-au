@@ -17,48 +17,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_executor_view_profile_rv"
-            android:layout_marginTop="10sp"
-            android:text="Специализация"
-            android:textColor="@color/colorMutedText"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5sp"
-            android:padding="5sp"
-            android:textSize="14sp" />
-        <View
-            android:layout_width="match_parent"
-            android:id="@+id/fragment_executor_view_profile_view2"
-            android:background="@color/gray"
             android:layout_marginTop="10sp"
-            android:padding="10sp"
+            android:padding="5sp"
+            android:text="Специализация"
+            android:textColor="@color/colorMutedText"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/fragment_executor_view_profile_view2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5sp"
             android:layout_below="@id/fragment_executor_view_profile_spec"
-            android:layout_height="0.5sp">
-        </View>
+            android:layout_marginTop="5sp"
+            android:background="@color/gray"
+            android:padding="10sp"></View>
+
         <TextView
             android:id="@+id/fragment_executor_view_profile_spec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_executor_view_profile_tvspec"
-            android:layout_marginTop="10sp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5sp"
+            android:layout_marginTop="10sp"
             android:padding="5sp"
             android:text="TextView"
             android:textSize="14sp" />
 
 
-
-
         <View
-            android:layout_width="match_parent"
             android:id="@+id/fragment_executor_view_profile_view"
-            android:background="@color/gray"
-            android:layout_marginTop="10sp"
-            android:padding="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="0.5sp"
             android:layout_below="@id/fragment_executor_view_profile_desc"
-            android:layout_height="0.5sp">
+            android:layout_marginTop="5sp"
+            android:background="@color/gray"
+            android:padding="10sp">
 
         </View>
-
 
 
         <TextView
@@ -66,12 +64,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_executor_view_profile_view3"
-            android:layout_marginTop="10sp"
-            android:text="Описание"
-            android:textColor="@color/colorMutedText"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5sp"
+            android:layout_marginTop="10sp"
             android:padding="5sp"
+            android:text="Описание"
+            android:textColor="@color/colorMutedText"
             android:textSize="14sp" />
 
         <TextView
@@ -79,9 +77,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_executor_view_profile_tvdesc"
-            android:layout_marginTop="10sp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5sp"
+            android:layout_marginTop="10sp"
             android:padding="5sp"
             android:text="desc"
             android:textSize="14sp" />
@@ -97,32 +95,32 @@
             android:id="@+id/fragment_executor_view_profile_tvservices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5sp"
             android:layout_marginTop="10sp"
+            android:padding="5sp"
             android:text="Услуги"
             android:textColor="@color/colorMutedText"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5sp"
-            android:layout_alignParentTop="true"
-            android:padding="5sp"
             android:textSize="14sp" />
-        <View
-            android:layout_width="match_parent"
-            android:id="@+id/fragment_executor_view_profile_veiw4"
-            android:background="@color/gray"
-            android:layout_marginTop="10sp"
-            android:padding="10sp"
-            android:layout_below="@id/fragment_executor_view_profile_rv"
-            android:layout_height="0.5sp">
-        </View>
 
         <View
+            android:id="@+id/fragment_executor_view_profile_veiw4"
             android:layout_width="match_parent"
-            android:id="@+id/fragment_executor_view_profile_view3"
-            android:background="@color/gray"
-            android:padding="10sp"
+            android:layout_height="0.5sp"
+            android:layout_below="@id/fragment_executor_view_profile_rv"
             android:layout_marginTop="10sp"
+            android:background="@color/gray"
+            android:padding="10sp"></View>
+
+        <View
+            android:id="@+id/fragment_executor_view_profile_view3"
+            android:layout_width="match_parent"
+            android:layout_height="0.5sp"
             android:layout_below="@id/fragment_executor_view_profile_spec"
-            android:layout_height="0.5sp">
+            android:layout_marginTop="8dp"
+            android:background="@color/gray"
+            android:padding="10sp">
 
         </View>
 
@@ -131,12 +129,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_executor_view_profile_view"
-            android:layout_marginTop="10sp"
-            android:text="Контакты"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5sp"
-            android:textColor="@color/colorMutedText"
+            android:layout_marginTop="10sp"
             android:padding="5sp"
+            android:text="Контакты"
+            android:textColor="@color/colorMutedText"
             android:textSize="14sp" />
 
         <TextView
@@ -148,8 +146,8 @@
             android:layout_marginLeft="5sp"
             android:layout_marginTop="10sp"
             android:padding="5sp"
-            android:textSize="14sp"
-            android:text="телефон" />
+            android:text="телефон"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/fragment_executor_view_profile_contacts_btn"

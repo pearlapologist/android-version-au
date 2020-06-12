@@ -50,7 +50,6 @@ public class MyProfile_createform_services_adapter extends RecyclerView.Adapter<
 
         @Override
         public void onClick(View v) {
-            checkBox.setChecked(true);
             profile_createFormActivity.setSelection(v, getAdapterPosition());
         }
 

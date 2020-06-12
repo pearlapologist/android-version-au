@@ -18,6 +18,7 @@ public class Review {
         this.review_text = review_text;
         this.assessment = assessment;
         this.createdDate = MyUtils.getCurentDateInLong();
+        answers = new ArrayList<>();
     }
 
     public Review(int executrId, int customerId,  String review_text, int assessment) {
@@ -26,6 +27,7 @@ public class Review {
         this.review_text = review_text;
         this.assessment = assessment;
         this.createdDate = MyUtils.getCurentDateInLong();
+        answers = new ArrayList<>();
     }
 
 

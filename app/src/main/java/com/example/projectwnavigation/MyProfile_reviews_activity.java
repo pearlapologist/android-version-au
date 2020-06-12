@@ -41,14 +41,14 @@ public class MyProfile_reviews_activity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             Fragment selected = null;
-            switch (menuItem.getItemId()) {
-                default:
+         /*   switch (menuItem.getItemId()) {
+                default:*/
                     selected = fragment_myprofile_reviews;
-                    break;
+                 //   break;
                 /*case R.id.executor_nav_reviews:
                     selected = fragment_reviews;
                     break; R.id.navbar_profile_reviews_to_me*/
-            }
+           // }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_executor_view_frameLayout, selected).commit();
 
             return true;

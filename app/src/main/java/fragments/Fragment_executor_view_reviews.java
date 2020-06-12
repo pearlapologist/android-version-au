@@ -90,7 +90,7 @@ public class Fragment_executor_view_reviews extends Fragment {
         btn_add = view.findViewById(R.id.fragment_executor_view_reviews_fb);
 
         insertArray();
-        executor_reviews_adapter_frg = new Executor_reviews_adapter_frg(getActivity(), context, reviews);
+        executor_reviews_adapter_frg = new Executor_reviews_adapter_frg(context, reviews);
         reviewsRv.setAdapter(executor_reviews_adapter_frg);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
@@ -117,7 +117,6 @@ public class Fragment_executor_view_reviews extends Fragment {
     void insertArray() {
         curPerson = provider.getLoggedInPerson();
         reviews = provider.getAllPersonReviewByPersonId(executorId);
-
 
         boolean b = false;
         ArrayList<Integer> arrId = new ArrayList<>();

@@ -60,7 +60,7 @@ public class Navigation_activity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navListener);
         fragment_specials = new Fragment_specials(getApplicationContext());
-        fragment_orders = new Fragment_orders(getApplicationContext());
+        fragment_orders = new Fragment_orders(this);
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
         fragment_notification = new Fragment_notification(getApplicationContext());
         fragment_settings = new Fragment_settings(getApplicationContext());

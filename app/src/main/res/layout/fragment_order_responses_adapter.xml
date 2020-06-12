@@ -27,10 +27,22 @@
                 app:srcCompat="@drawable/executors_default_image" />
 
             <TextView
+                android:id="@+id/order_responses_adapter_pname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8sp"
+                android:layout_marginTop="10sp"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="8sp"
+                android:layout_toRightOf="@id/order_responses_adapter_image"
+                android:text="Name Lastname" />
+
+
+            <TextView
                 android:id="@+id/order_responses_adapter_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/order_responses_adapter_price"
+                android:layout_below="@id/order_responses_adapter_pname"
                 android:layout_marginStart="8sp"
                 android:layout_marginTop="5sp"
                 android:layout_marginEnd="8sp"

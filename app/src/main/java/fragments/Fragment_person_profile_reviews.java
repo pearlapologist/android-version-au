@@ -58,7 +58,7 @@ public class Fragment_person_profile_reviews extends Fragment {
 
     public void setContext(Context context) {
         this.context = context;
-
+        provider = new MyDataProvider(context);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class Fragment_person_profile_reviews extends Fragment {
         btn_add = view.findViewById(R.id.fragment_person_profile_reviews_fb);
         rating = view.findViewById(R.id.fragment_person_profile_reviews_rating);
 
-        provider = new MyDataProvider(context);
+
         insertArray();
-        fragment_person_reviews_adapter = new Fragment_person_reviews_adapter(getActivity(), context, reviews);
+        fragment_person_reviews_adapter = new Fragment_person_reviews_adapter(context, reviews);
         reviewsRv.setAdapter(fragment_person_reviews_adapter);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 

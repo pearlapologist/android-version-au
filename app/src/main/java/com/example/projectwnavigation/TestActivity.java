@@ -20,6 +20,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class TestActivity extends AppCompatActivity {
     Button persons, executors, orders, notify, services, bookmr, test_json, image, choose;
+    Button btn;
     ImageView imagetest;
 
     @Override
@@ -111,6 +112,7 @@ public class TestActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 

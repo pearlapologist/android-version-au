@@ -44,6 +44,8 @@ public class PersonProfileActivity extends AppCompatActivity {
         if (getIntent().hasExtra("orderview_PersonId")) {
             curPersonId = getIntent().getIntExtra("orderview_PersonId", -1);
         }
+
+        //TODO: delete this check
         if (getIntent().hasExtra("responseAdapter")) {
             curPersonId = getIntent().getIntExtra("responseAdapter", -1);
         }

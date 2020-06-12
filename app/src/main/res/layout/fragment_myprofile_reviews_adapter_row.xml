@@ -90,9 +90,9 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myprofile_reviews_adapter_row_answersrv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/myprofile_reviews_adapter_row_reviewCardview"
-        android:layout_margin="10sp"
-        android:layout_marginTop="2dp" />
+     />
 </RelativeLayout>
