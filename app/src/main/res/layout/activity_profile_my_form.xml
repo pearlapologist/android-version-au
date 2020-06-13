@@ -47,6 +47,7 @@
                 android:layout_below="@id/myForm_carousel"
                 android:layout_marginStart="10sp"
                 android:layout_marginTop="15dp"
+                android:textAllCaps="false"
                 android:layout_marginEnd="10sp"
                 android:textSize="13sp"
                 android:layout_marginBottom="10sp"
@@ -57,10 +58,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4sp"
+                android:layout_below="@id/myForm_btn_save"
                 android:layout_marginTop="10sp"
                 android:layout_marginEnd="4sp"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="4sp"
                 app:fillColor="@color/gray"
                 app:pageColor="@color/gray"
                 app:radius="6sp"
@@ -86,10 +86,23 @@
                 android:layout_height="38sp"
                 android:layout_below="@id/myForm_rv"
                 android:layout_marginStart="10sp"
+                android:textAllCaps="false"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10sp"
                 android:textSize="15sp"
                 android:text="Добавить услугу"></Button>
+
+            <Button
+                android:id="@+id/myForm_btn_deleteform"
+                android:layout_width="wrap_content"
+                android:layout_height="38sp"
+                android:layout_below="@id/myForm_btn_addService"
+                android:layout_marginStart="10sp"
+                android:textAllCaps="false"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10sp"
+                android:textSize="15sp"
+                android:text="Удалить анкету"></Button>
 
             <EditText
                 android:id="@+id/myForm_desc"
@@ -110,11 +123,11 @@
                 android:id="@+id/myForm_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/myForm_btn_addService"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="10sp"
-                android:layout_marginTop="20sp"
+                android:textAllCaps="false"
+                android:layout_marginTop="10sp"
                 android:layout_marginEnd="10sp"
                 android:text="Сохранить"
 

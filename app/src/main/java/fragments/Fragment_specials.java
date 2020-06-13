@@ -78,18 +78,18 @@ public class Fragment_specials extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        insertExecutorsArray();
         recyclerView = view.findViewById(R.id.fargment_specials_rv);
+        spinner = view.findViewById(R.id.fargment_specials_spinner);
+        insertExecutorsArray();
+
         executors_adapter = new Executors_adapter_frg(context, executors);
         recyclerView.setAdapter(executors_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        spinner = view.findViewById(R.id.fargment_specials_spinner);
 
         ArrayList<String> sectionList = provider.getSectionListInString();
         ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
 
         super.onViewCreated(view, savedInstanceState);
     }

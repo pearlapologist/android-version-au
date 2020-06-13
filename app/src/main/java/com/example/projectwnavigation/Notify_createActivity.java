@@ -14,7 +14,7 @@ import models.MyDataProvider;
 import models.Notify;
 
 public class Notify_createActivity extends AppCompatActivity {
-    EditText id, personId, text;
+   /* EditText id, personId, text;
     MyDataProvider provider;
     Button btnOk;
 
@@ -35,7 +35,7 @@ public class Notify_createActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     Long curr = MyUtils.getCurentDateInLong();
-                    provider.addNotify(new Notify(Integer.parseInt(personId.getText().toString()),
+                    provider.createNotify(new Notify(Integer.parseInt(personId.getText().toString()),
                             text.getText().toString().trim(),
                             curr));
                 } catch (Exception e) {
@@ -50,5 +50,5 @@ public class Notify_createActivity extends AppCompatActivity {
 
 
     }
-
+*/
 }

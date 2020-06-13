@@ -18,8 +18,8 @@ import models.MyUtils;
 import models.MyDataProvider;
 import models.Notify;
 
-public class Notify_adapter extends RecyclerView.Adapter<Notify_adapter.MyViewHolder> {
-    private Context context;
+public class Notify_adapter  {
+   /* private Context context;extends RecyclerView.Adapter<Notify_adapter.MyViewHolder>
     Activity activity;
     MyDataProvider provider;
     ArrayList<Notify> notices;
@@ -81,5 +81,5 @@ public class Notify_adapter extends RecyclerView.Adapter<Notify_adapter.MyViewHo
     public int getItemCount() {
         return notices.size();
     }
-
+*/
 }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import models.MyUtils;
 import models.MyDataProvider;
+import models.Notify;
 import models.Order;
 import models.Persons;
 import models.Respons;
@@ -169,6 +170,8 @@ public class Orders_view_activity extends AppCompatActivity {
 
                     provider.addRespons(respons);
                     responses.add(respons);
+                    Notify notify = new Notify(cur.getCustomerId(), "У вашего заказа новый отклик", MyUtils.getCurentDateInLong(), 1, cur.getId());
+                    provider.createNotify(notify);
                 } catch (Exception error) {
                     Log.e("error", error.getMessage());
                 }

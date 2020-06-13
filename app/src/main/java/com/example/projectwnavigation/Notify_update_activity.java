@@ -18,7 +18,7 @@ import models.Notify;
 import models.Persons;
 
 public class Notify_update_activity extends AppCompatActivity {
-    EditText text, personId, id;
+  /*  EditText text, personId, id;
     TextView createdDate, name;
     Button add;
     Button delete;
@@ -113,5 +113,5 @@ public class Notify_update_activity extends AppCompatActivity {
             }
         });
         builder.create().show();
-    }
+    }*/
 }

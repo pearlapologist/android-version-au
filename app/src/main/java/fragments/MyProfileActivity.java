@@ -57,7 +57,8 @@ public class MyProfileActivity extends AppCompatActivity {
         btn_form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (provider.getPersonIsExecutorField(person.getId()) == false) {
+                boolean isexecutor = provider.getPersonIsExecutorField(person.getId());
+                if (isexecutor == false) {
                     Intent form = new Intent(MyProfileActivity.this, MyProfile_createFormActivity.class);
                     startActivity(form);
                 }

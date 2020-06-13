@@ -3,25 +3,37 @@ package fragments;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.core.view.MenuItemCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
 
-import models.MyDataProvider;
+import java.util.ArrayList;
 
-public class Fragment_notification extends Fragment {
+import models.MyDataProvider;
+import models.Notify;
+
+public class Fragment_notification extends Fragment  {
      private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+
     MyDataProvider provider;
     Context context;
+
+    RecyclerView recyclerView;
+    ArrayList<Notify> notifies = new ArrayList<>();
+    Fragment_notification_adapter notify_adapter;
+
 
     public Fragment_notification() {
     }
@@ -52,5 +64,28 @@ public class Fragment_notification extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_notification, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.frg_notification_rv);
+        provider = new MyDataProvider(context);
+
+        insertArray();
+
+        notify_adapter = new Fragment_notification_adapter(context, notifies);
+        recyclerView.setAdapter(notify_adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        notify_adapter.notifyDataSetChanged( );
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+
+    void insertArray() {
+        notifies = provider.getAllMyNotifies();
+        if (notifies == null || notifies.size() <= 0) {
+            Toast.makeText(getContext(), "У вас нет уведомлений", Toast.LENGTH_SHORT).show();
+        }
     }
 }

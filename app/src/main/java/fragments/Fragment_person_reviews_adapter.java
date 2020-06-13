@@ -126,6 +126,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
                 isCustomer = true;
             }
                 PopupMenu popup = new PopupMenu(context, v);
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -146,6 +147,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
 
                     }
                 });
+
                 popup.inflate(R.menu.review_popup_menu);
                 review_popupMenu = popup.getMenu();
                 if (review_popupMenu != null) {

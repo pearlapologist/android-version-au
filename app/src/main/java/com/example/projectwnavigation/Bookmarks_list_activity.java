@@ -15,14 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import models.Bookmarks;
-import models.DbHelper;
 import models.MyDataProvider;
 
 public class Bookmarks_list_activity extends AppCompatActivity {
@@ -68,7 +65,7 @@ public class Bookmarks_list_activity extends AppCompatActivity {
     }
 
     void insertArray() {
-        bookmarks = provider.getBookmarks();
+        bookmarks = provider.getAllBookmarks();
     }
 
 

@@ -27,44 +27,21 @@ import com.example.projectwnavigation.R;
 import java.util.ArrayList;
 
 import models.Bookmarks;
-import models.Executor;
 import models.MyDataProvider;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Fragment_bkmk_specials#newInstance} factory method to
+ * Use the {@link Fragment_bkmk_orders#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_bkmk_specials extends Fragment implements View.OnLongClickListener {
+public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
-    
-    MyDataProvider provider;
-    Context context;
-    
-    RecyclerView specialsRv;
-    Fragment_bkmk_specials_adapter specials_adapter;
-    Spinner spinner;
-    ArrayList<Bookmarks> executors;
-    
-    public Boolean contextModeEnable = false;
-    
-    ArrayList<Bookmarks> selectionList;
 
-
-    public Fragment_bkmk_specials(Context context) {
-        this.context = context;
-        provider = new MyDataProvider(context);
-    }
-
-    public Fragment_bkmk_specials() {
-    }
-
-
-    public static Fragment_bkmk_specials newInstance(String param1, String param2) {
-        Fragment_bkmk_specials fragment = new Fragment_bkmk_specials();
+    public static Fragment_bkmk_orders newInstance(String param1, String param2) {
+        Fragment_bkmk_orders fragment = new Fragment_bkmk_orders();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,10 +49,31 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
         return fragment;
     }
 
+    MyDataProvider provider;
+    Context context;
+
+    RecyclerView ordersRv;
+    Fragment_bkmk_orders_adapter orders_adapter;
+    Spinner spinner;
+    ArrayList<Bookmarks> orders;
+
+    public Boolean contextModeEnable = false;
+
+    ArrayList<Bookmarks> selectionList;
+
+
+    public Fragment_bkmk_orders() {
+    }
+
+    public Fragment_bkmk_orders(Context context) {
+        this.context = context;
+        provider = new MyDataProvider(context);
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,29 +83,26 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_brmk_specials, container, false);
+        return inflater.inflate(R.layout.fragment_bkmk_orders, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        specialsRv = view.findViewById(R.id.frg_bkmk_specials_rv);
-        spinner = view.findViewById(R.id.frg_bkmk_specials_spinner);
-
+        ordersRv = view.findViewById(R.id.frg_bkmk_orders_rv);
+        spinner = view.findViewById(R.id.frg_bkmk_orders_spinenr);
         selectionList = new ArrayList<>();
-
         insertArray();
 
-        specials_adapter = new Fragment_bkmk_specials_adapter(this, context, executors);
-        specialsRv.setAdapter(specials_adapter);  
-        specialsRv.setLayoutManager(new LinearLayoutManager(context));
-
+        orders_adapter = new Fragment_bkmk_orders_adapter(this, context, orders);
+        ordersRv.setAdapter(orders_adapter);
+        ordersRv.setLayoutManager(new LinearLayoutManager(context));
         super.onViewCreated(view, savedInstanceState);
     }
 
 
     void insertArray() {
-   executors = provider.getExecutorsListFromMyBookmarks();
-        if(executors == null || executors.size() <= 0){
+     orders = provider.getOrdersListFromMyBookmarks();
+        if(orders == null || orders.size() <= 0){
             Toast.makeText(context, "Ваш список закладок пуст", Toast.LENGTH_SHORT).show();
         }
     }
@@ -116,18 +111,19 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     public boolean onLongClick(View v) {
         contextModeEnable = true;
         getActivity().invalidateOptionsMenu();
-        specials_adapter.notifyDataSetChanged();
+        orders_adapter.notifyDataSetChanged();
         return true;
     }
 
-    public void setSelection(View v, int position) {
+    public void setSelection(View v, int adapterPosition) {
         if (((CheckBox) v).isChecked()) {
-            selectionList.add(executors.get(position));
+            selectionList.add(orders.get(adapterPosition));
         } else {
-            selectionList.remove(executors.get(position));
+            selectionList.remove(orders.get(adapterPosition));
             getActivity().invalidateOptionsMenu();
         }
     }
+
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         selectMenu(menu, getActivity().getMenuInflater());
@@ -150,6 +146,17 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
         return true;
     }
 
+    private void selectMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        if (contextModeEnable) {
+            inflater.inflate(R.menu.services_multiply_choice, menu);
+        } else {
+            inflater.inflate(R.menu.main, menu);
+        }
+    }
+
+
+
     private void showDialogDelete(final ArrayList<Bookmarks> selectionList) {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
@@ -163,8 +170,8 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 specials_adapter.removeItem(selectionList);
-                  removeContext();
+                orders_adapter.removeItem(selectionList);
+                removeContext();
                 dialog.dismiss();
             }
         });
@@ -182,17 +189,7 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     private void removeContext() {
         contextModeEnable = false;
         selectionList.clear();
-        specials_adapter.notifyDataSetChanged();
+        orders_adapter.notifyDataSetChanged();
         getActivity().invalidateOptionsMenu();
-    }
-
-
-    private void selectMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        if (contextModeEnable) {
-            inflater.inflate(R.menu.services_multiply_choice, menu);
-        } else {
-            inflater.inflate(R.menu.main, menu);
-        }
     }
 }

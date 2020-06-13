@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +32,8 @@ import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
+import models.Bookmarks;
+import models.Executor;
 import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
@@ -45,7 +48,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     Persons curPerson;
     private Menu popup_menu;
-    boolean isCreator = false;
+
 
     public Orders_adapter_frg(Activity activity, Context context, ArrayList<Order> orders) {
         this.context = context;
@@ -85,8 +88,10 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
     @Override
     public void onBindViewHolder(@NonNull Orders_adapter_frg.MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
+        curPerson = provider.getLoggedInPerson();
 
         final Order order = orders.get(position);
+
         holder.title.setText(order.getTitle());
         holder.descr.setText(order.getDescription());
         holder.price.setText("Бюджет: " + order.getPrice() + "");
@@ -98,37 +103,45 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         Section_of_services section = provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());
 
-        curPerson = provider.getLoggedInPerson();
-        if (order.getCustomerId() == curPerson.getId()) {
-            isCreator = true;
-        }
-
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isCreator = false;
+                if (order.getCustomerId() == curPerson.getId()) {
+                    isCreator = true;
+                }
+
+                boolean exists = false;
+                Bookmarks b = provider.getBookmarkByOrderId(order.getId());
+                if (b != null) {
+                    exists = true;
+                }
+
                 PopupMenu popup = new PopupMenu(context, v);
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.order_popup_bookm:
-                                Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
-                                return true;
-                            case R.id.order_popup_edit:
-                                showDialogUpdate(order.getId());
-                                return true;
-                            case R.id.order_popup_delete:
-                                    provider.deleteOrder(order.getId());
-                                    notifyDataSetChanged();
-                                return true;
-                            case R.id.order_popup_complain:
-                                //TODO: доделать методы
-                                Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
-                                return true;
-                            default:
-                                return false;
+                        if (item.getItemId() == R.id.order_popup_bookm) {
+                            provider.putOrderInMyBookmarks(order.getId());
+                            Toast.makeText(context, "Заказ добавлен в ваши закладки", Toast.LENGTH_SHORT).show();
+                            return true;
+                        } else if (item.getItemId() == R.id.order_popup_edit) {
+                            showDialogUpdate(order.getId());
+                            return true;
+                        } else if (item.getItemId() == R.id.order_popup_delete) {
+                            showDialogDelete(order.getId());
+                            return true;
+                        } else if (item.getItemId() == R.id.order_popup_bookm_delete) {
+                            showDialogDeleteFromBookm(order.getId());
+                            return true;
+                        } else if (item.getItemId() == R.id.order_popup_complain) {
+                            //TODO: доделать методы
+                            Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                            return true;
                         }
 
+                        return false;
                     }
                 });
                 popup.inflate(R.menu.order_popup);
@@ -136,7 +149,12 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 if (popup_menu != null) {
                     popup_menu.findItem(R.id.order_popup_edit).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_delete).setVisible(isCreator);
+                    popup_menu.findItem(R.id.order_popup_complain).setVisible(!isCreator);
+                    if ((exists == true) || isCreator)
+                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
                 }
+                popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(exists);
+
                 popup.show();
             }
         });
@@ -147,6 +165,36 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 Intent intent = new Intent(context, Orders_view_activity.class);
                 intent.putExtra("orderIdFragment", id);
                 activity.startActivityForResult(intent, 1);
+            }
+        });
+
+    }
+
+    private void showDialogDeleteFromBookm(final int orderId) {
+        final Dialog dialog = new Dialog(context);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.setContentView(R.layout.dialog_answer_delete);
+        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
+        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
+
+        dialog.setCancelable(true);
+        dialog.show();
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                provider.deleteOrderFromMyBookmarks(orderId);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Заказ удален из ваших закладок", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
 
@@ -174,8 +222,8 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String str = parent.getItemAtPosition(position).toString();
-                    sectionId = provider.getSectionIdByTitle(str);
+                String str = parent.getItemAtPosition(position).toString();
+                sectionId = provider.getSectionIdByTitle(str);
             }
 
             @Override
@@ -184,8 +232,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
             }
         });
 
-        dialog.getWindow().setLayout(720, 1300);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show();
         final Order order = provider.getOrder(orderId);
         title.setText(order.getTitle());
@@ -196,16 +243,16 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
-                    order.setSection(sectionId);
-                    order.setDescription(descr.getText().toString().trim());
-                    order.setTitle(title.getText().toString().trim());
-                    order.setPrice(Double.valueOf(price.getText().toString()));
-                    order.setDeadline(l);
+                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                order.setSection(sectionId);
+                order.setDescription(descr.getText().toString().trim());
+                order.setTitle(title.getText().toString().trim());
+                order.setPrice(Double.valueOf(price.getText().toString()));
+                order.setDeadline(l);
 
-                    provider.updateOrder(order);
-                    notifyDataSetChanged();
-                    Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
+                provider.updateOrder(order);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -219,6 +266,34 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     }
 
+    private void showDialogDelete(final int orderId) {
+        final Dialog dialog = new Dialog(context);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+
+        dialog.setContentView(R.layout.dialog_answer_delete);
+        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
+        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
+
+        dialog.setCancelable(true);
+        dialog.show();
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orders.remove(provider.getOrder(orderId));
+                provider.deleteOrder(orderId);
+                notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
 
     @Override
     public int getItemCount() {

@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,19 +20,21 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragment_bkmk_specials_adapter.MyViewHolder> implements View.OnClickListener {
+public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragment_bkmk_specials_adapter.MyViewHolder>{
     private Context context;
     MyDataProvider provider;
-    ArrayList<Executor> specials;
+    ArrayList<Bookmarks> specials;
     Fragment_bkmk_specials fragment_bkmk_specials;
+
     Persons curPerson;
 
-    public Fragment_bkmk_specials_adapter( Fragment_bkmk_specials fragment_bkmk_specials, Context context, ArrayList<Executor> specials) {
+    public Fragment_bkmk_specials_adapter( Fragment_bkmk_specials fragment_bkmk_specials, Context context, ArrayList<Bookmarks> specials) {
         this.context = context;
         this.fragment_bkmk_specials = fragment_bkmk_specials;
         this.specials = specials;
@@ -50,10 +53,14 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
 
-        final Executor executor = specials.get(position);
+        curPerson = provider.getLoggedInPerson();
+
+        Bookmarks bookm = specials.get(position);
+        int executorId = bookm.getExecutorId();
+       final Executor executor =  provider.getExecutor(executorId);
 
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        Persons p = provider.getPerson(executor.getPersonId());
+        final Persons p = provider.getPerson(executor.getPersonId());
         if (p.getPhoto() == null) {
             holder.photo.setImageResource(R.drawable.executors_default_image);
         } else {
@@ -62,27 +69,29 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         holder.name.setText(p.getName());
         holder.rating.setText(p.getRating() + "");
 
-        if (!fragment_bkmk_specials.contextModeEnable) {
-            holder.chbox.setVisibility(View.GONE);
-        } else {
+        if (fragment_bkmk_specials.contextModeEnable) {
             holder.chbox.setVisibility(View.VISIBLE);
+        } else {
+            holder.chbox.setVisibility(View.GONE);
             //holder.chbox.setChecked(false);
         }
 
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int id = executor.getId();
-                if (id == provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId())) {
+                if (p.getId() == curPerson.getId()) {
                     Intent intent = new Intent(context, MyProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 } else {
                     Intent intent = new Intent(context, Executors_view_activity.class);
-                    intent.putExtra("executorIdFragment", id);
+                    intent.putExtra("executorIdFragment", executor.getId());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
             }
         });
+
     }
 
 
@@ -94,12 +103,15 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         return specials.size();
     }
 
-    public void removeItem(ArrayList<Executor> selectionList) {
+    public void removeItem(ArrayList<Bookmarks> selectionList) {
         for (int i = 0; i < selectionList.size(); i++) {
             specials.remove(selectionList.get(i));
+            provider.deleteExecutorFromMyBookmarks(selectionList.get(i).getExecutorId());
             notifyDataSetChanged();
         }
+        Toast.makeText(context, "Успешно удалено из закладок", Toast.LENGTH_SHORT).show();
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView name, spcltn_txt, rating;
@@ -129,6 +141,5 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         public void onClick(View v) {
             fragment_bkmk_specials.setSelection(v, getAdapterPosition());
         }
-
     }
 }

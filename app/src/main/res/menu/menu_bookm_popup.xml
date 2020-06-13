@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_bookm_delete"
+        android:title="Удалить из закладок"></item>
+    <item
+        android:id="@+id/menu_bookm_complain"
+        android:title="Пожаловаться"></item>
+</menu>

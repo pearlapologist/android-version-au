@@ -12,12 +12,11 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import models.DbHelper;
 import models.MyDataProvider;
 import models.Notify;
 
 public class Notify_list_activity extends AppCompatActivity {
-    RecyclerView recyclerView;
+   /* RecyclerView recyclerView;
     Button add_button;
     MyDataProvider provider;
     ArrayList<Notify> notices;
@@ -58,6 +57,6 @@ public class Notify_list_activity extends AppCompatActivity {
     }
 
     void insertArray() {
-        notices = provider.getNotices();
-    }
+        notices = provider.getNotifies();
+    }*/
 }

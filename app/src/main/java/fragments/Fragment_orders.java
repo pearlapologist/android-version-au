@@ -44,21 +44,9 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public Fragment_orders() {
     }
 
-   /** public static Fragment_orders newInstance(boolean changed) {
-        Fragment_orders fragment = new Fragment_orders();
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_PARAM_CHANGED, changed);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* if (getArguments() != null) {
-           datachanged = getArguments().getBoolean(ARG_PARAM_CHANGED);
-        }*/
     }
 
     @Override

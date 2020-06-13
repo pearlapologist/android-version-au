@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +34,7 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
     MyDataProvider provider;
 
     EditText spec, descrp;
-    Button save, add_service;
+    Button save, add_service, deleteForm;
     Spinner mSpinner;
     int sectionId = 0;
     RecyclerView recyclerView;
@@ -66,6 +67,7 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         spec = findViewById(R.id.myForm_spec);
         descrp = findViewById(R.id.myForm_desc);
         save = findViewById(R.id.myForm_btn_save);
+        deleteForm = findViewById(R.id.myForm_btn_deleteform);
         add_service = findViewById(R.id.myForm_btn_addService);
         mSpinner = findViewById(R.id.myForm_spinner);
 
@@ -128,6 +130,48 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
                 showDialogCreate();
             }
         });
+
+
+        deleteForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogDelete();
+            }
+        });
+    }
+
+    private void showDialogDelete() {
+        final Dialog dialog = new Dialog(this);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+
+        dialog.setContentView(R.layout.dialog_answer_delete);
+        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
+        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
+
+        dialog.setCancelable(true);
+        dialog.show();
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    provider.deleteExecutor(provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId()));
+                    Toast.makeText(MyProfile_myForm_activity.this, "анкета успешно удалена", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
     }
 
 

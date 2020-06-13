@@ -23,11 +23,13 @@ public class Fragment_bkmrk extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+
     MyDataProvider provider;
     Context context;
 
     BottomNavigationView bottomNavigationView;
     Fragment_bkmk_specials fragment_specials;
+    Fragment_bkmk_orders fragment_orders;
 
 
     public Fragment_bkmrk() {
@@ -67,6 +69,8 @@ public class Fragment_bkmrk extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         fragment_specials = new Fragment_bkmk_specials(context);
+        fragment_orders = new Fragment_bkmk_orders(context);
+
         bottomNavigationView = view.findViewById(R.id.frg_bkm_navbar);
         bottomNavigationView.setOnNavigationItemSelectedListener(listener);
 
@@ -86,7 +90,7 @@ public class Fragment_bkmrk extends Fragment {
                     selected = fragment_specials;
                     break;
                 case R.id.menu_bookm_navbar_orders:
-                   // selected = fragment_reviews;
+                   selected = fragment_orders;
                     break;
             }
             FragmentManager manager = getFragmentManager();

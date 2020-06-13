@@ -4,24 +4,38 @@ import java.util.Calendar;
 
 public class Notify {
     private int id;
-    private int personid;
+    private int personId;
     private String text;
     private Long createdDate;
+    private int sectionId;
+    private int srcId;
+    /*
+    * разделы уведомлений:
+    * 1. отклики на заказ
+    * 2. новый отзыв на тебя или ответ на твой отзыв
+    * 3. сообщения (возможно)
+    *
+    * */
 
-    public Notify(int id, int personid, String text, Long createdDate) {
+    public Notify(int id, int personId, String text, Long createdDate,  int sectionId, int srcId) {
         this.id = id;
-        this.personid = personid;
+        this.personId = personId;
         this.text = text;
         this.createdDate = createdDate;
+        this.sectionId = sectionId;
+        this.srcId = srcId;
     }
+
+    public Notify(int personId, String text, Long createdDate,  int sectionId, int srcId) {
+        this.personId = personId;
+        this.text = text;
+        this.createdDate = createdDate;
+        this.sectionId = sectionId;
+        this.srcId = srcId;
+    }
+
 
     public Notify() {
-    }
-
-    public Notify(int personid, String text, Long createdDate) {
-        this.personid = personid;
-        this.text = text;
-        this.createdDate = createdDate;
     }
 
 
@@ -31,14 +45,6 @@ public class Notify {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPersonid() {
-        return personid;
-    }
-
-    public void setPersonid(int personid) {
-        this.personid = personid;
     }
 
     public String getText() {
@@ -55,5 +61,29 @@ public class Notify {
 
     public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public int getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(int sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public int getSrcId() {
+        return srcId;
+    }
+
+    public void setSrcId(int srcId) {
+        this.srcId = srcId;
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 }

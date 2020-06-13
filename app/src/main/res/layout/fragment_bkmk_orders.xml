@@ -2,27 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fragments.Fragment_bkmk_specials">
+    tools:context="fragments.Fragment_bkmk_orders">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <Spinner
-            android:id="@+id/frg_bkmk_specials_spinner"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10sp"
-            android:layout_height="wrap_content" />
-
+        android:layout_height="match_parent"
+        >
+    <Spinner
+        android:layout_marginTop="10sp"
+        android:id="@+id/frg_bkmk_orders_spinenr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ></Spinner>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_below="@id/frg_bkmk_specials_spinner"
-            android:id="@+id/frg_bkmk_specials_rv"
+            android:layout_below="@id/frg_bkmk_orders_spinenr"
+            android:id="@+id/frg_bkmk_orders_rv"
             android:layout_marginTop="10sp"
             android:padding="5sp"
             android:layout_height="match_parent" />
 
-
     </RelativeLayout>
-
 </FrameLayout>

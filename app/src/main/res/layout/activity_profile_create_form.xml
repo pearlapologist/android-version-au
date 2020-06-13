@@ -57,8 +57,7 @@
                 android:layout_marginStart="4sp"
                 android:layout_marginTop="10sp"
                 android:layout_marginEnd="4sp"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="4sp"
+            android:layout_below="@id/createform_btn_save"
                 app:fillColor="@color/gray"
                 app:pageColor="@color/gray"
                 app:radius="6sp"
@@ -83,10 +82,10 @@
                 android:id="@+id/createform_btn_addService"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/createform_et_descr"
                 android:layout_marginStart="10sp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10sp"
+                android:layout_below="@id/createform_recycler"
                 android:textSize="15sp"
                 android:layout_marginBottom="10sp"
                 android:text="Добавить услугу"></Button>
@@ -103,11 +102,22 @@
                 android:inputType="text"
                 android:textSize="18sp"></EditText>
 
+            <TextView
+                android:id="@+id/createform_tvservices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Услуги"
+                android:layout_marginStart="15sp"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/createform_et_descr"
+                android:textSize="13sp"></TextView>
+
+
             <Button
                 android:id="@+id/createform_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/createform_recycler"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="10sp"
                 android:layout_marginTop="15sp"
@@ -120,7 +130,8 @@
                 android:id="@+id/createform_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/createform_btn_addService"
+                android:layout_marginTop="10sp"
+                android:layout_below="@id/createform_tvservices"
                 android:padding="4sp" />
 
         </RelativeLayout>

@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction19.db";
-    public static final int DATABASE_VERSION = 19;
+    public static final String DATABASE_NAME = "serviceAuction24.db";
+    public static final int DATABASE_VERSION = 24;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -95,7 +95,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_ORDER_PRICE + " real, " +
                 MyDataProvider.KEY_ORDER_CREATED_DATE + " integer, "
                 + MyDataProvider.KEY_ORDER_DEADLINE + " integer, " +
-                MyDataProvider.KEY_ORDER_DESCRIPTION + " text, "+
+                MyDataProvider.KEY_ORDER_DESCRIPTION + " text, " +
                 MyDataProvider.KEY_ORDER_ISANONNOTE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
@@ -143,19 +143,21 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_EXECUTOR_PERSON_ID + " integer, " +
                 MyDataProvider.KEY_EXECUTOR_SECTION_ID + " integer, " +
                 MyDataProvider.KEY_EXECUTOR_SPECIALIZATION + " text, " +
-                MyDataProvider.KEY_EXECUTOR_DESCRIPTION + " text, "+
-                MyDataProvider.KEY_EXECUTOR_COVERPHOTO+ " blob)";
+                MyDataProvider.KEY_EXECUTOR_DESCRIPTION + " text, " +
+                MyDataProvider.KEY_EXECUTOR_COVERPHOTO + " blob)";
         sqLiteDatabase.execSQL(sql);
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_NOTIFY +
                 "(" + MyDataProvider.KEY_NOTIFY_ID + " integer primary key autoincrement, " +
-                MyDataProvider.KEY_NOTIFY_PERSON_ID + " integer, " +
+                MyDataProvider.KEY_NOTIFY_PERSONID + " integer, " +
+                MyDataProvider.KEY_NOTIFY_SECTION_ID + " integer, " +
+                MyDataProvider.KEY_NOTIFY_SRC_ID + " integer, " +
                 MyDataProvider.KEY_NOTIFY_TEXT + " text, " +
                 MyDataProvider.KEY_NOTIFY_CREATED_DATE + " integer)";
         sqLiteDatabase.execSQL(sql);
 
 
-        sql = "create table " + MyDataProvider.TABLE_EXECUTORNPERSON+ "(" +
+        sql = "create table " + MyDataProvider.TABLE_EXECUTORNPERSON + "(" +
                 MyDataProvider.KEY_EXECUTORNPERSON_ID + " integer primary key autoincrement, " +
                 MyDataProvider.KEY_EXECUTORNPERSON_EXECUTOR_ID + " integer, " +
                 MyDataProvider.KEY_EXECUTORNPERSON_PERSON_ID + " integer)";
@@ -163,9 +165,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
         sql = "create table " + MyDataProvider.TABLE_BOOKMARKS + "(" +
                 MyDataProvider.KEY_BOOKMARK_PART_ID + " integer primary key autoincrement, " +
-                MyDataProvider.KEY_BOOKMARK_PERSON_ID+ " integer, " +
-                MyDataProvider.KEY_BOOKMARK_EXECUTOR_ID + " integer)";
+                MyDataProvider.KEY_BOOKMARK_PERSON_ID + " integer, " +
+                MyDataProvider.KEY_BOOKMARK_EXECUTOR_ID + " integer, " +
+                MyDataProvider.KEY_BOOKMARK_ORDER_ID + " integer)";
         sqLiteDatabase.execSQL(sql);
+
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_REVIEWS +
                 "(" + MyDataProvider.KEY_REVIEW_PART_ID + " integer primary key autoincrement, " +
@@ -178,7 +182,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_ANSWERS +
                 "(" + MyDataProvider.KEY_ANSWER_PART_ID + " integer primary key autoincrement, " +
-                MyDataProvider.KEY_ANSWER_REVIEW_ID+ " integer, " +
+                MyDataProvider.KEY_ANSWER_REVIEW_ID + " integer, " +
                 MyDataProvider.KEY_ANSWER_WHOANSWERS_ID + " integer, " +
                 MyDataProvider.KEY_ANSWER_WHOPOSTED_ID + " integer, " +
                 MyDataProvider.KEY_ANSWER_TEXT + " text, " +
@@ -186,7 +190,7 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
 
         sql = "create table " + MyDataProvider.TABLE_REVIEWNANSWERS + "(" +
-                MyDataProvider.KEY_REVIEWNANSWERS_ID+ " integer primary key autoincrement, " +
+                MyDataProvider.KEY_REVIEWNANSWERS_ID + " integer primary key autoincrement, " +
                 MyDataProvider.KEY_REVIEWNANSWERS_REVIEW_ID + " integer, " +
                 MyDataProvider.KEY_REVIEWNANSWERS_ANSWER_ID + " integer)";
         sqLiteDatabase.execSQL(sql);
@@ -194,7 +198,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         sql = "CREATE TABLE test_image( _id integer primary key autoincrement, title varchar, image blob)";
         sqLiteDatabase.execSQL(sql);
-
 
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_RESPONSES +

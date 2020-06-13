@@ -12,6 +12,8 @@ import android.widget.EditText;
 import com.example.projectwnavigation.R;
 
 import models.MyDataProvider;
+import models.MyUtils;
+import models.Notify;
 import models.Review;
 
 public class PersonProfile_AddReviewActivity extends AppCompatActivity {
@@ -47,9 +49,14 @@ MyDataProvider provider;
                 try {
                     provider.addReview(review);
                     provider.updatePersonRatingById(executorId);
+
+                    //TODO: передавать айди юзера или спеца? :(
+                    Notify notify = new Notify(provider.getPersonIdByExecutorId(executorId), "У вас новый отзыв", MyUtils.getCurentDateInLong(), 2, curPersonId);
+                    provider.createNotify(notify);
                 }catch(Exception e){
                     Log.e("add review", e.getMessage());
                 }
+
 
 
           setResult(RESULT_OK);
