@@ -1,6 +1,6 @@
 package models;
 
-public class Respons {
+public class Response {
     private int id;
     private int orderId;
     private int personId;
@@ -8,7 +8,7 @@ public class Respons {
     private Double price;
     private Long createdDate;
 
-    public Respons(int id, int orderId, int personId, String text, Double price, Long createdDate) {
+    public Response(int id, int orderId, int personId, String text, Double price, Long createdDate) {
         this.id = id;
         this.orderId = orderId;
         this.personId = personId;
@@ -17,7 +17,7 @@ public class Respons {
         this.createdDate = createdDate;
     }
 
-    public Respons( int orderId, int personId, String text, Double price, Long createdDate) {
+    public Response(int orderId, int personId, String text, Double price, Long createdDate) {
         this.orderId = orderId;
         this.personId = personId;
         this.text = text;

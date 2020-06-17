@@ -9,6 +9,8 @@ public class Notify {
     private Long createdDate;
     private int sectionId;
     private int srcId;
+    private int status;
+
     /*
     * разделы уведомлений:
     * 1. отклики на заказ
@@ -17,21 +19,23 @@ public class Notify {
     *
     * */
 
-    public Notify(int id, int personId, String text, Long createdDate,  int sectionId, int srcId) {
+    public Notify(int id, int personId, String text, Long createdDate,  int sectionId, int srcId, int status) {
         this.id = id;
         this.personId = personId;
         this.text = text;
         this.createdDate = createdDate;
         this.sectionId = sectionId;
         this.srcId = srcId;
+        this.status = status;
     }
 
-    public Notify(int personId, String text, Long createdDate,  int sectionId, int srcId) {
+    public Notify(int personId, String text, Long createdDate,  int sectionId, int srcId, int status) {
         this.personId = personId;
         this.text = text;
         this.createdDate = createdDate;
         this.sectionId = sectionId;
         this.srcId = srcId;
+        this.status =status;
     }
 
 
@@ -85,5 +89,13 @@ public class Notify {
 
     public void setPersonId(int personId) {
         this.personId = personId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

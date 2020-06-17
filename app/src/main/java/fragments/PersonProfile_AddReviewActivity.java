@@ -2,24 +2,32 @@ package fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.projectwnavigation.MyProfile_reviews_activity;
 import com.example.projectwnavigation.R;
 
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Notify;
+import models.Persons;
 import models.Review;
 
 public class PersonProfile_AddReviewActivity extends AppCompatActivity {
 Button cancel, save;
 EditText assessment, text;
 MyDataProvider provider;
+private NotificationManager nManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +38,7 @@ MyDataProvider provider;
         assessment = findViewById(R.id.person_profile_add_review_etAssessment);
         text = findViewById(R.id.person_profile_add_review_etText);
         provider = new MyDataProvider(this);
+        nManager =(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,13 +59,12 @@ MyDataProvider provider;
                     provider.addReview(review);
                     provider.updatePersonRatingById(executorId);
 
-                    //TODO: передавать айди юзера или спеца? :(
-                    Notify notify = new Notify(provider.getPersonIdByExecutorId(executorId), "У вас новый отзыв", MyUtils.getCurentDateInLong(), 2, curPersonId);
+                    Notify notify = new Notify(executorId, "У вас новый отзыв", MyUtils.getCurentDateInLong(), 2, curPersonId, 0);
                     provider.createNotify(notify);
+
                 }catch(Exception e){
                     Log.e("add review", e.getMessage());
                 }
-
 
 
           setResult(RESULT_OK);
@@ -65,4 +73,5 @@ MyDataProvider provider;
         });
 
     }
+
 }

@@ -65,11 +65,11 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
 
         holder.title.setText(order.getTitle());
         holder.descr.setText(order.getDescription());
-        holder.price.setText("Бюджет: " + order.getPrice() + "");
+        holder.price.setText(order.getPrice() + "");
         String created = MyUtils.convertLongToDataString(order.getCreated_date());
         holder.createdDate.setText(created);
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText("До: " + deadlinetext);
+        holder.deadline.setText("" + deadlinetext);
 
         Section_of_services section = provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());

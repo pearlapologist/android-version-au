@@ -5,6 +5,7 @@ import java.util.Calendar;
 public class Order {
 
     private int customerId;
+
     private int id;
     private String title;
     private int sectionId;
@@ -12,6 +13,7 @@ public class Order {
     private Long created_date;
     private Long deadline;
     private String description;
+    private boolean isAnonNote;
 
 public Order(){}
 
@@ -99,4 +101,19 @@ public Order(){}
         this.customerId = customerId;
     }
 
+    public int getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(int sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public boolean isAnonNote() {
+        return isAnonNote;
+    }
+
+    public void setAnonNote(boolean anonNote) {
+        isAnonNote = anonNote;
+    }
 }

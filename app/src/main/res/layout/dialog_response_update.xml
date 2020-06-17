@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:padding="10sp"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Описание"
+                android:layout_marginTop="25sp"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:id="@+id/dialog_response_update_tvdesc"
+                android:textSize="16sp"></TextView>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/dialog_response_update_descr"
+                android:layout_marginTop="10sp"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:layout_height="wrap_content"
+                android:hint=""
+                android:layout_below="@id/dialog_response_update_tvdesc"></EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Бюджет"
+                android:layout_marginTop="25sp"
+                android:layout_below="@id/dialog_response_update_descr"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:id="@+id/dialog_response_update_tvprice"
+                android:textSize="16sp"></TextView>
+
+            <EditText
+                android:id="@+id/dialog_response_update_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:ems="10"
+                android:layout_marginStart="4sp"
+                android:layout_marginEnd="4sp"
+                android:layout_below="@id/dialog_response_update_tvprice"
+                android:hint=""
+                android:inputType="number"
+                android:textSize="18sp" />
+            <Button
+                android:id="@+id/dialog_response_update_btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:text="Сохранить"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/dialog_response_update_price"
+                android:textAllCaps="false"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/dialog_response_update_btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Отменить"
+                android:layout_margin="10sp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/dialog_response_update_price"
+                android:textAllCaps="false"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

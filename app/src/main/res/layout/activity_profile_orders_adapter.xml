@@ -15,9 +15,8 @@
         android:layout_alignParentLeft="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10sp"
-        android:layout_toLeftOf="@id/activity_profile_orders_adapter_deadline"
+        android:layout_marginEnd="5dp"
+        android:layout_toLeftOf="@id/activity_profile_orders_adapter_deadlinetxt"
         android:hint="раздел по ремонту и бытовым проблемам"/>
 
     <TextView
@@ -25,12 +24,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/activity_profile_orders_adapter_created"
         android:textStyle="bold"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="44dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:hint="title"
-        android:textAlignment="center"
         android:textSize="14sp" />
 
     <TextView
@@ -45,10 +44,11 @@
 
     <TextView
         android:id="@+id/activity_profile_orders_adapter_created"
-        android:layout_width="wrap_content"
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10sp"
         android:layout_marginEnd="10sp"
         android:layout_toLeftOf="@id/activity_profile_orders_adapter_btn_popup"
         android:hint="08/06/2020"
@@ -57,24 +57,43 @@
         />
 
     <TextView
-        android:id="@+id/activity_profile_orders_adapter_deadline"
+        android:id="@+id/activity_profile_orders_adapter_deadlinetxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_below="@id/activity_profile_orders_adapter_desc"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_alignBottom="@id/activity_profile_orders_adapter_section"
+        android:layout_toLeftOf="@id/activity_profile_orders_adapter_deadline"
+        android:text="До: "
+        android:textColor="@color/colorMutedText" />
+
+
+    <TextView
+        android:id="@+id/activity_profile_orders_adapter_deadline"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_profile_orders_adapter_desc"
         android:hint="20/06/2020" />
 
     <TextView
-        android:id="@+id/activity_profile_orders_adapter_price"
+        android:id="@+id/activity_profile_orders_adapter_txtprice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_profile_orders_adapter_title"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/colorMutedText"
+        android:text="Бюджет: " />
+    <TextView
+        android:id="@+id/activity_profile_orders_adapter_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/activity_profile_orders_adapter_txtprice"
+        android:layout_below="@id/activity_profile_orders_adapter_title"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="10dp"
         android:hint="price" />
 

@@ -21,6 +21,7 @@ import models.Persons;
 
 public class MyProfile_orders_activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     MyDataProvider provider;
+
     RecyclerView recyclerView;
     ArrayList<Order> orders = new ArrayList<>();
     MyProfile_orders_adapter profile_orders_adapter;

@@ -25,19 +25,17 @@
 
 
     <string-array name="sections">
-        <item>Стройка</item>
-        <item>Грузоперевозки</item>
-        <item>Ремонт и сервис</item>
-        <item>Дизайн и фото</item>
-        <item>Красота</item>
-        <item>Образование и спорт</item>
-        <item>Здоровье</item>
+        <item>Авто услуги</item>
         <item>Бытовые услуги</item>
-        <item>Авто</item>
-        <item>Рукоделие</item>
-        <item>Недвижимость</item>
+        <item>Дизайн, фотосъемка и перевод</item>
+        <item>Доставка и грузоперевозки</item>
         <item>Животные</item>
         <item>Ит и реклама</item>
+        <item>Красота и здоровье</item>
+        <item>Недвижимость и финансы</item>
+        <item>Помощь с учебой</item>
+        <item>Ремонт, сервис и стройка</item>
+        <item>Уборка</item>
         <item>Прочее</item>
     </string-array>
 </resources>

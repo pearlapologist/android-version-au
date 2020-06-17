@@ -3,7 +3,6 @@ package models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
@@ -44,7 +43,7 @@ public class MyDataProvider {
     public static final String TABLE_BOOKMARKS = "bookmarks";
     public static final String TABLE_REVIEWS = "reviews";
     public static final String TABLE_EXECUTORNSERVICES = "executornservices";
-    public static final String TABLE_NOTIFY = "notifications";
+    public static final String TABLE_NOTIFY = "notify";
     public static final String TABLE_EXECUTORNPERSON = "executor_person";
     public static final String TABLE_RESPONSES = "responses";
     public static final String TABLE_ANSWERS = "answers";
@@ -69,8 +68,9 @@ public class MyDataProvider {
     public static final String KEY_PERSON_PASSWD = "person_passw";
     public static final String KEY_PERSON_CREATED_DATE = "person_created_date";
     public static final String KEY_PERSON_NUMBER = "person_number";
-    public static final String KEY_PERSON_PHOTO = "photo";
+    public static final String KEY_PERSON_PHOTO = "person_photo";
     public static final String KEY_PERSON_RATING = "person_rating";
+    public static final String KEY_PERSON_BIRTHDAY = "person_birthday";
     public static final String KEY_PERSON_ISEXECUTOR = "isExecutor";
 
 
@@ -104,10 +104,10 @@ public class MyDataProvider {
     public static final String KEY_BOOKMARK_ORDER_ID = "bookm_order_id";
 
 
-    public static final String KEY_ORDERNPERSON_CUSTOMER_ID = "customer_id";
-    public static final String KEY_ORDERNPERSON_ORDER_ID = "order_id";
-    public static final String KEY_ORDERNPERSON_EXECUTOR_ID = "executor_id";
-    public static final String KEY_ORDERNPERSON_STATUS = "status";
+    public static final String KEY_ORDERNPERSON_CUSTOMER_ID = "ordernpers_customer_id";
+    public static final String KEY_ORDERNPERSON_ORDER_ID = "ordernpers_order_id";
+    public static final String KEY_ORDERNPERSON_EXECUTOR_ID = "ordernpers_executor_id";
+    public static final String KEY_ORDERNPERSON_STATUS = "ordernpers_status";
 
     public static final String KEY_REVIEW_PART_ID = "review_id";
     public static final String KEY_REVIEW_EXECUTOR_ID = "review_executor_id";
@@ -131,11 +131,12 @@ public class MyDataProvider {
     public static final String KEY_REVIEWNANSWERS_ANSWER_ID = "reviewnanswers_answerid";
 
 
-    public static final String KEY_NOTIFY_TEXT = "text";
+    public static final String KEY_NOTIFY_TEXT = "notify_text";
     public static final String KEY_NOTIFY_PERSONID = "notify_personid";
     public static final String KEY_NOTIFY_CREATED_DATE = "notify_createddt";
     public static final String KEY_NOTIFY_SECTION_ID = "notify_sectionId";
     public static final String KEY_NOTIFY_SRC_ID = "notify_src";
+    public static final String KEY_NOTIFY_STATUS_ID = "notify_status";
 
     public static final String KEY_EXECUTORNPERSON_EXECUTOR_ID = "executorId";
     public static final String KEY_EXECUTORNPERSON_PERSON_ID = "personId";
@@ -155,8 +156,8 @@ public class MyDataProvider {
         sqLiteDb.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_PERSONS + "(" + KEY_PERSON_NAME + ", " + KEY_PERSON_LASTNAME + ", " + KEY_PERSON_NUMBER +
-                    ", " + KEY_PERSON_PASSWD + ", " + KEY_PERSON_RATING + ", " + KEY_PERSON_CREATED_DATE + ", " + KEY_PERSON_PHOTO +
-                    ") VALUES (?,?,?,?,?,?,?)";
+                    ", " + KEY_PERSON_PASSWD + ", " + KEY_PERSON_RATING + ", " + KEY_PERSON_CREATED_DATE + ", " + KEY_PERSON_PHOTO + ", " + KEY_PERSON_BIRTHDAY +
+                    ") VALUES (?,?,?,?,?,?,?,?)";
             SQLiteStatement statement = sqLiteDb.compileStatement(sql);
             statement.clearBindings();
 
@@ -168,8 +169,8 @@ public class MyDataProvider {
             statement.bindLong(6, person.getCreatedDate());
             if (person.getPhoto() != null) {
                 statement.bindBlob(7, person.getPhoto());
-            } else {
             }
+            statement.bindLong(8, person.getBirthday());
             statement.executeInsert();
 
             String sqlMaxId = "SELECT MAX(" + KEY_PERSON_ID + ") FROM " +
@@ -230,27 +231,6 @@ public class MyDataProvider {
         return null;
     }
 
-
-    public Persons getPersonByName(String name) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_PERSONS + " where " + KEY_PERSON_NAME + "='"
-                    + name + "'", null);
-            if (c.moveToFirst()) {
-                Persons person = getPersonFromCursor(c);
-                return person;
-            }
-            sqLiteDb.setTransactionSuccessful();
-            c.close();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return null;
-    }
-
-
     public Persons getPersonByNumber(String number) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
@@ -308,23 +288,6 @@ public class MyDataProvider {
             sqLiteDb.endTransaction();
         }
         return result;
-    }
-
-    public ArrayList<Integer> getAllPersonsIdList() {
-        ArrayList<Integer> arrID = new ArrayList();
-        SQLiteDatabase database = db.getReadableDatabase();
-        database.beginTransaction();
-        try {
-            Cursor c = database.rawQuery("SELECT " + KEY_PERSON_ID + " FROM " + TABLE_PERSONS, null);
-            while (c.moveToNext()) {
-                arrID.add(c.getInt(0));
-            }
-            database.setTransactionSuccessful();
-            c.close();
-        } finally {
-            database.endTransaction();
-        }
-        return arrID;
     }
 
     public Persons getPersonFromCursor(Cursor c) {
@@ -401,7 +364,6 @@ public class MyDataProvider {
         Boolean b = false;
         String sql = "SELECT " + KEY_PERSON_ISEXECUTOR + " FROM " + TABLE_PERSONS +
                 " WHERE " + KEY_PERSON_ID + "=" + personId;
-        SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
         try {
             Cursor c = sqLiteDatabase.rawQuery(sql, null);
             if (c.moveToFirst()) {
@@ -542,7 +504,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         }
     }
 
-    public ArrayList<Executor> getExecutors() {
+    public ArrayList<Executor> getAllExecutors() {
         ArrayList<Executor> result = new ArrayList<>();
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
@@ -562,6 +524,28 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         }
         return result;
     }
+
+    public ArrayList<Executor> getExecutorsBySectionId(int cId) {
+        ArrayList<Executor> result = new ArrayList<>();
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select * from "
+                    + TABLE_EXECUTOR + " where " + KEY_EXECUTOR_SECTION_ID + " = " + cId + " order by " + KEY_EXECUTOR_ID +
+                    " desc", null);
+            while (c.moveToNext()) {
+                Executor executor = getExecutorFromCursor(c);
+                loadExecutorServices(executor);
+                result.add(executor);
+            }
+            c.close();
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+        }
+        return result;
+    }
+
 
     public ArrayList<Service> getExecutorServices(int executorId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
@@ -604,7 +588,8 @@ where executor_services.executor_id = 1
         SQLiteDatabase database = db.getReadableDatabase();
         database.beginTransaction();
         try {
-            String sql = "select " + KEY_EXECUTORNSERVICES_SERVICE_ID + " FROM " + TABLE_EXECUTORNSERVICES + " where " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + " = " + executorId;
+            String sql = "select " + KEY_EXECUTORNSERVICES_SERVICE_ID + " FROM " +
+                    TABLE_EXECUTORNSERVICES + " where " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + " = " + executorId;
             Cursor c = database.rawQuery(sql, null);
             while (c.moveToNext()) {
                 arrID.add(c.getInt(0));
@@ -643,8 +628,6 @@ where executor_services.executor_id = 1
         SQLiteDatabase sqLDb = db.getWritableDatabase();
         try {
             int personId = getPersonIdByExecutorId(id);
-               /* deleteExecutorServices(id);
-                deleteFromExecutorNServicesByExecutorId(id);*/
             setPersonIsExecutorField(personId, false);
             onExecutorDelete(id);
 
@@ -655,17 +638,6 @@ where executor_services.executor_id = 1
         }
     }
 
-    public void deleteAllExecutors() {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            String sql = "DELETE FROM " + TABLE_EXECUTOR;
-            sqL.execSQL(sql);
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
     //endregion
 
     //region Service
@@ -736,25 +708,6 @@ where executor_services.executor_id = 1
         }
     }
 
-    public ArrayList<Service> getAllServices() {
-        ArrayList<Service> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_SERVICE + " order by " + KEY_SERVICE_ID,
-                    null);
-            while (c.moveToNext()) {
-                Service service = getServiceFromCursor(c);
-                result.add(service);
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return result;
-    }
 
 
     public Service getServiceFromCursor(Cursor c) {
@@ -789,12 +742,17 @@ where executor_services.executor_id = 1
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
-            ArrayList<Integer> servicesId = getExecutorsServicesId(executor.getId());
+           /* ArrayList<Integer> servicesId = getExecutorsServicesId(executor.getId());
             for (int i = 0; i < servicesId.size(); i++) {
                 String sql = "DELETE FROM " + TABLE_SERVICE +
                         " WHERE " + KEY_SERVICE_ID + "=" + i;
-                sqLiteDb.execSQL(sql);
-            }
+                sqLiteDb.execSQL(sql);}*/
+            deleteExecutorServices(executor.getId());
+            String sql = "DELETE FROM " + TABLE_EXECUTORNSERVICES
+                    + " WHERE " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + "=" + executor.getId();
+            sqLiteDb.execSQL(sql);
+
+
             for (Service service : executor.getServices()) {
                 String sql2 = "INSERT INTO " + TABLE_SERVICE + "(" +
                         KEY_SERVICE_PRICE + ", " + KEY_SERVICE_TITLE +
@@ -870,6 +828,7 @@ where executor_services.executor_id = 1
     public Section_of_services getSection(int sectionId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        Section_of_services section = new Section_of_services();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_SECTIONS + " where " + KEY_SECTION_ID + "=" + sectionId,
@@ -877,15 +836,14 @@ where executor_services.executor_id = 1
             if (c.moveToNext()) {
                 int id = c.getInt(c.getColumnIndex(KEY_SECTION_ID));
                 String title = c.getString(c.getColumnIndex(KEY_SECTION_TITLE));
-                Section_of_services section = new Section_of_services(id, title);
-                return section;
+                section = new Section_of_services(id, title);
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
         }
-        return null;
+        return section;
     }
 
 
@@ -939,7 +897,7 @@ where executor_services.executor_id = 1
         try {
             Cursor cursor = sqLiteDb.rawQuery("select " + KEY_SECTION_ID + " from "
                     + TABLE_SECTIONS + " where " + KEY_SECTION_TITLE + " = '" + title + "'", null);
-            if (cursor.moveToFirst() && cursor.getColumnCount() != 0) {
+            if (cursor.moveToFirst()) {
                 id = cursor.getInt(cursor.getColumnIndex(KEY_SECTION_ID));
             }
             cursor.close();
@@ -950,37 +908,6 @@ where executor_services.executor_id = 1
         return id;
     }
 
-    //UPDATE SECTION
-    public void updateSection(Section_of_services section) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "UPDATE " + TABLE_SECTIONS + " SET " +
-                    KEY_SECTION_TITLE + "='" + section.getTitle() + "', " +
-                    " WHERE " + KEY_SECTION_ID + "=" + section.getId();
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
-
-    //DELETE SECTION
-    public void deleteSection(int sectionId) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            int result = sqL.delete(TABLE_SECTIONS, KEY_SECTION_ID + " = " + sectionId, null);
-            if (result == -1) {
-                Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(db.context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-            }
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
 //endregion
 
 
@@ -990,14 +917,19 @@ where executor_services.executor_id = 1
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         try {
+            int i =0;
+            if(order.isAnonNote()){
+                i =1;
+            }
+
             String sql = "INSERT INTO " + TABLE_ORDERS + "(" + KEY_ORDER_CUSTOMER_ID + ", " + KEY_ORDER_TITLE +
                     ", " + KEY_ORDER_SECTION_ID + ", " + KEY_ORDER_PRICE + ", "
-                    + KEY_ORDER_DESCRIPTION + ", " + KEY_ORDER_DEADLINE + ", " + KEY_ORDER_CREATED_DATE +
+                    + KEY_ORDER_DESCRIPTION + ", " + KEY_ORDER_DEADLINE + ", " + KEY_ORDER_CREATED_DATE +", " + KEY_ORDER_ISANONNOTE +
                     ") VALUES (" + order.getCustomerId() + ", '" + order.getTitle() + "', " + order.getSection() + " , "
                     + order.getPrice() + " , '"
                     + order.getDescription() + "' , "
                     + order.getDeadline() + " , "
-                    + MyUtils.getCurentDateInLong() + ")";
+                    + MyUtils.getCurentDateInLong() +" , "+  i + ")";
             sqLiteDatabase.execSQL(sql);
 
             String sqlMaxId = "SELECT MAX(" + KEY_ORDER_ID + ") FROM " +
@@ -1164,18 +1096,6 @@ where executor_services.executor_id = 1
         }
     }
 
-
-    public void deleteAllOrders() {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            String sql = "DELETE FROM " + TABLE_ORDERS;
-            sqL.execSQL(sql);
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
     //endregion
 
     //region Notification
@@ -1186,9 +1106,9 @@ where executor_services.executor_id = 1
         sqLiteDatabase.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_NOTIFY + "(" + KEY_NOTIFY_PERSONID + "," + KEY_NOTIFY_TEXT + "," +
-                    KEY_NOTIFY_CREATED_DATE + "," + KEY_NOTIFY_SECTION_ID +  "," + KEY_NOTIFY_SRC_ID +
+                    KEY_NOTIFY_CREATED_DATE + "," + KEY_NOTIFY_SECTION_ID +  "," + KEY_NOTIFY_SRC_ID +"," + KEY_NOTIFY_STATUS_ID +
                     ") VALUES (" +  notify.getPersonId() + " , '" + notify.getText() + "', "
-                    + notify.getCreatedDate() + ", "+ notify.getSectionId() +  ", " + notify.getSrcId() + ")";
+                    + notify.getCreatedDate() + ", "+ notify.getSectionId() +  ", " + notify.getSrcId() + ", " + notify.getStatus() +  ")";
             sqLiteDatabase.execSQL(sql);
 
             String sqlMaxId = "SELECT MAX(" + KEY_NOTIFY_ID + ") FROM " +
@@ -1221,8 +1141,9 @@ where executor_services.executor_id = 1
                 Long createdDate = c.getLong(c.getColumnIndex(KEY_NOTIFY_CREATED_DATE));
                 int sectionId  = c.getInt(c.getColumnIndex(KEY_NOTIFY_SECTION_ID));
                 int srcId  = c.getInt(c.getColumnIndex(KEY_NOTIFY_SRC_ID));
+                int status = c.getInt(c.getColumnIndex(KEY_NOTIFY_STATUS_ID));
 
-                Notify notify = new Notify(id,personId, text, createdDate, sectionId, srcId);
+                Notify notify = new Notify(id,personId, text, createdDate, sectionId, srcId, status);
                 return notify;
             }
             c.close();
@@ -1248,8 +1169,9 @@ where executor_services.executor_id = 1
                 int srcId = c.getInt(c.getColumnIndex(KEY_NOTIFY_SRC_ID));
                 Long createdDate = c.getLong(c.getColumnIndex(KEY_NOTIFY_CREATED_DATE));
                 int sectionId  = c.getInt(c.getColumnIndex(KEY_NOTIFY_SECTION_ID));
+                int status = c.getInt(c.getColumnIndex(KEY_NOTIFY_STATUS_ID));
 
-                Notify notify = new Notify(id, personId, text, createdDate, sectionId, srcId);
+                Notify notify = new Notify(id, personId, text, createdDate, sectionId, srcId, status);
                 result.add(notify);
             }
             c.close();
@@ -1260,16 +1182,33 @@ where executor_services.executor_id = 1
         return result;
     }
 
-    //UPDATE NOTIFICATION
-    public void updateNotify(Notify notify) {
+
+    public int getCountOfAllMyNewNotifies() {
+        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        int count = 0;
+        sqLiteDb.beginTransaction();
+        try {
+            Cursor c = sqLiteDb.rawQuery("select count(*) from "
+                    + TABLE_NOTIFY + " where " + KEY_NOTIFY_PERSONID +
+                    "=" +getLoggedInPerson().getId() + " and " + KEY_NOTIFY_STATUS_ID + " = " + 0, null);
+            if (c.moveToFirst()) {
+                count = c.getInt(0);
+            }
+            c.close();
+            sqLiteDb.setTransactionSuccessful();
+        } finally {
+            sqLiteDb.endTransaction();
+        }
+        return count;
+    }
+
+    public void setMyNotifiesToChecked() {
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_NOTIFY + " SET " +
-                    KEY_NOTIFY_TEXT + "='" + notify.getText() + "', " +
-                    KEY_NOTIFY_SRC_ID + "=" + notify.getSrcId() + ", " +
-                    KEY_NOTIFY_SECTION_ID + " = " + notify.getSectionId() +
-                    " WHERE " + KEY_NOTIFY_ID + "=" + notify.getId();
+                    KEY_NOTIFY_STATUS_ID + " = 1 " +
+                    " WHERE " + KEY_NOTIFY_PERSONID + "=" + getLoggedInPerson().getId();
             sqLiteDb.execSQL(sql);
             sqLiteDb.setTransactionSuccessful();
         } finally {
@@ -1305,48 +1244,6 @@ where executor_services.executor_id = 1
 
     //region Bookmark
     //CREATE BOOKMARK
-
-
-    public void addBookmark(Bookmarks bookmr) {
-
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        try {
-            String sql = "INSERT INTO " + TABLE_BOOKMARKS + "(" + KEY_BOOKMARK_PERSON_ID +
-                    ", " + KEY_BOOKMARK_EXECUTOR_ID +
-                    ") VALUES (" + bookmr.getPersonId() + " , "
-                    + bookmr.getExecutorId() + ")";
-            sqLiteDatabase.execSQL(sql);
-
-            String sqlMaxId = "SELECT MAX(" + KEY_BOOKMARK_PART_ID + ") FROM " +
-                    TABLE_BOOKMARKS;
-            int maxId = 0;
-            Cursor c = sqLiteDatabase.rawQuery(sqlMaxId, null);
-            if (c.moveToFirst()) {
-                maxId = c.getInt(0);
-                bookmr.setId(maxId);
-            }
-            c.close();
-            sqLiteDatabase.setTransactionSuccessful();
-        } finally {
-            sqLiteDatabase.endTransaction();
-        }
-    }
-/*
-    public void addExecutorInMyBookmarks(int executorId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        try {
-            String sql = " INSERT INTO " + TABLE_BOOKMARKS + "(" + KEY_BOOKMARK_PERSON_ID +
-                    ", " + KEY_BOOKMARK_EXECUTOR_ID +  ", " + KEY_BOOKMARK_ORDER_ID +
-                    ") VALUES (" + getLoggedInPerson().getId() + " , "
-                    + executorId +  " , " + 0 + ")";
-            sqLiteDatabase.execSQL(sql);
-            sqLiteDatabase.setTransactionSuccessful();
-        } finally {
-            sqLiteDatabase.endTransaction();
-        }
-    }*/
 
     public void putExecutorInMyBookmarks(int executorId) {
         SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
@@ -1388,35 +1285,14 @@ where executor_services.executor_id = 1
 
 
     //READ BOOKMARK
-    public Bookmarks getBookmark(int bookmarkId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_BOOKMARKS + " where" + " " + KEY_BOOKMARK_PART_ID + "=" + bookmarkId,
-                    null);
-            if (c.moveToFirst()) {
-                int id = c.getInt(c.getColumnIndex(KEY_BOOKMARK_PART_ID));
-                int personId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_PERSON_ID));
-                int executorId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_EXECUTOR_ID));
-                int orderId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_ORDER_ID));
-                Bookmarks bookmark = new Bookmarks(id, personId, executorId, orderId);
-                return bookmark;
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return null;
-    }
 
     public Bookmarks getBookmarkByOrderId(int orderId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_BOOKMARKS + " where" + " " + KEY_BOOKMARK_ORDER_ID + "=" + orderId,
+                            + TABLE_BOOKMARKS + " where" + " " + KEY_BOOKMARK_ORDER_ID + "=" + orderId +
+                    " and " + KEY_BOOKMARK_PERSON_ID + " = " + getLoggedInPerson().getId(),
                     null);
             if (c.moveToFirst()) {
                 int id = c.getInt(c.getColumnIndex(KEY_BOOKMARK_PART_ID));
@@ -1433,34 +1309,33 @@ where executor_services.executor_id = 1
         return null;
     }
 
-
-
-    public ArrayList<Bookmarks> getAllBookmarks() {
-        ArrayList<Bookmarks> result = new ArrayList<>();
+    public Bookmarks getBookmarkByExecutorId(int executorId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        Bookmarks b = new Bookmarks();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_BOOKMARKS + " order by " + KEY_BOOKMARK_PART_ID +
-                    " desc", null);
-            while (c.moveToNext()) {
+                            + TABLE_BOOKMARKS + " where" + " " + KEY_BOOKMARK_EXECUTOR_ID + "=" + executorId +
+                            " and " + KEY_BOOKMARK_PERSON_ID + " = " + getLoggedInPerson().getId(),
+                    null);
+            if (c.moveToFirst()) {
                 int id = c.getInt(c.getColumnIndex(KEY_BOOKMARK_PART_ID));
                 int personId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_PERSON_ID));
-                int executorId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_EXECUTOR_ID));
-                int orderId = c.getInt(c.getColumnIndex(KEY_BOOKMARK_ORDER_ID));
 
-                Bookmarks bookm = new Bookmarks(id, personId, executorId, orderId);
-                result.add(bookm);
+                b.setId(id);
+                b.setPersonId(personId);
+                b.setExecutorId(executorId);
+                b.setOrderId(0);
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e("Error ", e.getMessage());
         } finally {
             sqLiteDb.endTransaction();
         }
-        return result;
+        return b;
     }
+
+
 
     public ArrayList<Bookmarks> getExecutorsListFromMyBookmarks() {
         ArrayList<Bookmarks> result = new ArrayList<>();
@@ -1511,22 +1386,6 @@ where executor_services.executor_id = 1
         return result;
     }
 
-    //UPDATE BOOKMARK
-
-    public void updateBookmark(Bookmarks bookmarks) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "UPDATE " + TABLE_BOOKMARKS + " SET " +
-                    KEY_BOOKMARK_PERSON_ID + "=" + bookmarks.getPersonId() + ", " +
-                    KEY_BOOKMARK_EXECUTOR_ID + "= " + bookmarks.getExecutorId() +
-                    " WHERE " + KEY_BOOKMARK_PART_ID + " = " + bookmarks.getId();
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
 
     //DELETE BOOKMARK
     public void deleteBookm(int id) {
@@ -1553,7 +1412,8 @@ where executor_services.executor_id = 1
           Executor r = getExecutor(executorId);
             if (r != null) {
                 sql = "DELETE FROM " + TABLE_BOOKMARKS +
-                        " WHERE " + KEY_BOOKMARK_EXECUTOR_ID + " = " + executorId;
+                        " WHERE " + KEY_BOOKMARK_EXECUTOR_ID + " = " + executorId + " and "
+                + KEY_BOOKMARK_PERSON_ID + " = " + getLoggedInPerson().getId();
             }
             sqLiteDatabase.execSQL(sql);
             sqLiteDatabase.setTransactionSuccessful();
@@ -1609,21 +1469,21 @@ where executor_services.executor_id = 1
     public Review getReview(int id) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        Review review = new Review();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_REVIEWS + " where " + " " + KEY_REVIEW_PART_ID + "=" + id,
                     null);
             if (c.moveToFirst()) {
-                Review review = getReviewFromCursor(c);
+                 review = getReviewFromCursor(c);
                 loadReviewAnswers(review);
-                return review;
             }
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
         }
-        return null;
+        return review;
     }
 
 
@@ -1640,28 +1500,6 @@ where executor_services.executor_id = 1
         return review;
     }
 
-    public ArrayList<Review> getReviews() {
-        ArrayList<Review> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_REVIEWS + " order by " + KEY_REVIEW_PART_ID +
-                    " desc", null);
-            while (c.moveToNext()) {
-                Review review = getReviewFromCursor(c);
-                loadReviewAnswers(review);
-                result.add(review);
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return result;
-    }
-
-
     public ArrayList<Review> getAllPersonReviewByPersonId(int personId) {
         ArrayList<Review> result = new ArrayList<>();
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
@@ -1670,7 +1508,7 @@ where executor_services.executor_id = 1
             Cursor c = sqLiteDb.rawQuery("select * from "
                     + TABLE_REVIEWS + " where " + KEY_REVIEW_EXECUTOR_ID + " = " + personId + " order by "
                     + KEY_REVIEW_CREATED_DATE +
-                    " asc", null);
+                    " desc", null);
             while (c.moveToNext()) {
                 Review r = getReviewFromCursor(c);
                 loadReviewAnswers(r);
@@ -1705,9 +1543,10 @@ where executor_services.executor_id = 1
             }
             database.setTransactionSuccessful();
             c.close();
-            return arrID;
+
         } finally {
             database.endTransaction();
+            return arrID;
         }
     }
 
@@ -1746,7 +1585,7 @@ where executor_services.executor_id = 1
     }
 
     //endregion
-    //TODO:Доделать эти методы
+
     //region Executor and Person
     //CREATE EXECUTNPERSON TABLE
     public void onExecutorCreate(Executor executor) {
@@ -1765,35 +1604,6 @@ where executor_services.executor_id = 1
     }
 
     //READ EXECUTORNPERSON
-    public String getPersonNameFromExecutorId(int executorid) {
-        if (String.valueOf(executorid).length() == 0) {
-            return null;
-        }
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor cursor = sqLiteDb.rawQuery("SELECT " + KEY_EXECUTORNPERSON_PERSON_ID +
-                    " FROM " + TABLE_EXECUTORNPERSON + " WHERE " + KEY_EXECUTORNPERSON_EXECUTOR_ID + "= " + executorid, null);
-            if (cursor.moveToFirst()) {
-                int personId = cursor.getInt(0);
-                Persons person = getPerson(personId);
-                if (person == null) {
-                    return null;
-                } else {
-                    String personName = person.getName();
-                    sqLiteDb.setTransactionSuccessful();
-                    cursor.close();
-                    return personName;
-                }
-            } else {
-                sqLiteDb.setTransactionSuccessful();
-                cursor.close();
-                return " ";
-            }
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
 
     public int getExecutorIdByPersonId(int personId) {
         Persons person = this.getPerson(personId);
@@ -1851,40 +1661,7 @@ where executor_services.executor_id = 1
         return id;
     }
 
-    //UPDATE EXECUTORNPERSON
-    public void updateExecutorNPerson(int id, int executorId, int personId) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "UPDATE " + TABLE_EXECUTORNPERSON + " SET " +
-                    KEY_EXECUTORNPERSON_EXECUTOR_ID + "=" + executorId + ", " +
-                    KEY_EXECUTORNPERSON_PERSON_ID + "= " + personId + ", " +
-                    " WHERE " + KEY_EXECUTORNPERSON_ID + " = " + id;
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
-
-
     //DELETE EXECUTORNPERSON
-    public void deleteFromExecutorNPersonByPartId(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            int result = sqL.delete(TABLE_EXECUTORNPERSON, KEY_EXECUTORNPERSON_ID + " = " + id, null);
-            if (result == -1) {
-                Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(db.context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-            }
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
-
 
     public void onExecutorDelete(int executorId) {
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
@@ -1969,12 +1746,9 @@ where executor_services.executor_id = 1
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
-            String sql = "DELETE FROM " + TABLE_EXECUTORNSERVICES +
-                    " WHERE " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + "=" + executor.getId();
-            sqLiteDb.execSQL(sql);
-
+          deleteFromExecutorNServicesByExecutorId(executor.getId());
             for (Service service : executor.getServices()) {
-                sql = "INSERT INTO " + TABLE_EXECUTORNSERVICES + "(" +
+               String sql = "INSERT INTO " + TABLE_EXECUTORNSERVICES + "(" +
                         KEY_EXECUTORNSERVICES_EXECUTOR_ID + ", " + KEY_EXECUTORNSERVICES_SERVICE_ID +
                         ") VALUES (" + executor.getId() + ", " + service.getId() + ")";
                 sqLiteDb.execSQL(sql);
@@ -1986,21 +1760,6 @@ where executor_services.executor_id = 1
     }
 
     //DELETE EXECUTORNSERVICES
-    public void deleteFromExecutorNServicesByPartId(int ID) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            int result = sqL.delete(TABLE_EXECUTORNSERVICES, KEY_EXECUTORNSERVICES_ID + " = " + ID, null);
-            if (result == -1) {
-                Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-            }
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
 
     public void deleteFromExecutorNServicesByExecutorId(int id) {
         SQLiteDatabase sqLDb = db.getWritableDatabase();
@@ -2102,68 +1861,6 @@ where executor_services.executor_id = 1
         }
     }
 
-    public ArrayList<OrderNPerson> getAllOrderNPersons() {
-        ArrayList<OrderNPerson> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_ORDERNPERSON + " order by " + KEY_ORDERNPERSON_PART_ID +
-                    " desc", null);
-            while (c.moveToNext()) {
-
-                int id = c.getInt(c.getColumnIndex(KEY_ORDERNPERSON_PART_ID));
-                int orderId = c.getInt(c.getColumnIndex(KEY_ORDERNPERSON_ORDER_ID));
-                int customerId = c.getInt(c.getColumnIndex(KEY_ORDERNPERSON_CUSTOMER_ID));
-                int executorId = c.getInt(c.getColumnIndex(KEY_ORDERNPERSON_EXECUTOR_ID));
-                // KEY_ORDERNPERSON_STATUS +
-                OrderNPerson orderNP = new OrderNPerson(id, orderId, customerId, executorId);
-                // c.close();
-                //loadExecutorServices(executor);
-                result.add(orderNP);
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return result;
-    }
-
-    //UPDATE OrderNPerson TABLE
-    public void updateOrderNPerson(OrderNPerson tNr) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "UPDATE " + TABLE_ORDERNPERSON + " SET " +
-                    KEY_ORDERNPERSON_ORDER_ID + "=" + tNr.getOrderId() + ", " +
-                    KEY_ORDERNPERSON_CUSTOMER_ID + "=" + tNr.getCustomerId() + ", " +
-                    KEY_ORDERNPERSON_EXECUTOR_ID + "= " + tNr.getExecutorId() + ", " +
-                    " WHERE " + KEY_ORDERNPERSON_PART_ID + " = " + tNr.getId();
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
-
-    //DELETE OrderNPerson TABLE
-    public void deleteFromOrderNPerson(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            int result = sqL.delete(TABLE_ORDERNPERSON, KEY_ORDERNPERSON_PART_ID + " = " + id, null);
-            if (result == -1) {
-                Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-            }
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
-
     public void onOrderDelete(int orderId) {
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
@@ -2246,7 +1943,7 @@ where executor_services.executor_id = 1
     //region Responses
 
     //create responses
-    public void addRespons(Respons respons) {
+    public void addRespons(Response response) {
 
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
@@ -2257,11 +1954,11 @@ where executor_services.executor_id = 1
             SQLiteStatement statement = sqLiteDb.compileStatement(sql);
             statement.clearBindings();
 
-            statement.bindDouble(1, respons.getOrderId());
-            statement.bindDouble(2, respons.getPersonId());
-            statement.bindString(3, respons.getText());
-            statement.bindDouble(4, respons.getPrice());
-            statement.bindLong(5, respons.getCreatedDate());
+            statement.bindDouble(1, response.getOrderId());
+            statement.bindDouble(2, response.getPersonId());
+            statement.bindString(3, response.getText());
+            statement.bindDouble(4, response.getPrice());
+            statement.bindLong(5, response.getCreatedDate());
             statement.executeInsert();
 
             String sqlMaxId = "SELECT MAX(" + KEY_RESPONSES_ID + ") FROM " +
@@ -2271,7 +1968,7 @@ where executor_services.executor_id = 1
             if (c.moveToFirst()) {
                 maxId = c.getInt(0);
             }
-            respons.setId(maxId);
+            response.setId(maxId);
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
@@ -2280,29 +1977,29 @@ where executor_services.executor_id = 1
 
     //get responses
     public int getPersonIdByResponseId(int responsId) {
-        Respons respons = this.getRespons(responsId);
-        if (respons == null) {
+        Response response = this.getRespons(responsId);
+        if (response == null) {
             return -1;
         }
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
+        int id = 0;
         try {
             Cursor cursor = sqLiteDb.rawQuery("SELECT " + KEY_RESPONSES_PERSON_ID +
                     " FROM " + TABLE_RESPONSES + " WHERE " + KEY_RESPONSES_ID + "= " + responsId, null);
             if (cursor.moveToFirst()) {
-                int id = cursor.getInt(0);
-                return id;
+                id = cursor.getInt(0);
             }
             sqLiteDb.setTransactionSuccessful();
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
         }
-        return -1;
+        return id;
     }
 
 
-    public Respons getRespons(int responseId) {
+    public Response getRespons(int responseId) {
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -2310,7 +2007,7 @@ where executor_services.executor_id = 1
                             + TABLE_RESPONSES + " where " + KEY_RESPONSES_ID + "=" + responseId,
                     null);
             if (c.moveToFirst()) {
-                Respons r = getResponsFromCursor(c);
+                Response r = getResponsFromCursor(c);
                 return r;
             }
             sqLiteDb.setTransactionSuccessful();
@@ -2320,7 +2017,7 @@ where executor_services.executor_id = 1
         }
         return null;
     }
-
+//TODO: птимизировать
     public ArrayList<Integer> getRespondedPersonsIdListByOrderId(int orderId) {
         Order order = this.getOrder(orderId);
         if (order == null) {
@@ -2345,36 +2042,16 @@ where executor_services.executor_id = 1
         }
     }
 
-    public ArrayList<Respons> getAllResponses() {
-        ArrayList<Respons> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_RESPONSES + " order by " + KEY_RESPONSES_CREATEDDATE +
-                    " desc", null);
-            while (c.moveToNext()) {
-                Respons r = getResponsFromCursor(c);
-                result.add(r);
-            }
-            sqLiteDb.setTransactionSuccessful();
-            c.close();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return result;
-    }
-
-    public ArrayList<Respons> getAllOrderResponsesByOrderId(int orderId) {
-        ArrayList<Respons> result = new ArrayList<>();
+    public ArrayList<Response> getAllOrderResponsesByOrderId(int orderId) {
+        ArrayList<Response> result = new ArrayList<>();
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                     + TABLE_RESPONSES + " where " + KEY_RESPONSES_ORDER_ID + " = " + orderId + " order by " + KEY_RESPONSES_CREATEDDATE +
-                    " asc", null);
+                    " desc", null);
             while (c.moveToNext()) {
-                Respons r = getResponsFromCursor(c);
+                Response r = getResponsFromCursor(c);
                 result.add(r);
             }
             sqLiteDb.setTransactionSuccessful();
@@ -2385,7 +2062,7 @@ where executor_services.executor_id = 1
         return result;
     }
 
-    public Respons getResponsFromCursor(Cursor c) {
+    public Response getResponsFromCursor(Cursor c) {
         int id = c.getInt(c.getColumnIndex(KEY_RESPONSES_ID));
         int orderId = c.getInt(c.getColumnIndex(KEY_RESPONSES_ORDER_ID));
         int personId = c.getInt(c.getColumnIndex(KEY_RESPONSES_PERSON_ID));
@@ -2393,31 +2070,25 @@ where executor_services.executor_id = 1
         Double price = c.getDouble(c.getColumnIndex(KEY_RESPONSES_SUGGESTEDPRICE));
         Long created = c.getLong(c.getColumnIndex(KEY_RESPONSES_CREATEDDATE));
 
-        Respons r = new Respons(id, orderId, personId, text, price, created);
+        Response r = new Response(id, orderId, personId, text, price, created);
         return r;
     }
 
 
     //UPDATE Responses
-    public void updateRespons(Respons r) {
+    public void updateRespons(Response r) {
         SQLiteDatabase sqlDatabase = db.getWritableDatabase();
         sqlDatabase.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_RESPONSES + " SET " +
-                    KEY_RESPONSES_ORDER_ID + "= ?," +
-                    KEY_RESPONSES_PERSON_ID + "= ?," +
                     KEY_RESPONSES_TEXT + "= ?," +
-                    KEY_RESPONSES_SUGGESTEDPRICE + "= ?," +
-                    KEY_RESPONSES_CREATEDDATE + "= ?" +
+                    KEY_RESPONSES_SUGGESTEDPRICE + "= ?" +
                     " WHERE " + KEY_RESPONSES_ID + "= ?";
             SQLiteStatement statement = sqlDatabase.compileStatement(sql);
 
-            statement.bindDouble(1, r.getOrderId());
-            statement.bindDouble(2, r.getPersonId());
-            statement.bindString(3, r.getText());
-            statement.bindDouble(4, r.getPrice());
-            statement.bindLong(5, r.getCreatedDate());
-            statement.bindDouble(6, r.getId());
+            statement.bindString(1, r.getText());
+            statement.bindDouble(2, r.getPrice());
+            statement.bindDouble(3, r.getId());
             statement.execute();
             sqlDatabase.setTransactionSuccessful();
         } finally {
@@ -2434,9 +2105,9 @@ where executor_services.executor_id = 1
         try {
             int result = sqL.delete(TABLE_RESPONSES, KEY_RESPONSES_ID + " = " + id, null);
             if (result == -1) {
-                Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(db.context, "Ошибка при удалении", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(db.context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(db.context, "Успешно удалено", Toast.LENGTH_SHORT).show();
             }
             sqL.setTransactionSuccessful();
         } finally {
@@ -2504,27 +2175,6 @@ where executor_services.executor_id = 1
         return answer;
     }
 
-
-    public ArrayList<Answer> getAllAnswers() {
-        ArrayList<Answer> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_ANSWERS + " order by " + KEY_ANSWER_CREATED_DATE +
-                    " desc", null);
-            while (c.moveToNext()) {
-                Answer answer = getAnswerFromCursor(c);
-                result.add(answer);
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-            return result;
-        }
-    }
 
     public ArrayList<Answer> getAllReviewAnswersByReviewId(int reviewId) {
         ArrayList<Answer> result = new ArrayList<>();

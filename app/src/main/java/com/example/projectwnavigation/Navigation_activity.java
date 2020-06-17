@@ -1,5 +1,9 @@
 package com.example.projectwnavigation;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,19 +27,23 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
+
+import fragments.Executors_view_activity;
 import fragments.Fragment_bkmrk;
 import fragments.Fragment_notification;
 import fragments.Fragment_orders;
 import fragments.Fragment_settings;
 import fragments.Fragment_specials;
 import fragments.MyProfileActivity;
+import fragments.Orders_view_activity;
+import fragments.PersonProfileActivity;
 import models.MyDataProvider;
 import models.MyUtils;
+import models.Notify;
 import models.Persons;
 
 public class Navigation_activity extends AppCompatActivity {
-
-    private AppBarConfiguration mAppBarConfiguration;
     private TextView mNotifyTv;
     int notifyCounter = 0;
 
@@ -47,6 +55,8 @@ public class Navigation_activity extends AppCompatActivity {
     Fragment_settings fragment_settings;
     TextView headerPersonName;
     ImageView headerImageView;
+
+    private NotificationManager nManager;
 
 
     @Override
@@ -64,8 +74,11 @@ public class Navigation_activity extends AppCompatActivity {
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
         fragment_notification = new Fragment_notification(getApplicationContext());
         fragment_settings = new Fragment_settings(getApplicationContext());
-       /* DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
-        drawer2.closeDrawer(GravityCompat.START);*/
+
+        nManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
+        drawer2.closeDrawer(GravityCompat.START);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
@@ -107,6 +120,7 @@ public class Navigation_activity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.replace(R.id.fram, fragment_orders).commit();
         setTitle("Заказы");
+
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
@@ -133,6 +147,7 @@ public class Navigation_activity extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onStart() {
         Persons currentPerson = provider.getLoggedInPerson();
@@ -142,6 +157,29 @@ public class Navigation_activity extends AppCompatActivity {
             startActivity(intent);
             return;
         }
+        notifyCounter = provider.getCountOfAllMyNewNotifies();
+        if (notifyCounter != 0) {
+            ArrayList<Notify> notifies = provider.getAllMyNotifies();
+            if (notifies != null) {
+                for (Notify n : notifies) {
+                    Intent intent = new Intent(getApplicationContext(), MyProfile_reviews_activity.class);
+                    intent.putExtra("orderview_PersonId", n.getSrcId());
+                    if (n.getSectionId() == 1) {
+                        intent = new Intent(getApplicationContext(), Orders_view_activity.class);
+                        intent.putExtra("orderIdFragment", n.getSrcId());
+                    }
+                    Notification.Builder buildr = new Notification.Builder(getApplicationContext());
+                    PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    buildr.setContentIntent(pIntent).setSmallIcon(R.drawable.minecraft).
+                            setTicker("У вас новое уведомление").setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(n.getText());
+                    Notification notification = buildr.build();
+                    nManager.notify(n.getId(), notification);
+
+                }
+            }
+        }
+
+        initializeCountDrawer();
         super.onStart();
     }
 
@@ -179,7 +217,7 @@ public class Navigation_activity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_exit) {
             provider.setLoggedInPerson(null);
-        onStart();
+            onStart();
             return true;
         }
 
@@ -199,7 +237,11 @@ public class Navigation_activity extends AppCompatActivity {
                 fragment = fragment_bkmrk;
             } else if (id == R.id.nav_notificatn) {
                 fragment = fragment_notification;
-                initializeCountDrawer();
+                if (notifyCounter != 0) {
+                    provider.setMyNotifiesToChecked();
+                    notifyCounter = provider.getCountOfAllMyNewNotifies();
+                }
+
             } else if (id == R.id.nav_settings) {
                 fragment = fragment_settings;
             }
@@ -216,7 +258,10 @@ public class Navigation_activity extends AppCompatActivity {
         mNotifyTv.setGravity(Gravity.CENTER_VERTICAL);
         mNotifyTv.setTypeface(null, Typeface.BOLD);
         mNotifyTv.setTextColor(getResources().getColor(R.color.colorAccent));
-        mNotifyTv.setText(notifyCounter + "");
-        notifyCounter++;
+        if (notifyCounter == 0) {
+            mNotifyTv.setText("");
+        } else {
+            mNotifyTv.setText(notifyCounter + "");
+        }
     }
 }

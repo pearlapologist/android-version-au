@@ -3,7 +3,9 @@ package fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,11 +87,11 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         final Order order = orders.get(position);
         holder.title.setText(order.getTitle());
         holder.descr.setText(order.getDescription());
-        holder.price.setText("Бюджет: " + order.getPrice() + "");
+        holder.price.setText("" + order.getPrice() + "");
         String created = MyUtils.convertLongToDataString(order.getCreated_date());
         holder.createdDate.setText(created);
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText("До: " + deadlinetext);
+        holder.deadline.setText(""+deadlinetext);
         final int id = order.getId();
         Section_of_services section = provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());
@@ -106,18 +109,11 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.order_popup_bookm:
-                                Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
-                                return true;
                             case R.id.order_popup_edit:
-                                showDialogUpdate(orders.get(position).getId());
+                                showDialogUpdate(order.getId());
                                 return true;
                             case R.id.order_popup_delete:
-                                provider.deleteOrder(order.getId());
-                                return true;
-                            case R.id.order_popup_complain:
-                                //TODO: доделать методы
-                                Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                                showDialogDelete(order.getId());
                                 return true;
                             default:
                                 return false;
@@ -125,11 +121,15 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
 
                     }
                 });
+
                 popup.inflate(R.menu.order_popup);
                 popup_menu = popup.getMenu();
                 if (popup_menu != null) {
                     popup_menu.findItem(R.id.order_popup_edit).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_delete).setVisible(isCreator);
+                    popup_menu.findItem(R.id.order_popup_complain).setVisible(false);
+                    popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(false);
+                    popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
                 }
                 popup.show();
             }
@@ -144,6 +144,34 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
             }
         });
     }
+
+    private void showDialogDelete(final int id) {
+        final AlertDialog.Builder dialogDelete = new AlertDialog.Builder(context);
+
+        dialogDelete.setTitle("Внимание!");
+        dialogDelete.setMessage("Вы уверены, что хотите удалить свой заказ?");
+        dialogDelete.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    provider.deleteOrder(id);
+                    notifyDataSetChanged();
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    Log.e("showDialogDelete", e.getMessage());
+                }
+            }
+        });
+
+        dialogDelete.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialogDelete.show();
+    }
+
     int sectionId = -1;
 
     private void showDialogUpdate(final int orderId) {

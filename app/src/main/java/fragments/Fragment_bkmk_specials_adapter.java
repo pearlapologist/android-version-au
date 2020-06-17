@@ -1,15 +1,19 @@
 package fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
 import models.MyUtils;
+import models.Order;
 import models.Persons;
 
 public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragment_bkmk_specials_adapter.MyViewHolder>{
@@ -52,7 +57,6 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
-
         curPerson = provider.getLoggedInPerson();
 
         Bookmarks bookm = specials.get(position);
@@ -92,8 +96,63 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
             }
         });
 
+        holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(context, v);
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_bookm_delete:
+                                showDialogDelete(executor.getId());
+                                return true;
+                            case R.id.menu_bookm_complain:
+                                //TODO: доделать методы
+                                Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popup.inflate(R.menu.menu_bookm_popup);
+                popup.show();
+            }
+        });
+
     }
 
+    private void showDialogDelete(final int executorId) {
+        final Dialog dialog = new Dialog(context);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.setContentView(R.layout.dialog_answer_delete);
+        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
+        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
+
+        dialog.setCancelable(true);
+        dialog.show();
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Executor r = provider.getExecutor(executorId);
+                specials.remove(r);
+                provider.deleteExecutorFromMyBookmarks(executorId);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Специалист удален из ваших закладок", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -117,6 +176,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         private TextView name, spcltn_txt, rating;
         ImageView photo;
         View view;
+        Button btn_popup_menu;
         CheckBox chbox;
         LinearLayout adapter_layout;
 
@@ -129,6 +189,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
             spcltn_txt = itemView.findViewById(R.id.frg_bkmk_specials_adapter_spec);
             chbox = itemView.findViewById(R.id.frg_bkmk_specials_adapter_chbox);
             photo = itemView.findViewById(R.id.frg_bkmk_specials_adapter_image);
+            btn_popup_menu = itemView.findViewById(R.id.frg_bkmk_specials_adapter_btn_popup);
 
             chbox.setOnClickListener(this);
             view.setOnLongClickListener(fragment_bkmk_specials);

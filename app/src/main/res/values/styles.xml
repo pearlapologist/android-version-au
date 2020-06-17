@@ -12,17 +12,7 @@
         <item name="android:fontFamily">@font/chalkboard</item>
     </style>
 
-    <style name="woutActionBar" parent="AppTheme">
-        <item name="colorPrimary">@color/colorMutedGray2</item>
-        <item name="colorPrimaryDark">@color/gray</item>
-        <item name="colorAccent">@color/colorYellow</item>
-        <item name="spinBars">true</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="background">@color/colorBackground</item>
-        <item name="android:windowAnimationStyle">
-            @style/activityAnim
-        </item>
-        <item name="android:fontFamily">@font/chalkboard</item>
+    <style name="AppTheme.woutActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

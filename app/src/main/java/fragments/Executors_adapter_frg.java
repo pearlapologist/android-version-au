@@ -26,6 +26,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
 import models.MyUtils;
@@ -47,9 +48,9 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView name, spcltn_txt,rating;
+        private TextView name, spcltn_txt, rating;
         ImageView photo;
-         Button btn_popup_menu;
+        Button btn_popup_menu;
         LinearLayout adapter_layout;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -87,7 +88,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
             holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
         holder.name.setText(p.getName());
-        holder.rating.setText(p.getRating()+"");
+        holder.rating.setText(p.getRating() + "");
 
 
         final int id = executor.getId();
@@ -99,14 +100,20 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                 if (p.getId() == curPerson.getId()) {
                     isCreator = true;
                 }
+
+
+                boolean exists = false;
+                Bookmarks b = provider.getBookmarkByExecutorId(executor.getId());
+                if (b != null) {
+                    exists = true;
+                }
+
                 PopupMenu popup = new PopupMenu(context, v);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-
-                       switch (item.getItemId()) {
-
+                        switch (item.getItemId()) {
                             case R.id.order_popup_bookm:
                                 provider.putExecutorInMyBookmarks(executor.getId());
                                 Toast.makeText(context, "Специалист добавлен в ваши закладки", Toast.LENGTH_SHORT).show();
@@ -117,7 +124,10 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                                 context.startActivity(intent);
                                 return true;
                             case R.id.order_popup_delete:
-                            showDialogDelete(id);
+                                showDialogDelete(id);
+                                return true;
+                            case R.id.order_popup_bookm_delete:
+                                showDialogDeleteFromBookm(id);
                                 return true;
                             case R.id.order_popup_complain:
                                 //TODO: доделать методы
@@ -136,13 +146,15 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                     popup_menu.findItem(R.id.order_popup_edit).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_delete).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_complain).setVisible(!isCreator);
-                    popup_menu.findItem(R.id.order_popup_bookm).setVisible(!isCreator);
+                    popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(exists);
+                    if ((exists == true) || isCreator) {
+                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
+                    }
 
                 }
                 popup.show();
             }
         });
-
 
 
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +207,38 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         });
 
     }
+
+    private void showDialogDeleteFromBookm(final int executorId) {
+        final Dialog dialog = new Dialog(context);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.setContentView(R.layout.dialog_answer_delete);
+        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
+        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
+
+        dialog.setCancelable(true);
+        dialog.show();
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                provider.deleteExecutorFromMyBookmarks(executorId);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Специалист удален из ваших закладок", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+
     @Override
     public int getItemCount() {
         if (executors == null) {

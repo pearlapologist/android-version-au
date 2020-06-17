@@ -237,6 +237,8 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                 review.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
 
                 provider.updateReview(review);
+                provider.updatePersonRatingById(review.getExecutrId());
+
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -264,7 +266,9 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Review review = provider.getReview(id);
                 provider.deleteReview(id);
+                provider.updatePersonRatingById(review.getExecutrId());
                 notifyDataSetChanged();
                 Toast.makeText(context, "Отзыв удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();

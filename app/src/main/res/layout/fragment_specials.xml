@@ -16,10 +16,18 @@
     <Spinner
         android:id="@+id/fargment_specials_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:spinnerMode="dropdown"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createform_tvSection"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginEnd="10sp"
+        android:padding="4sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fargment_specials_rv"
+        android:layout_marginTop="10sp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

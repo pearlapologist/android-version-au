@@ -25,8 +25,6 @@
         <activity
             android:name=".MyProfile_myForm_activity"
             android:label="Редактировать анкету" />
-        <activity android:name=".TestImageList" />
-        <activity android:name=".TestImageActivity" />
         <activity
             android:name="fragments.Executors_view_activity"
             android:label="Профиль специалиста" />
@@ -34,25 +32,10 @@
         <activity
             android:name="fragments.Orders_view_activity"
             android:label="Заказ" />
-        <activity android:name=".Service_update_activity" />
         <activity
             android:name=".FirstActivity"
             android:label="Вход" />
-        <activity android:name=".Bookmarks_update_activity" />
-        <activity
-            android:name=".Notify_update_activity"
-            android:parentActivityName=".Notify_list_activity" />
         <activity android:name=".Orders_update_activity" />
-        <activity android:name=".Executor_update_activity" />
-        <activity android:name=".Orders_createActivity" />
-        <activity android:name=".Notify_createActivity" />
-        <activity android:name=".Service_createActivity" />
-        <activity android:name=".Bookmarks_create_activity" />
-        <activity
-            android:name=".Bookmarks_list_activity"
-            android:parentActivityName=".TestActivity" />
-        <activity android:name=".Service_list_activity" />
-        <activity android:name=".Notify_list_activity" />
         <activity android:name=".TestActivity" />
         <activity
             android:name=".MyProfile_reviews_activity"
@@ -68,10 +51,9 @@
             android:label="Мой профиль" />
         <activity
             android:name=".Navigation_activity"
-            android:theme="@style/woutActionBar">
+            android:theme="@style/AppTheme.woutActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -81,30 +63,12 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="Зарегистрироваться" />
-        <activity android:name=".Executors_list_activity" />
         <activity
             android:name=".AuthorizationActivity"
             android:label="Авторизоваться" />
         <activity
-            android:name=".Orders_list_activity"
-            android:label="Orders">
-
-            <!--
-                <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity android:name=".Persons_contol_addPerson" />
-        <activity
-            android:name=".Persons_controlList_activity"
-            android:parentActivityName=".Persons_contol_addPerson" />
-        <activity android:name=".MainActivity" />
-        <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

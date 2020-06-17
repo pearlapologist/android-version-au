@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -141,23 +142,19 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
     }
 
     private void showDialogDelete() {
-        final Dialog dialog = new Dialog(this);
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        final androidx.appcompat.app.AlertDialog.Builder dialogDelete = new androidx.appcompat.app.AlertDialog.Builder(this);
+        dialogDelete.setTitle("Предупреждение");
+        dialogDelete.setMessage("Вы уверены, что хотите удалить?");
 
-        dialog.setContentView(R.layout.dialog_answer_delete);
-        Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
-        Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
-
-        dialog.setCancelable(true);
-        dialog.show();
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        dialogDelete.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 try {
                     provider.deleteExecutor(provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId()));
-                    Toast.makeText(MyProfile_myForm_activity.this, "анкета успешно удалена", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyProfile_myForm_activity.this, "Анкета успешно удалена", Toast.LENGTH_SHORT).show();
+
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("Delete error", e.getMessage());
                 }
 
                 dialog.dismiss();
@@ -165,13 +162,13 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        dialogDelete.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
+        dialogDelete.show();
     }
 
 

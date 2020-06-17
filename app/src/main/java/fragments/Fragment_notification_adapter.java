@@ -20,6 +20,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projectwnavigation.MyProfile_reviews_activity;
 import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
@@ -30,20 +31,20 @@ import models.Notify;
 import models.Order;
 import models.Persons;
 
-public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment_notification_adapter.MyViewHolder>{
+public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment_notification_adapter.MyViewHolder> {
     Context context;
     MyDataProvider provider;
     ArrayList<Notify> notifies;
 
     Persons curPerson;
 
-    public Fragment_notification_adapter( Context context, ArrayList<Notify> notifies) {
+    public Fragment_notification_adapter(Context context, ArrayList<Notify> notifies) {
         this.context = context;
         this.notifies = notifies;
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder  {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView title, createdDate, subText;
         ImageView icon;
         LinearLayout adapter_layout;
@@ -75,56 +76,49 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
         curPerson = provider.getLoggedInPerson();
 
         final Notify notify = notifies.get(position);
-        int notifyId = notify.getId();
-      //  final Order order =  provider.getOrder(orderId);
 
         holder.title.setText(notify.getText());
         String created = MyUtils.convertLongToDataString(notify.getCreatedDate());
         holder.createdDate.setText(created);
 
-       final int section =notify.getSectionId();
-       final int src = notify.getSrcId();
-       int drawb = R.drawable.ic_notification;
-       if(section == 1){
-           drawb= R.drawable.response;
-           Order order =provider.getOrder(src);
-           holder.subText.setText(order.getTitle());
-       }else if(section ==2){
-           drawb= R.drawable.review;
-           Persons p = provider.getPerson(src);
-           holder.subText.setText(p.getName()+ " " + p.getLastname());
-       }else if(section ==3){
-           drawb= R.drawable.msg;
-           Persons p = provider.getPerson(src);
-           holder.subText.setText(p.getName()+ " " + p.getLastname());
-       }
+        final int section = notify.getSectionId();
+        final int src = notify.getSrcId();
+        int drawb = R.drawable.ic_notification;
+        if (section == 1) {
+            drawb = R.drawable.response;
+            Order order = provider.getOrder(src);
+            if (order != null) {
+                holder.subText.setText(order.getTitle());
+            }
+        } else if (section == 2) {
+            drawb = R.drawable.review;
+            Persons p = provider.getPerson(src);
+            String name = "";
+            if(p != null){
+                name = p.getName() + " " + p.getLastname();
+            }else{
+                name = "Пользователь удален или не найден";
+            }
+            holder.subText.setText (name +" оставил(а) вам новый отзыв");
+        } else if (section == 3) {
+            drawb = R.drawable.msg;
+            Persons p = provider.getPerson(src);
+            holder.subText.setText(p.getName() + " " + p.getLastname());
+        }
         holder.icon.setImageDrawable(ContextCompat.getDrawable(context, drawb));
-
 
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(section == 1){
-                    Intent intent = new Intent(context, Orders_view_activity.class);
+                Intent intent = new Intent(context, MyProfile_reviews_activity.class);
+                intent.putExtra("orderview_PersonId", src);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (section == 1) {
+                    intent = new Intent(context, Orders_view_activity.class);
                     intent.putExtra("orderIdFragment", src);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else if(section == 2){
-                    int executorId = provider.getExecutorIdByPersonId(src);
-                    if(executorId != 0 && executorId != -1){
-                        Intent intent = new Intent(context,  Executors_view_activity.class);
-                        intent.putExtra("executorIdFragment", executorId);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
-                    else{
-                        Intent intent = new Intent(context, PersonProfileActivity.class);
-                        intent.putExtra("orderview_PersonId", src);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);}
-
                 }
+                context.startActivity(intent);
             }
         });
 

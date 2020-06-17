@@ -27,7 +27,7 @@ import models.MyDataProvider;
 import models.Notify;
 import models.Order;
 import models.Persons;
-import models.Respons;
+import models.Response;
 import models.Section_of_services;
 
 public class Orders_view_activity extends AppCompatActivity {
@@ -38,7 +38,7 @@ public class Orders_view_activity extends AppCompatActivity {
     MyDataProvider provider;
     TextView spinnerSection;
     RecyclerView recyclerView;
-    ArrayList<Respons> responses = new ArrayList<>();
+    ArrayList<Response> responses = new ArrayList<>();
     Orders_responses_adapter adapter;
     Order cur;
 
@@ -61,85 +61,85 @@ public class Orders_view_activity extends AppCompatActivity {
         recyclerView = findViewById(R.id.order_view_recycler_act);
         btn_viewprofile = findViewById(R.id.order_view_btnViewPrf);
         provider = new MyDataProvider(this);
+        curPerson = provider.getLoggedInPerson();
 
-        getAndSetOrderIntentData();
-
-        adapter = new Orders_responses_adapter(this, this, responses);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        btn_response.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogCreate();
-            }
-        });
-
-        btn_viewprofile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int personId = provider.getCustomerIdByOrderId(cur.getId());
-                int executorId = provider.getExecutorIdByPersonId(personId);
-
-                if (personId == curPerson.getId()) {
-                    Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
-                    startActivity(intent);
-                }
-                else if(executorId != 0 && executorId != -1){
-                    Intent intent = new Intent(Orders_view_activity.this,  Executors_view_activity.class);
-                    intent.putExtra("executorIdFragment", executorId);
-                    startActivity(intent);
-                }
-                else{
-                Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
-                intent.putExtra("orderview_PersonId", personId);
-                startActivity(intent);}
-            }
-        });
-
-    }
-
-    void getAndSetOrderIntentData() {
         if (getIntent().hasExtra("orderIdFragment")) {
             final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
             if (gettedId != -1) {
                 cur = provider.getOrder(gettedId);
-                Section_of_services section = provider.getSection(cur.getSection());
-                spinnerSection.setText(section.getTitle());
-
-                title.setText(cur.getTitle());
-                price.setText(""+cur.getPrice());
-                descr.setText(cur.getDescription());
-                String s = MyUtils.convertLongToDataString(cur.getDeadline());
-                deadline.setText(s);
-                String d = MyUtils.convertLongToDataString(cur.getCreated_date());
-                createdDate.setText(d);
-
-                responses = provider.getAllOrderResponsesByOrderId(cur.getId());
-                curPerson = provider.getLoggedInPerson();
-
-                boolean b = false;
-                ArrayList<Integer> arrId = new ArrayList<>();
-                try {
-                    arrId = provider.getRespondedPersonsIdListByOrderId(gettedId);
-                } catch (Exception e) {
-                    Log.e("Orders view activity", e.getMessage());
-                }
-                for (int i : arrId) {
-                    if (curPerson.getId() == i) {
-                        b = true;
-                    }
-                }
-                if (b == true || curPerson.getId() == cur.getCustomerId()) {
-                    btn_response.setEnabled(false);
-                }
-
-            } else {
-                Toast.makeText(this, "orderid invalid", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
         }
+
+        insertRespones();
+        adapter = new Orders_responses_adapter(this, this, responses);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        Section_of_services section = provider.getSection(cur.getSection());
+        spinnerSection.setText(section.getTitle());
+
+        title.setText(cur.getTitle());
+        price.setText("" + cur.getPrice());
+        descr.setText(cur.getDescription());
+        String s = MyUtils.convertLongToDataString(cur.getDeadline());
+        deadline.setText(s);
+        String d = MyUtils.convertLongToDataString(cur.getCreated_date());
+        createdDate.setText(d);
+
+        boolean b = false;
+        ArrayList<Integer> arrId = new ArrayList<>();
+        try {
+            arrId = provider.getRespondedPersonsIdListByOrderId(cur.getId());
+        } catch (Exception e) {
+            Log.e("Orders view activity", e.getMessage());
+        }
+        for (int i : arrId) {
+            if (curPerson.getId() == i) {
+                b = true;
+            }
+        }
+        if (b == true || curPerson.getId() == cur.getCustomerId()) {
+            btn_response.setEnabled(false);
+        }
+
+
+        btn_response.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        showDialogCreate();
+    }
+    });
+
+        btn_viewprofile.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        int personId = provider.getCustomerIdByOrderId(cur.getId());
+        int executorId = provider.getExecutorIdByPersonId(personId);
+
+        if (personId == curPerson.getId()) {
+            Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
+            startActivity(intent);
+        } else if (executorId != 0 && executorId != -1) {
+            Intent intent = new Intent(Orders_view_activity.this, Executors_view_activity.class);
+            intent.putExtra("executorIdFragment", executorId);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
+            intent.putExtra("orderview_PersonId", personId);
+            startActivity(intent);
+        }
+    }
+    });
+
+}
+
+    public void insertRespones() {
+        responses = provider.getAllOrderResponsesByOrderId(cur.getId());
     }
 
     private void showDialogCreate() {
@@ -153,7 +153,6 @@ public class Orders_view_activity extends AppCompatActivity {
         Button btnSave = dialog.findViewById(R.id.dialog_createresponse_btnsave);
         Button btnCancel = dialog.findViewById(R.id.dialog_createresponse_btnCancel);
 
-        dialog.getWindow().setLayout(700, 1000);
         dialog.setCancelable(true);
         dialog.show();
 
@@ -163,20 +162,21 @@ public class Orders_view_activity extends AppCompatActivity {
 
                 Long date = MyUtils.getCurentDateInLong();
                 try {
-                    Respons respons = new Respons(cur.getId(), curPerson.getId(),
+                    Response response = new Response(cur.getId(), curPerson.getId(),
                             edDesc.getText().toString().trim(),
                             Double.parseDouble(edPrice.getText().toString().trim()),
                             date);
 
-                    provider.addRespons(respons);
-                    responses.add(respons);
-                    Notify notify = new Notify(cur.getCustomerId(), "У вашего заказа новый отклик", MyUtils.getCurentDateInLong(), 1, cur.getId());
+                    provider.addRespons(response);
+                    adapter.notifyItemInserted(response.getId());
+                    responses.add(response);
+                    Notify notify = new Notify(cur.getCustomerId(), "У вашего заказа новый отклик", MyUtils.getCurentDateInLong(), 1, cur.getId(), 0);
                     provider.createNotify(notify);
                 } catch (Exception error) {
                     Log.e("error", error.getMessage());
                 }
-                adapter.notifyDataSetChanged();
                 dialog.dismiss();
+                btn_response.setClickable(false);
             }
         });
 
@@ -233,6 +233,5 @@ public class Orders_view_activity extends AppCompatActivity {
         }
 
     }
-
 
 }

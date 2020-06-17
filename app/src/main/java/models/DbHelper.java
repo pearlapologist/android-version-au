@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     Context context;
 
-    public static final String DATABASE_NAME = "serviceAuction24.db";
-    public static final int DATABASE_VERSION = 24;
+    public static final String DATABASE_NAME = "serviceAuction27.db";
+    public static final int DATABASE_VERSION = 27;
 
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -21,7 +21,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public DbHelper(Context context, String name,
                     SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-
     }
 
     @Override
@@ -32,37 +31,16 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
 
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Стройка');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Грузоперевозки');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ремонт и сервис');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Дизайн и фото');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Красота');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Образование и спорт');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Здоровье');";
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Авто услуги');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Бытовые услуги');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Авто');";
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Дизайн, фотосъемка и перевод');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Рукоделие');";
-        sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Недвижимость');";
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Доставка и грузоперевозки');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Животные');";
@@ -71,7 +49,22 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ит и реклама');";
         sqLiteDatabase.execSQL(sql);
         sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
-                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Разное');";
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Красота и здоровье');";
+        sqLiteDatabase.execSQL(sql);
+        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Недвижимость и финансы');";
+        sqLiteDatabase.execSQL(sql);
+        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Помощь с учебой');";
+        sqLiteDatabase.execSQL(sql);
+        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Ремонт, сервис и стройка');";
+        sqLiteDatabase.execSQL(sql);
+        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Уборка');";
+        sqLiteDatabase.execSQL(sql);
+        sql = "INSERT INTO " + MyDataProvider.TABLE_SECTIONS + "(" +
+                MyDataProvider.KEY_SECTION_TITLE + ") VALUES('Прочее');";
         sqLiteDatabase.execSQL(sql);
 
 
@@ -84,7 +77,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_PERSON_NUMBER + " text, " +
                 MyDataProvider.KEY_PERSON_RATING + " integer, " +
                 MyDataProvider.KEY_PERSON_ISEXECUTOR + " integer, " +
-                MyDataProvider.KEY_PERSON_CREATED_DATE + " integer)";
+                MyDataProvider.KEY_PERSON_CREATED_DATE + " integer," +
+                MyDataProvider.KEY_PERSON_BIRTHDAY + " int)";
         sqLiteDatabase.execSQL(sql);
 
         sql = "CREATE TABLE " + MyDataProvider.TABLE_ORDERS +
@@ -104,7 +98,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_ORDERNPERSON_ORDER_ID + " INTEGER, " +
                 MyDataProvider.KEY_ORDERNPERSON_CUSTOMER_ID + " INTEGER, " +
                 MyDataProvider.KEY_ORDERNPERSON_EXECUTOR_ID + " INTEGER, " +
-                MyDataProvider.KEY_ORDERNPERSON_STATUS + " TEXT)";
+                MyDataProvider.KEY_ORDERNPERSON_STATUS + " INTEGER)";
         sqLiteDatabase.execSQL(sql);
 
 
@@ -153,7 +147,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_NOTIFY_SECTION_ID + " integer, " +
                 MyDataProvider.KEY_NOTIFY_SRC_ID + " integer, " +
                 MyDataProvider.KEY_NOTIFY_TEXT + " text, " +
-                MyDataProvider.KEY_NOTIFY_CREATED_DATE + " integer)";
+                MyDataProvider.KEY_NOTIFY_CREATED_DATE + " integer, "+
+                MyDataProvider.KEY_NOTIFY_STATUS_ID + " integer )";
         sqLiteDatabase.execSQL(sql);
 
 

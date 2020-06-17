@@ -81,11 +81,16 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
                 android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(1);
+        spinner.setSelection(0);
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String str = parent.getItemAtPosition(position).toString();
+        int sectionId = provider.getSectionIdByTitle(str);
+    }
 
     void insertArray() {
             orders = provider.getOrders();
@@ -94,11 +99,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String str = parent.getItemAtPosition(position).toString();
-       int sectionId = provider.getSectionIdByTitle(str);
-    }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

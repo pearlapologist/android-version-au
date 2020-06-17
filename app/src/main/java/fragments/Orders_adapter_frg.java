@@ -94,11 +94,11 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
         holder.title.setText(order.getTitle());
         holder.descr.setText(order.getDescription());
-        holder.price.setText("Бюджет: " + order.getPrice() + "");
+        holder.price.setText(order.getPrice() + "");
         String created = MyUtils.convertLongToDataString(order.getCreated_date());
         holder.createdDate.setText(created);
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText("До: " + deadlinetext);
+        holder.deadline.setText("" + deadlinetext);
         final int id = order.getId();
         Section_of_services section = provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());
@@ -150,10 +150,10 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                     popup_menu.findItem(R.id.order_popup_edit).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_delete).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_complain).setVisible(!isCreator);
-                    if ((exists == true) || isCreator)
-                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
+                    popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(exists);
+                    if ((exists == true) || isCreator){
+                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);}
                 }
-                popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(exists);
 
                 popup.show();
             }

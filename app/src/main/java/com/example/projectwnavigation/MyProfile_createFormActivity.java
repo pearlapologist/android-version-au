@@ -64,7 +64,6 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(1);

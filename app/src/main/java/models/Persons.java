@@ -15,10 +15,6 @@ public class Persons {
     //upd
     private Long birthday;
 
-    public static final String ONLINE = "online";
-    public static final String OFFLINE = "offline";
-
-
     public Persons(){}
     //get person to cursor
     public Persons(int id, String name, String passwd, Long createdDate) {
