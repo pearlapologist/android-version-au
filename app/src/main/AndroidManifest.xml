@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Conversation_view_activity"></activity>
         <activity
             android:name="fragments.PersonProfile_AddReviewActivity"
             android:label="Написать отзыв" />
@@ -54,6 +55,7 @@
             android:theme="@style/AppTheme.woutActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

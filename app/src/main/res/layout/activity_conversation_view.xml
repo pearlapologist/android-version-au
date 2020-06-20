@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Conversation_view_activity">
+    <TextView
+        android:id="@+id/act_conversation_tvname"
+        android:layout_width="match_parent"
+        android:text="Name"
+        android:layout_marginTop="10sp"
+        android:layout_height="wrap_content"></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/act_conversation_rv"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_conversation_tvname"
+        android:layout_above="@id/act_conversation_etText">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/act_conversation_btnSend"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:text="Отправить"
+        android:layout_alignParentBottom="true" />
+
+    <EditText
+        android:id="@+id/act_conversation_etText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/act_conversation_btnSend"
+   android:layout_alignParentLeft="true"
+        android:inputType="textPersonName"
+      android:hint="поле ввода"
+        android:layout_alignParentBottom="true"  />
+</RelativeLayout>

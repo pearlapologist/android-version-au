@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projectwnavigation.Conversation_view_activity;
 import com.example.projectwnavigation.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.synnapps.carouselview.CarouselView;
@@ -41,6 +43,7 @@ public class Executors_view_activity extends AppCompatActivity {
     CarouselView carousel;
     int[] mImages = new int[]{R.drawable.minecraft, R.drawable.add_a_photo_black_20dp};
     String[] mImagesTitle = new String[]{"minecraft", "add"};
+    Executor cur= null;
 
     BottomNavigationView bottomNavigation;
 
@@ -55,15 +58,36 @@ public class Executors_view_activity extends AppCompatActivity {
         personName = findViewById(R.id.fragment_executor_view_name);
         section = findViewById(R.id.fragment_executor_view_section);
         photo = findViewById(R.id.fragment_executor_view_photo);
+        chat = findViewById(R.id.fragment_executor_view_chat);
+
+
+
         // btn = findViewById(R.id.executor_update_btn_add);
 
-        fragment_reviews = Fragment_executor_view_reviews.newInstance(getIntent().getIntExtra("executorIdFragment", 42));
-        fragment_profile = Fragment_executor_view_profile.newInstance(getIntent().getIntExtra("executorIdFragment", 42));
-
-        fragment_profile.setContext(this);
-        fragment_reviews.setContext(this);
 
 
+        if (getIntent().hasExtra("executorIdFragment")) {
+            final int executorId = getIntent().getIntExtra("executorIdFragment", 42);
+            fragment_reviews = Fragment_executor_view_reviews.newInstance(executorId);
+            fragment_profile = Fragment_executor_view_profile.newInstance(executorId);
+
+            fragment_profile.setContext(this);
+            fragment_reviews.setContext(this);
+
+           cur = provider.getExecutor(executorId);
+        }
+
+
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Executors_view_activity.this, Conversation_view_activity.class);
+                intent.putExtra("msg_adapter", cur.getPersonId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Executors_view_activity.this.startActivity(intent);
+            }
+        });
         carousel = findViewById(R.id.fragment_executor_view_carousel);
         bottomNavigation = findViewById(R.id.fragment_executor_view_bottomnav);
         bottomNavigation.setOnNavigationItemSelectedListener(listener);
@@ -110,22 +134,19 @@ public class Executors_view_activity extends AppCompatActivity {
     };
 
     public void getAndSetExecutorIntentData() {
-        if (getIntent().hasExtra("executorIdFragment")) {
-            final int gettedId = getIntent().getIntExtra("executorIdFragment", 42);
-            Executor cur = provider.getExecutor(gettedId);
+       if(cur !=null) {
+           Persons p = provider.getPerson(cur.getPersonId());
+           if (p.getPhoto() == null) {
+               photo.setImageResource(R.drawable.executors_default_image);
+           } else {
+               photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+           }
 
-            Persons p = provider.getPerson(cur.getPersonId());
-            if (p.getPhoto() == null) {
-                photo.setImageResource(R.drawable.executors_default_image);
-            } else {
-                photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-            }
+           personName.setText(p.getName() + " " + p.getLastname());
 
-            personName.setText(p.getName() + " " + p.getLastname());
-
-            Section_of_services sectiontlt = provider.getSection(cur.getSectionId());
-            section.setText(sectiontlt.getTitle());
-        } else {
+           Section_of_services sectiontlt = provider.getSection(cur.getSectionId());
+           section.setText(sectiontlt.getTitle());
+       }  else {
             Toast.makeText(Executors_view_activity.this, "error", Toast.LENGTH_SHORT).show();
         }
     }

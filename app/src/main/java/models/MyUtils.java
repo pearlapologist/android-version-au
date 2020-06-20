@@ -19,9 +19,8 @@ public class MyUtils {
     public static Long convertDataToLong(String res) {
         long startDate = 0;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(res);
-
             startDate = date.getTime();
 
         } catch (ParseException e) {
@@ -34,7 +33,7 @@ public class MyUtils {
     public static Long convertPntdStringToLong(String res) {
         long startDate = 0;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(res);
             startDate = date.getTime();
         } catch (ParseException e) {
@@ -48,7 +47,7 @@ public class MyUtils {
         String res = day + "/" + month + "/" + year;
         long startDate = 0;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(res);
 
             startDate = date.getTime();
@@ -61,13 +60,13 @@ public class MyUtils {
     }
 
     public static Long convertDataToLongWithRawString(String str) {
-        String day = str.substring(0, 2);
-        String month = str.substring(3, 5);
-        String year = str.substring(6, 10);
-        String res = day + "/" + month + "/" + year;
+        String day = str.substring(8, 10);
+        String month = str.substring(5, 7);
+        String year = str.substring(0, 4);
+        String res = year + "-" + month + "-" + day;
         long startDate = 0;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(res);
 
             startDate = date.getTime();
@@ -75,30 +74,28 @@ public class MyUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return startDate;
     }
 
     public static String convertLongToDataString(Long date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(new Date(date));
         return dateString;
     }
 
     public static String getCurrentDateInString() {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateobj = new Date();
-        String data = df.format(dateobj);
-        return data;
+        Date date = new Date();
+        String mDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        return mDate;
     }
 
 
     public static Long getCurentDateInLong(){
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateobj = new Date();
-        String data = df.format(dateobj);
-        Long l = convertDataToLongWithRawString(data);
-        return l;
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateobj = new Date();
+            String data = df.format(dateobj);
+            Long l = convertDataToLongWithRawString(data);
+            return l;
     }
 
 

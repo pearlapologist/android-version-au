@@ -20,6 +20,13 @@
             app:actionViewClass="android.widget.TextView" />
 
         <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/response"
+            android:title="Сообщения"
+            app:actionViewClass="android.widget.TextView" />
+
+
+        <item
             android:id="@+id/nav_bkmr"
             android:icon="@drawable/ic_bookmark"
             android:title="Закладки" />

@@ -26,7 +26,7 @@ import models.Executor;
 import models.MyDataProvider;
 
 
-public class Fragment_specials extends Fragment {
+public class Fragment_specials extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     MyDataProvider provider;
@@ -90,25 +90,26 @@ public class Fragment_specials extends Fragment {
                 android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String[] choose = getResources().getStringArray(R.array.sections);
-                int sectionId = provider.getSectionIdByTitle(choose[position]);
-                if (executors != null) {
-                    executors.clear();
-                }
-                ArrayList<Executor>n = provider.getExecutorsBySectionId(sectionId);
-                executors.addAll(n);
-                executors_adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String[] choose = getResources().getStringArray(R.array.sections);
+        int sectionId = provider.getSectionIdByTitle(choose[position]);
+        if (executors != null) {
+            executors.clear();
+        }
+        ArrayList<Executor>n = provider.getExecutorsBySectionId(sectionId);
+        executors.addAll(n);
+        executors_adapter.notifyDataSetChanged();
+    }
+
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     void insertExecutorsArray() {
@@ -125,7 +126,6 @@ public class Fragment_specials extends Fragment {
             Toast.makeText(context, "Пока что не было создано специалистов", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 }

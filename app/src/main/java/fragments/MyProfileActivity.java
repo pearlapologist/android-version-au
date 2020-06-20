@@ -91,7 +91,7 @@ public class MyProfileActivity extends AppCompatActivity {
         }
         tv_status.setText("Статус: " + "Онлайн");
 
-        tv_registr.setText("Дата регистрации " + person.getCreatedDateinString());
+        tv_registr.setText("Дата регистрации " + person.getCreatedDate());
     }
 
 

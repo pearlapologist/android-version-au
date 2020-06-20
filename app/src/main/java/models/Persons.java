@@ -5,7 +5,7 @@ public class Persons {
     private String name;
     private String lastname;
     private String passwd;
-    private Long createdDate;
+    private String createdDate;
     private int rating;
     private String status;
     private byte[] photo;
@@ -13,18 +13,18 @@ public class Persons {
     String desciption;
     boolean hasAccount;
     //upd
-    private Long birthday;
+    private String birthday;
 
     public Persons(){}
     //get person to cursor
-    public Persons(int id, String name, String passwd, Long createdDate) {
+    public Persons(int id, String name, String passwd, String createdDate) {
         this.id = id;
         this.passwd = passwd;
         this.name = name;
         this.createdDate = createdDate;
     }
 
-    public Persons(int id, String name, String lastname, String passwd, byte[] photo, String number, int rating, Long createdDate) {
+    public Persons(int id, String name, String lastname, String passwd, byte[] photo, String number, int rating, String createdDate) {
         this.id = id;
         this.passwd = passwd;
         this.name = name;
@@ -35,7 +35,7 @@ public class Persons {
         this.createdDate = createdDate;
     }
 
-    public Persons(String name, String lastname, String passwd,  byte[] photo, String number, int rating, Long createdDate) {
+    public Persons(String name, String lastname, String passwd,  byte[] photo, String number, int rating, String createdDate) {
         this.passwd = passwd;
         this.name = name;
         this.lastname = lastname;
@@ -47,7 +47,7 @@ public class Persons {
 
 
     public Persons(int id, String name, String lastname, String passwd, String number, int rating,
-                   Long createdDate) {
+                   String createdDate) {
         this.id = id;
         this.passwd = passwd;
         this.name = name;
@@ -64,7 +64,7 @@ public class Persons {
         this.number = number;
         this.passwd = passwd;
         this.rating = rating;
-        Long created = MyUtils.getCurentDateInLong();
+        String created = MyUtils.getCurrentDateInString();
         this.createdDate = created;
     }
 
@@ -105,18 +105,18 @@ public class Persons {
         this.passwd = passwd;
     }
 
-    public Long getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public String getCreatedDateinString() {
-        Long create = this.createdDate;
+   /* public String getCreatedDateinString() {
+        String create = this.createdDate;
       String str =  MyUtils.convertLongToDataString(create);
         return str;
     }
+*/
 
-
-    public void setCreatedDate(Long createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -164,11 +164,11 @@ public class Persons {
         this.desciption = desciption;
     }
 
-    public Long getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Long birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 }

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import fragments.Executors_view_activity;
 import fragments.Fragment_bkmrk;
+import fragments.Fragment_messages;
 import fragments.Fragment_notification;
 import fragments.Fragment_orders;
 import fragments.Fragment_settings;
@@ -53,6 +54,7 @@ public class Navigation_activity extends AppCompatActivity {
     Fragment_bkmrk fragment_bkmrk;
     Fragment_notification fragment_notification;
     Fragment_settings fragment_settings;
+    Fragment_messages fragment_messages;
     TextView headerPersonName;
     ImageView headerImageView;
 
@@ -74,6 +76,7 @@ public class Navigation_activity extends AppCompatActivity {
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
         fragment_notification = new Fragment_notification(getApplicationContext());
         fragment_settings = new Fragment_settings(getApplicationContext());
+        fragment_messages = new Fragment_messages(this);
 
         nManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -155,31 +158,30 @@ public class Navigation_activity extends AppCompatActivity {
             Intent intent = new Intent(this, FirstActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            return;
-        }
-        notifyCounter = provider.getCountOfAllMyNewNotifies();
-        if (notifyCounter != 0) {
-            ArrayList<Notify> notifies = provider.getAllMyNotifies();
-            if (notifies != null) {
-                for (Notify n : notifies) {
-                    Intent intent = new Intent(getApplicationContext(), MyProfile_reviews_activity.class);
-                    intent.putExtra("orderview_PersonId", n.getSrcId());
-                    if (n.getSectionId() == 1) {
-                        intent = new Intent(getApplicationContext(), Orders_view_activity.class);
-                        intent.putExtra("orderIdFragment", n.getSrcId());
+        } else {
+            notifyCounter = provider.getCountOfAllMyNewNotifies();
+            if (notifyCounter != 0) {
+                ArrayList<Notify> notifies = provider.getAllMyNotifies();
+                if (notifies != null) {
+                    for (Notify n : notifies) {
+                        Intent intent = new Intent(getApplicationContext(), MyProfile_reviews_activity.class);
+                        intent.putExtra("orderview_PersonId", n.getSrcId());
+                        if (n.getSectionId() == 1) {
+                            intent = new Intent(getApplicationContext(), Orders_view_activity.class);
+                            intent.putExtra("orderIdFragment", n.getSrcId());
+                        }
+                        Notification.Builder buildr = new Notification.Builder(getApplicationContext());
+                        PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        buildr.setContentIntent(pIntent).setSmallIcon(R.drawable.minecraft).
+                                setTicker("У вас новое уведомление").setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(n.getText());
+                        Notification notification = buildr.build();
+                        nManager.notify(n.getId(), notification);
                     }
-                    Notification.Builder buildr = new Notification.Builder(getApplicationContext());
-                    PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                    buildr.setContentIntent(pIntent).setSmallIcon(R.drawable.minecraft).
-                            setTicker("У вас новое уведомление").setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(n.getText());
-                    Notification notification = buildr.build();
-                    nManager.notify(n.getId(), notification);
-
                 }
             }
-        }
 
-        initializeCountDrawer();
+            initializeCountDrawer();
+        }
         super.onStart();
     }
 
@@ -244,6 +246,8 @@ public class Navigation_activity extends AppCompatActivity {
 
             } else if (id == R.id.nav_settings) {
                 fragment = fragment_settings;
+            } else if (id == R.id.nav_messages) {
+                fragment = fragment_messages;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
             setTitle(item.getTitle());

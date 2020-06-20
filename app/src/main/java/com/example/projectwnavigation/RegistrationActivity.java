@@ -1,10 +1,13 @@
 package com.example.projectwnavigation;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +23,14 @@ import com.santalu.maskedittext.MaskEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import models.ApiProvider;
 import models.MyUtils;
 import models.MyDataProvider;
 import models.Persons;
@@ -30,6 +41,8 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText name, lastname, passwd, passwd2;
     MaskEditText number;
     ImageView image;
+    ApiProvider apiprovider;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         provider = new MyDataProvider(this);
+        apiprovider = new ApiProvider();
         name = findViewById(R.id.regist_name);
         lastname = findViewById(R.id.regist_lastname);
         number = findViewById(R.id.regist_number);
@@ -59,24 +73,24 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
                 String num = number.getRawText().trim() + "";
                 String n = "+7" + num;
-                byte[] imageByte = null;
-                if (image.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.add_a_photo_black_20dp).getConstantState()) {
-                    imageByte = MyUtils.imageViewToByte(image);
-                }
                 if (passwd.getText().toString().trim().
                         equals(passwd2.getText().toString().trim())) {
-                    Persons person = new Persons(name.getText().toString().trim(),
-                            lastname.getText().toString().trim(),
-                            passwd.getText().toString().trim(),
-                            imageByte,
-                            n,
-                            0,
-                            MyUtils.getCurentDateInLong());
-                    provider.addPerson(person);
-                    // provider.setLoggedInPerson(person);
-                    Intent i = new Intent(RegistrationActivity.this, AuthorizationActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+                    Persons person = new Persons();
+                    person.setName(name.getText().toString().trim());
+                    person.setLastname(lastname.getText().toString().trim());
+                    person.setPasswd(passwd.getText().toString().trim());
+                    person.setPhoto(MyUtils.imageViewToByte(image));
+                    person.setNumber(n);
+                    person.setRating(0);
+                    person.setCreatedDate(MyUtils.getCurrentDateInString());
+                    person.setBirthday(MyUtils.getCurrentDateInString());
+
+                  //  provider.addPerson(person);
+                    RegistrationTask task2 = new RegistrationTask();
+                    task2.execute(person);
+                    //  apiprovider.addPerson(person);
+
+
                 } else {
                     Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
                 }
@@ -93,6 +107,39 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
+    private class RegistrationTask extends AsyncTask<Persons, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(RegistrationActivity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Persons... params) {
+            try {
+                apiprovider.addPerson(params[0]);
+                Intent i = new Intent(RegistrationActivity.this, AuthorizationActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

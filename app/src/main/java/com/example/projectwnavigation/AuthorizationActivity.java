@@ -12,12 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.santalu.maskedittext.MaskEditText;
 
+import models.ApiProvider;
 import models.DbHelper;
 import models.MyDataProvider;
 import models.Persons;
 
 public class AuthorizationActivity extends AppCompatActivity {
     MyDataProvider provider;
+    ApiProvider apiprovider;
     EditText  etPasswd;
     MaskEditText etNumb;
     Button btn;
@@ -27,6 +29,7 @@ public class AuthorizationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
         provider = new MyDataProvider(this);
+        apiprovider = new ApiProvider();
         etNumb = findViewById(R.id.author_numb);
         etPasswd = findViewById(R.id.author_passwd);
 
@@ -45,7 +48,9 @@ public class AuthorizationActivity extends AppCompatActivity {
                     password = etPasswd.getText().toString();
                 }
 
-                Persons p = provider.getPersonByPasswdNNumb(password, n);
+                Persons p = apiprovider.getPersonByNumbNPasswd(password, n);
+                //provider.getPersonByPasswdNNumb(password, n);
+
                 if (p != null) {
                     provider.setLoggedInPerson(p);
 
