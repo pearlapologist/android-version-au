@@ -29,6 +29,7 @@ import com.example.projectwnavigation.R;
 import java.util.ArrayList;
 
 import models.Answer;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -37,6 +38,7 @@ import models.Review;
 public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_reviews_adapter_frg.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Review> reviews;
     Persons curPerson;
     private Menu review_popupMenu;
@@ -61,6 +63,7 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
 
         curPerson = provider.getLoggedInPerson();
 
@@ -71,7 +74,7 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         }
 
         final int personId = review.getCustomerId();
-        final Persons p = provider.getPerson(personId);
+        final Persons p = apiProvider.getPerson(personId); //provider.getPerson(personId);
         String text = "";
         int rating = -1;
 
@@ -237,7 +240,8 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                 review.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
 
                 provider.updateReview(review);
-                provider.updatePersonRatingById(review.getExecutrId());
+                apiProvider.updatePersonRatingById(review.getExecutrId());
+               // provider.updatePersonRatingById(review.getExecutrId());
 
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
@@ -268,7 +272,8 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
             public void onClick(View v) {
                 final Review review = provider.getReview(id);
                 provider.deleteReview(id);
-                provider.updatePersonRatingById(review.getExecutrId());
+                apiProvider.updatePersonRatingById(review.getExecutrId());
+               // provider.updatePersonRatingById(review.getExecutrId());
                 notifyDataSetChanged();
                 Toast.makeText(context, "Отзыв удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();

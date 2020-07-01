@@ -17,6 +17,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Message;
 import models.MyDataProvider;
 import models.Persons;
@@ -24,6 +25,7 @@ import models.Persons;
 public class Conversation_messages_adapter extends RecyclerView.Adapter<Conversation_messages_adapter.MyViewHolder>{
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Message> messages;
 
     Persons curPerson;
@@ -46,11 +48,13 @@ public class Conversation_messages_adapter extends RecyclerView.Adapter<Conversa
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
+
         curPerson = provider.getLoggedInPerson();
 
         final Message message = messages.get(position);
         holder.txt.setText(message.getText());
-        final Persons p = provider.getPerson(message.getWhosends());
+        final Persons p =apiProvider.getPerson(message.getWhosends()); //provider.getPerson(message.getWhosends());
         holder.name.setText(p.getName());
 
         final int id = message.getId();

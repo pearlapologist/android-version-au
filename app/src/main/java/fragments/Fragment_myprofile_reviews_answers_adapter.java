@@ -24,6 +24,7 @@ import com.example.projectwnavigation.R;
 import java.util.ArrayList;
 
 import models.Answer;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -31,6 +32,7 @@ import models.Persons;
 public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Adapter<Fragment_myprofile_reviews_answers_adapter.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Answer> answers;
 
     Persons curPerson;
@@ -51,12 +53,13 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
 
         curPerson = provider.getLoggedInPerson();
 
         final Answer answer = answers.get(position);
         final int whoanswers = answer.getWhoanswersId();
-        final Persons p = provider.getPerson(whoanswers);
+        final Persons p =apiProvider.getPerson(whoanswers); // provider.getPerson(whoanswers);
         String text = answer.getText();
         holder.text.setText(text);
         holder.name.setText(p.getName() + " " + p.getLastname());

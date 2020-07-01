@@ -28,6 +28,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -36,6 +37,7 @@ import models.Response;
 public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_responses_adapter.MyViewHolder> {
     Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Orders_view_activity activity;
     ArrayList<Response> responses;
 
@@ -59,6 +61,7 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         Response response = responses.get(position);
@@ -67,7 +70,7 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
         String created = MyUtils.convertLongToDataString(response.getCreatedDate());
         holder.date.setText(created);
         final int responsId = response.getId();
-        final Persons person = provider.getPerson(provider.getPersonIdByResponseId(responsId));
+        final Persons person = apiProvider.getPerson(provider.getPersonIdByResponseId(responsId)); // provider.getPerson(provider.getPersonIdByResponseId(responsId));
         String name = "";
 
         Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),

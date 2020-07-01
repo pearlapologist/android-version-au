@@ -27,6 +27,7 @@ import com.synnapps.carouselview.ImageListener;
 
 import java.lang.reflect.Field;
 
+import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
 import models.MyUtils;
@@ -39,6 +40,7 @@ public class Executors_view_activity extends AppCompatActivity {
     TextView personName, section;
     ImageView photo;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Button chat;
     CarouselView carousel;
     int[] mImages = new int[]{R.drawable.minecraft, R.drawable.add_a_photo_black_20dp};
@@ -55,6 +57,7 @@ public class Executors_view_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_executor_view);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
         personName = findViewById(R.id.fragment_executor_view_name);
         section = findViewById(R.id.fragment_executor_view_section);
         photo = findViewById(R.id.fragment_executor_view_photo);
@@ -74,7 +77,7 @@ public class Executors_view_activity extends AppCompatActivity {
             fragment_profile.setContext(this);
             fragment_reviews.setContext(this);
 
-           cur = provider.getExecutor(executorId);
+           cur =apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
         }
 
 
@@ -135,7 +138,7 @@ public class Executors_view_activity extends AppCompatActivity {
 
     public void getAndSetExecutorIntentData() {
        if(cur !=null) {
-           Persons p = provider.getPerson(cur.getPersonId());
+           Persons p =apiProvider.getPerson(cur.getPersonId());  // provider.getPerson(cur.getPersonId());
            if (p.getPhoto() == null) {
                photo.setImageResource(R.drawable.executors_default_image);
            } else {
@@ -156,7 +159,7 @@ public class Executors_view_activity extends AppCompatActivity {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
             final int gettedId = getIntent().getIntExtra("executorIdFragment", 42);
-            Executor cur = provider.getExecutor(gettedId);
+            Executor cur =apiProvider.getExecutor(gettedId); // provider.getExecutor(gettedId);
             if (cur.getCoverPhoto() != null) {
                 imageView.setImageBitmap(MyUtils.decodeByteToBitmap(cur.getCoverPhoto()));
             }

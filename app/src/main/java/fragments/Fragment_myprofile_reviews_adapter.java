@@ -29,6 +29,7 @@ import com.example.projectwnavigation.R;
 import java.util.ArrayList;
 
 import models.Answer;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -37,6 +38,7 @@ import models.Review;
 public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fragment_myprofile_reviews_adapter.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Review> reviews;
     private Menu review_popupMenu;
     Persons curPerson;
@@ -84,6 +86,7 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
 
         curPerson = provider.getLoggedInPerson();
 
@@ -93,7 +96,7 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
             answers = new ArrayList<>();
         }
         int personId = review.getCustomerId();
-        final Persons p = provider.getPerson(personId);
+        final Persons p =apiProvider.getPerson(personId); // provider.getPerson(personId);
 
         String text = "";
         int rating = -1;

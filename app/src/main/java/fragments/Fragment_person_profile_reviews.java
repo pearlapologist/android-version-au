@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.Persons;
 import models.Review;
@@ -42,6 +43,7 @@ public class Fragment_person_profile_reviews extends Fragment {
     FloatingActionButton btn_add;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     Persons curPerson;
@@ -59,6 +61,7 @@ public class Fragment_person_profile_reviews extends Fragment {
     public void setContext(Context context) {
         this.context = context;
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
     }
 
     @Override
@@ -87,7 +90,7 @@ public class Fragment_person_profile_reviews extends Fragment {
         reviewsRv.setAdapter(fragment_person_reviews_adapter);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
-       Persons person = provider.getPerson(executorId);
+       Persons person =apiProvider.getPerson(executorId); // provider.getPerson(executorId);
         rating.setText(person.getRating() +"");
 
         btn_add.setOnClickListener(new View.OnClickListener() {

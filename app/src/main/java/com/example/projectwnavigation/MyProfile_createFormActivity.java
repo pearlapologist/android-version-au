@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import fragments.MyProfileActivity;
+import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
 import models.Service;
@@ -32,6 +33,7 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
     EditText spclztn, descrp;
     Button add_executor, add_service;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Spinner mSpinner;
     int sectionId = 0;
     RecyclerView recyclerView;
@@ -54,6 +56,7 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         recyclerView = findViewById(R.id.createform_recycler);
 
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
 
         selectionList = new ArrayList<>();
 
@@ -91,7 +94,8 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
                 exec.setPersonId(provider.getLoggedInPerson().getId());
                 exec.setServices(services);
                 try {
-                    provider.addExecutor(exec);
+                    apiProvider.addExecutor(exec);
+                   // provider.addExecutor(exec);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

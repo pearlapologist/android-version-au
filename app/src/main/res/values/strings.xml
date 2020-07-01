@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">projectwnavigation</string>
+    <string name="app_name">A.U.Almaty</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -38,4 +38,18 @@
         <item>Уборка</item>
         <item>Прочее</item>
     </string-array>
+
+    <string name="powered_by">Powered by Bayan &amp; Samsung</string>
+
+    <string name="first_slide_title">Ищите необходимых специалистов</string>
+    <string name="second_slide_title">Проявите себя в своей специальности</string>
+
+    <string name="first_slide_desc">Вы можете искать подходящие заказы и нужных специалистов в соответстующих разделах</string>
+    <string name="second_slide_desc">Вы можете разместить свои услуги и контакты</string>
+
+    <string name="btn_skip">Пропустить</string>
+    <string name="btn_next">Продолжить</string>
+    <string name="btn_start">Начать</string>
+    <string name="search_txt">Поиск...</string>
+
 </resources>

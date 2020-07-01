@@ -26,6 +26,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fragments.MyProfileActivity;
+import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
 import models.Persons;
@@ -33,6 +34,7 @@ import models.Service;
 
 public class MyProfile_myForm_activity extends AppCompatActivity implements View.OnLongClickListener {
     MyDataProvider provider;
+    ApiProvider apiProvider;
 
     EditText spec, descrp;
     Button save, add_service, deleteForm;
@@ -51,9 +53,10 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         setContentView(R.layout.activity_profile_my_form);
 
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
         Persons p = provider.getLoggedInPerson();
         int executorId = provider.getExecutorIdByPersonId(p.getId());
-        final Executor r = provider.getExecutor(executorId);
+        final Executor r =apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
 
         recyclerView = findViewById(R.id.myForm_rv);
         try {

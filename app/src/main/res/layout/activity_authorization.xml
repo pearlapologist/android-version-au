@@ -1,67 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorBackground"
     android:padding="10sp"
     tools:context=".AuthorizationActivity">
 
-      <!--  android:layout_width="match_parent"
-        android:layout_marginTop="20sp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">-->
 
-
-    <com.santalu.maskedittext.MaskEditText
-        android:id="@+id/author_numb"
+    <TextView
+        android:layout_marginTop="40sp"
+        android:id="@+id/author_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="59dp"
-        android:layout_marginTop="183dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="Номер:"
-        android:inputType="phone"
-        app:layout_constraintBottom_toTopOf="@+id/author_passwd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:met_mask="+7(###) ### ## ##" />
+        android:textColor="@color/colorMutedGray2"
+        android:text="A.U.Almaty"
+        android:textSize="25sp"
+        android:transitionName="transition_aualmaty"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        ></TextView>
 
-    <EditText
-        android:id="@+id/author_passwd"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Пароль: "
-        android:imeOptions="actionDone"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/author_numb"
-        />
+        android:layout_below="@id/author_txt"
+        android:layout_marginTop="115dp"
+        android:layout_marginBottom="20sp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Номер"
+            android:textColorHint="@color/colorMutedText">
+
+            <com.santalu.maskedittext.MaskEditText
+                android:id="@+id/author_numb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_contact_phone"
+                android:inputType="phone"
+                android:text="+7"
+                android:textColorHint="@color/colorMutedGray2"
+                app:met_mask="+7(###) ### ## ##"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/author_txtinputlutpasswd"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:hint="Пароль"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/author_passwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_security_locked"
+                android:drawablePadding="10sp"
+                android:inputType="textPassword"
+                android:textColor="@color/colorMutedGray2"
+                android:textColorHint="@color/colorMutedText">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/author_forget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="5sp"
+            android:background="#00000000"
+            android:elevation="0sp"
+            android:text="Забыли пароль?"
+            android:textAllCaps="false"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/author_btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:background="@color/colorMutedGray2"
+            android:enabled="true"
+            android:text="Войти"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/author_btnOk"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
-        android:enabled="true"
-        android:text="Войти"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/author_passwd" />
+        android:id="@+id/author_btnToRegistratn"
+        android:background="#00000000"
+        android:text="Нет аккаунта? Зарегистрируйтесь"
+        android:layout_marginTop="30sp"
+        android:layout_alignParentBottom="true"
+        android:textSize="14sp"
+        android:layout_gravity="left"
+        android:textAllCaps="false"
+        android:elevation="0sp"
+        android:layout_height="wrap_content"/>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
@@ -36,6 +38,7 @@ import models.Review;
 public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapter_frg.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Executor> executors;
 
     Persons curPerson;
@@ -48,18 +51,19 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView name, spcltn_txt, rating;
+        private TextView name, spcltn_txt;
         ImageView photo;
         Button btn_popup_menu;
         LinearLayout adapter_layout;
+        RatingBar ratingBar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.executors_adapter_frg_name);
-            rating = itemView.findViewById(R.id.executors_adapter_frg_rating);
             spcltn_txt = itemView.findViewById(R.id.executors_adapter_frg_spec);
             photo = itemView.findViewById(R.id.executors_adapter_frg_photo);
             btn_popup_menu = itemView.findViewById(R.id.executors_adapter_frg_btn_popup);
+            ratingBar = itemView.findViewById(R.id.executors_adapter_frg_ratingBar);
 
             adapter_layout = itemView.findViewById(R.id.executors_adapter_frg_layout);
         }
@@ -77,18 +81,20 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
     @Override
     public void onBindViewHolder(@NonNull Executors_adapter_frg.MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         final Executor executor = executors.get(position);
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        final Persons p = provider.getPerson(executor.getPersonId());
+        final Persons p = apiProvider.getPerson(executor.getPersonId());   //provider.getPerson(executor.getPersonId());
         if (p.getPhoto() == null) {
             holder.photo.setImageResource(R.drawable.executors_default_image);
         } else {
             holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
         }
         holder.name.setText(p.getName());
-        holder.rating.setText(p.getRating() + "");
+        holder.ratingBar.setRating(p.getRating());
+
 
 
         final int id = executor.getId();
@@ -189,7 +195,8 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
             public void onClick(View v) {
                 try {
                     provider.deleteExecutor(executorId);
-                    executors.remove(provider.getExecutor(executorId));
+                    executors.remove(apiProvider.getExecutor(executorId));
+                    //executors.remove(provider.getExecutor(executorId));
                     Toast.makeText(context, "анкета успешно удалена", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Verify_numberActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:ems="5"
+        android:id="@+id/verify_num_code"
+        android:hint="code"
+        android:singleLine="true"
+        android:layout_height="wrap_content"></EditText>
+
+    <Button
+        android:text="Отправить"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:id="@+id/verify_num_btn"
+        android:layout_height="wrap_content"></Button>
+
+</RelativeLayout>

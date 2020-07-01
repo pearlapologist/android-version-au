@@ -25,6 +25,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Notify;
@@ -34,6 +35,7 @@ import models.Persons;
 public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment_notification_adapter.MyViewHolder> {
     Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Notify> notifies;
 
     Persons curPerson;
@@ -73,6 +75,7 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         final Notify notify = notifies.get(position);
@@ -92,7 +95,7 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
             }
         } else if (section == 2) {
             drawb = R.drawable.review;
-            Persons p = provider.getPerson(src);
+            Persons p =apiProvider.getPerson(src); // provider.getPerson(src);
             String name = "";
             if(p != null){
                 name = p.getName() + " " + p.getLastname();
@@ -102,7 +105,7 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
             holder.subText.setText (name +" оставил(а) вам новый отзыв");
         } else if (section == 3) {
             drawb = R.drawable.msg;
-            Persons p = provider.getPerson(src);
+            Persons p =apiProvider.getPerson(src); // Persons p = provider.getPerson(src);
             holder.subText.setText(p.getName() + " " + p.getLastname());
         }
         holder.icon.setImageDrawable(ContextCompat.getDrawable(context, drawb));

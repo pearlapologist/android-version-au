@@ -33,6 +33,5 @@ Button btn_auth, btn_regist;
             }
         });
 
-
     }
 }

@@ -10,6 +10,9 @@
             @style/activityAnim
         </item>
         <item name="android:fontFamily">@font/chalkboard</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
     </style>
 
     <style name="AppTheme.woutActionBar" parent="AppTheme">

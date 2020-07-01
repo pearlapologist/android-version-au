@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
 import models.Persons;
@@ -45,6 +46,7 @@ public class Fragment_executor_view_reviews extends Fragment {
     FloatingActionButton btn_add;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     Persons curPerson;
@@ -62,6 +64,7 @@ public class Fragment_executor_view_reviews extends Fragment {
 
     public void setContext(Context context) {
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         this.context = context;
 
     }
@@ -94,8 +97,8 @@ public class Fragment_executor_view_reviews extends Fragment {
         reviewsRv.setAdapter(executor_reviews_adapter_frg);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
-        Executor executor = provider.getExecutor(executorId);
-        Persons p = provider.getPerson(executor.getPersonId());
+        Executor executor = apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
+        Persons p =apiProvider.getPerson(executor.getPersonId()); // provider.getPerson(executor.getPersonId());
         int rat = -1;
         if (p != null) {
             rat = p.getRating();

@@ -1,20 +1,28 @@
 package fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.projectwnavigation.R;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.Persons;
 
@@ -25,6 +33,7 @@ public class Fragment_person_profile_info extends Fragment {
     Button btn_call;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     private int receivedId;
@@ -42,6 +51,7 @@ public class Fragment_person_profile_info extends Fragment {
 
     public void setContext(Context context) {
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         this.context = context;
 
     }
@@ -61,7 +71,7 @@ public class Fragment_person_profile_info extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-       Persons person = provider.getPerson(receivedId);
+       final Persons person =apiProvider.getPerson(receivedId); // provider.getPerson(receivedId);
 
         desc = view.findViewById(R.id.fragment_person_profile_info_desc);
         contacts = view.findViewById(R.id.fragment_person_profile_info_contacts);
@@ -76,6 +86,36 @@ public class Fragment_person_profile_info extends Fragment {
             desc.setText(description);
         }
         contacts.setText(person.getNumber());
+
+        btn_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+
+                dialog.setTitle("Внимание!");
+                dialog.setMessage("Вы уверены?");
+                dialog.setPositiveButton("Да, позвонить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + person.getNumber()));
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Log.e("showDialog_profile_info", e.getMessage());
+                        }
+                    }
+                });
+
+                dialog.setNegativeButton("Отменa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
 }

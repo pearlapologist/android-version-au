@@ -24,6 +24,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
@@ -34,6 +35,7 @@ import models.Persons;
 public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragment_bkmk_specials_adapter.MyViewHolder>{
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Bookmarks> specials;
     Fragment_bkmk_specials fragment_bkmk_specials;
 
@@ -57,14 +59,15 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         Bookmarks bookm = specials.get(position);
         int executorId = bookm.getExecutorId();
-       final Executor executor =  provider.getExecutor(executorId);
+       final Executor executor = apiProvider.getExecutor(executorId); //  provider.getExecutor(executorId);
 
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        final Persons p = provider.getPerson(executor.getPersonId());
+        final Persons p = apiProvider.getPerson(executor.getPersonId());  //provider.getPerson(executor.getPersonId());
         if (p.getPhoto() == null) {
             holder.photo.setImageResource(R.drawable.executors_default_image);
         } else {
@@ -106,7 +109,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_bookm_delete:
-                                showDialogDelete(executor.getId());
+                                showDialogDelete(executor);
                                 return true;
                             case R.id.menu_bookm_complain:
                                 //TODO: доделать методы
@@ -124,7 +127,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
 
     }
 
-    private void showDialogDelete(final int executorId) {
+    private void showDialogDelete(final Executor executor) {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.setContentView(R.layout.dialog_answer_delete);
@@ -137,9 +140,9 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Executor r = provider.getExecutor(executorId);
-                specials.remove(r);
-                provider.deleteExecutorFromMyBookmarks(executorId);
+             //   Executor r =apiProvider.getExecutor(executor.getId()); // provider.getExecutor(executorId);
+                specials.remove(executor.getId());
+                provider.deleteExecutorFromMyBookmarks(executor.getId());
                 notifyDataSetChanged();
                 Toast.makeText(context, "Специалист удален из ваших закладок", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();

@@ -24,6 +24,7 @@ public class MyDataProvider {
 
     private DbHelper db;
     private Context context;
+    ApiProvider apiProvider = new ApiProvider();
 
 
     public MyDataProvider(Context context) {
@@ -149,43 +150,6 @@ public class MyDataProvider {
 
     //region Person
 
-    //CREATE/ADD PERSON
-    public void addPerson(Persons person) {
-
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "INSERT INTO " + TABLE_PERSONS + "(" + KEY_PERSON_NAME + ", " + KEY_PERSON_LASTNAME + ", " + KEY_PERSON_NUMBER +
-                    ", " + KEY_PERSON_PASSWD + ", " + KEY_PERSON_RATING + ", " + KEY_PERSON_CREATED_DATE + ", " + KEY_PERSON_PHOTO + ", " + KEY_PERSON_BIRTHDAY +
-                    ") VALUES (?,?,?,?,?,?,?,?)";
-            SQLiteStatement statement = sqLiteDb.compileStatement(sql);
-            statement.clearBindings();
-
-            statement.bindString(1, person.getName());
-            statement.bindString(2, person.getLastname());
-            statement.bindString(3, person.getNumber());
-            statement.bindString(4, person.getPasswd());
-            statement.bindDouble(5, person.getRating());
-            statement.bindString(6, person.getCreatedDate());
-            statement.bindBlob(7, person.getPhoto());
-            statement.bindString(8, person.getBirthday());
-            statement.executeInsert();
-
-            String sqlMaxId = "SELECT MAX(" + KEY_PERSON_ID + ") FROM " +
-                    TABLE_PERSONS;
-            int maxId = 0;
-            Cursor c = sqLiteDb.rawQuery(sqlMaxId, null);
-            if (c.moveToFirst()) {
-                maxId = c.getInt(0);
-            }
-            person.setId(maxId);
-            sqLiteDb.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e("erroe", e.getMessage());
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
 
     //READ PERSON
     private Persons currentPerson = null;
@@ -197,7 +161,7 @@ public class MyDataProvider {
 
         if (personId != -1) {
             if (currentPerson == null || personId != currentPerson.getId()) {
-                Persons person = getPerson(personId);
+                Persons person = apiProvider.getPerson(personId);
                 currentPerson = person;
             }
         }
@@ -217,80 +181,10 @@ public class MyDataProvider {
         currentPerson = person;
     }
 
-
-    public Persons getPersonByPasswdNNumb(String passwd, String number) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-
-        String q = "select * from " + TABLE_PERSONS + " where " + KEY_PERSON_NUMBER + "='" +
-                number + "' AND " + KEY_PERSON_PASSWD + "= '" + passwd + "'";
-        Cursor cursor = sqLiteDb.rawQuery(q, null);
-        if (cursor.moveToFirst()) {
-            Persons person = getPersonFromCursor(cursor);
-            return person;
-        }
-        return null;
-    }
-
-    public Persons getPersonByNumber(String number) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                    + TABLE_PERSONS + " where " + KEY_PERSON_NUMBER + "='"
-                    + number + "'", null);
-            if (c.moveToFirst()) {
-                Persons person = getPersonFromCursor(c);
-                return person;
-            }
-            sqLiteDb.setTransactionSuccessful();
-            c.close();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return null;
-    }
-
-    public Persons getPerson(int personId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        Persons p = null;
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_PERSONS + " where " + KEY_PERSON_ID + "=" + personId,
-                    null);
-            if (c.moveToFirst()) {
-                p = getPersonFromCursor(c);
-            }
-            sqLiteDb.setTransactionSuccessful();
-            c.close();
-        } catch (Exception e) {
-            Log.e("getPerson", e.getMessage());
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return p;
-    }
-
-
-    public Persons getPersonFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_PERSON_ID));
-        String name = c.getString(c.getColumnIndex(KEY_PERSON_NAME));
-        String number = c.getString(c.getColumnIndex(KEY_PERSON_NUMBER));
-        String lastname = c.getString(c.getColumnIndex(KEY_PERSON_LASTNAME));
-        int rating = c.getInt(c.getColumnIndex(KEY_PERSON_RATING));
-        String passwd = c.getString(c.getColumnIndex(KEY_PERSON_PASSWD));
-        String created = c.getString(c.getColumnIndex(KEY_PERSON_CREATED_DATE));
-        byte[] photo = c.getBlob(c.getColumnIndex(KEY_PERSON_PHOTO));
-
-        Persons per = new Persons(id, name, lastname, passwd, photo, number, rating, created);
-        return per;
-    }
-
-
     //UPDATE PERSON
 
-    public void updatePerson(Persons person) {
-        SQLiteDatabase sqlDatabase = db.getWritableDatabase();
+   public void updatePerson(Persons person) {
+     /*   SQLiteDatabase sqlDatabase = db.getWritableDatabase();
         sqlDatabase.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_PERSONS + " SET " +
@@ -315,11 +209,11 @@ public class MyDataProvider {
         } finally {
             sqlDatabase.endTransaction();
             sqlDatabase.close();
-        }
+        }*/
     }
 
     public void setPersonIsExecutorField(int personId, Boolean b) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         int value;
         if (b == true) {
@@ -336,14 +230,15 @@ public class MyDataProvider {
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
 
 
     public boolean getPersonIsExecutorField(int personId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       Boolean b = false;
+     /*   SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
-        Boolean b = false;
+
         String sql = "SELECT " + KEY_PERSON_ISEXECUTOR + " FROM " + TABLE_PERSONS +
                 " WHERE " + KEY_PERSON_ID + "=" + personId;
         try {
@@ -358,15 +253,16 @@ public class MyDataProvider {
             c.close();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
         return b;
     }
 
 
     public int getPersonRatingById(int id) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       int rating = -1;
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
-        int rating = -1;
+
         try {
             String sql = "select (select sum(" + KEY_REVIEW_ASSESSMENT + ") from " + TABLE_REVIEWS + " where " + KEY_REVIEW_EXECUTOR_ID +
                     " = " + id + ")/(select count(" + KEY_REVIEW_CUSTOMER_ID + ") from " + TABLE_REVIEWS + " where " + KEY_REVIEW_EXECUTOR_ID +
@@ -379,14 +275,14 @@ public class MyDataProvider {
             c.close();
         } finally {
             sqLiteDb.endTransaction();
-            return rating;
-        }
 
+        }*/
+        return rating;
     }
 
 
     public void updatePersonRatingById(int personId) {
-        int rating = getPersonRatingById(personId);
+      /*  int rating = getPersonRatingById(personId);
         SQLiteDatabase sqlDatabase = db.getWritableDatabase();
         sqlDatabase.beginTransaction();
         try {
@@ -402,14 +298,15 @@ public class MyDataProvider {
         } finally {
             sqlDatabase.endTransaction();
             sqlDatabase.close();
-        }
-    }/*select count(customer_id) from reviews where executor_id = 2
+        }*/
+    }
+    /*select count(customer_id) from reviews where executor_id = 2
 select (select sum(assessment) from reviews where executor_id  = 2)/2
     select sum(assessment) from reviews where executor_id  = 2*/
 
     //DELETE PERSON
     public void deletePerson(int personId) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
+       /* SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
             int result = sqL.delete(TABLE_PERSONS, KEY_PERSON_ID + " = " + personId, null);
@@ -421,7 +318,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.setTransactionSuccessful();
         } finally {
             sqL.endTransaction();
-        }
+        }*/
     }
     //endregion
 
@@ -447,7 +344,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             onExecutorCreate(executor);
             createExecutorServices(executor);
             onExecutorServicesCreate(executor);
-            setPersonIsExecutorField(executor.getPersonId(), true);
+           setPersonIsExecutorField(executor.getPersonId(), true);
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
@@ -565,25 +462,6 @@ where executor_services.executor_id = 1
         return result;
     }
 
-    public ArrayList<Integer> getExecutorsServicesId(int executorId) {
-        ArrayList<Integer> arrID = new ArrayList();
-        SQLiteDatabase database = db.getReadableDatabase();
-        database.beginTransaction();
-        try {
-            String sql = "select " + KEY_EXECUTORNSERVICES_SERVICE_ID + " FROM " +
-                    TABLE_EXECUTORNSERVICES + " where " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + " = " + executorId;
-            Cursor c = database.rawQuery(sql, null);
-            while (c.moveToNext()) {
-                arrID.add(c.getInt(0));
-            }
-            database.setTransactionSuccessful();
-            c.close();
-        } finally {
-            database.endTransaction();
-        }
-        return arrID;
-    }
-
     //UPDATE EXECUTOR
     public void updateExecutor(Executor executor) {
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
@@ -633,6 +511,16 @@ where executor_services.executor_id = 1
                     KEY_SERVICE_PRICE + ") VALUES ( '" + service.getTitle() + "',  "
                     + service.getPrice() + ")";
             sqLiteDb.execSQL(sql);
+
+            String sqlMaxId = "SELECT MAX(" + KEY_SERVICE_ID + ") FROM " +
+                    TABLE_SERVICE;
+            int maxId = 0;
+            Cursor c = sqLiteDb.rawQuery(sqlMaxId, null);
+            if (c.moveToFirst()) {
+                maxId = c.getInt(0);
+            }
+            service.setId(maxId);
+
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
@@ -1049,7 +937,7 @@ where executor_services.executor_id = 1
                     + TABLE_ORDERS + " where " + KEY_ORDER_SECTION_ID + " = " + rId + " order by " + KEY_ORDER_CREATED_DATE +
                     " desc", null);
             while (c.moveToNext()) {
-                Order order  = getOrderFromCursor(c);
+                Order order = getOrderFromCursor(c);
                 result.add(order);
             }
             c.close();
@@ -1528,7 +1416,7 @@ where executor_services.executor_id = 1
 
 
     public ArrayList<Integer> getLeavedReviewPersonsIdList(int personId) {
-        Persons person = getPerson(personId);
+        Persons person = null;// getPerson(personId);
         if (person == null) {
             return null;
         }
@@ -1607,7 +1495,7 @@ where executor_services.executor_id = 1
     //READ EXECUTORNPERSON
 
     public int getExecutorIdByPersonId(int personId) {
-        Persons person = this.getPerson(personId);
+        Persons person =null;// this.getPerson(personId);
         if (person == null) {
             return -1;
         }
@@ -1649,7 +1537,7 @@ where executor_services.executor_id = 1
                     " FROM " + TABLE_EXECUTORNPERSON + " WHERE " + KEY_EXECUTORNPERSON_EXECUTOR_ID + "= " + executorId, null);
             if (cursor.moveToFirst()) {
                 int personId = cursor.getInt(0);
-                Persons p = getPerson(personId);
+                Persons p = null; //getPerson(personId);
                 if (p != null) {
                     id = personId;
                 }

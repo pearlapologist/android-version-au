@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/custom_blue"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreen">
+
+    <ImageView
+        android:id="@+id/splshscrn_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/splash_image"
+        android:transitionName="transition_splash_image"></ImageView>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/splshscrn_txtpwr"
+        android:text="@string/powered_by"
+        android:textStyle="bold"
+        android:transitionName="splash_transition_powered"
+        android:textColor="@color/colorWhite"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:src="@drawable/stars"
+        android:layout_alignParentRight="true"
+       android:layout_above="@id/splshscrn_txtpwr"
+        ></pl.droidsonroids.gif.GifImageView>
+
+</RelativeLayout>

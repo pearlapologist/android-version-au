@@ -17,6 +17,7 @@ import android.widget.EditText;
 import com.example.projectwnavigation.MyProfile_reviews_activity;
 import com.example.projectwnavigation.R;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Notify;
@@ -27,6 +28,7 @@ public class PersonProfile_AddReviewActivity extends AppCompatActivity {
 Button cancel, save;
 EditText assessment, text;
 MyDataProvider provider;
+ApiProvider apiProvider;
 private NotificationManager nManager;
 
     @Override
@@ -38,6 +40,7 @@ private NotificationManager nManager;
         assessment = findViewById(R.id.person_profile_add_review_etAssessment);
         text = findViewById(R.id.person_profile_add_review_etText);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
         nManager =(NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +60,8 @@ private NotificationManager nManager;
 
                 try {
                     provider.addReview(review);
-                    provider.updatePersonRatingById(executorId);
+                    apiProvider.updatePersonRatingById(executorId);
+                   // provider.updatePersonRatingById(executorId);
 
                     Notify notify = new Notify(executorId, "У вас новый отзыв", MyUtils.getCurentDateInLong(), 2, curPersonId, 0);
                     provider.createNotify(notify);

@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener;
 import com.synnapps.carouselview.ImageClickListener;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -24,6 +25,7 @@ public class PersonProfileActivity extends AppCompatActivity {
     TextView personName;
     ImageView photo;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Button chat;
     // CarouselView carousel;
     BottomNavigationView bottomNavigation;
@@ -38,6 +40,7 @@ public class PersonProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_profile);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
         personName = findViewById(R.id.person_profile_tvName);
         photo = findViewById(R.id.person_profile_image);
 
@@ -102,7 +105,7 @@ public class PersonProfileActivity extends AppCompatActivity {
 
     public void getAndSetExecutorIntentData() {
         if(curPersonId != -1){
-            Persons person = provider.getPerson(curPersonId);
+            Persons person = apiProvider.getPerson(curPersonId); //provider.getPerson(curPersonId);
 
             if (person.getPhoto() == null) {
                 photo.setImageResource(R.drawable.executors_default_image);

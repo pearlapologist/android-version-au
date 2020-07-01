@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context=".RegistrationActivity">
 
@@ -13,94 +14,156 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/registr_scroll_rlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <Button
-                android:id="@+id/regist_btnOk"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="Зарегистрироваться"
-                android:layout_centerHorizontal="true"
-             android:layout_below="@id/regist_passwd2"/>
+                android:id="@+id/regist_btnToAuth"
+                android:background="#00000000"
+                android:text="Уже есть аккаунт?"
+                android:layout_marginTop="5sp"
+                android:layout_alignParentTop="true"
+                android:textSize="14sp"
+                android:layout_marginStart="5sp"
+                android:layout_gravity="left"
+                android:textAllCaps="false"
+                android:elevation="0sp"
+                android:layout_height="wrap_content"/>
 
-            <EditText
-                android:id="@+id/regist_name"
+            <TextView
+                android:layout_marginTop="10sp"
+                android:id="@+id/regist_txt"
+                android:textColor="@color/colorMutedGray2"
+                android:text="A.U.Almaty"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:scaleType="centerCrop"
+                android:transitionName="transition_aualmaty"
+                android:layout_below="@id/regist_btnToAuth"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/regist_image"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginBottom="35dp"
-                android:ems="10"
-                android:hint="Имя:"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/regist_lastname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/regist_name"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginBottom="35dp"
-                android:ems="10"
-                android:hint="Фамилия:"
-                android:inputType="textPersonName" />
-
-            <com.santalu.maskedittext.MaskEditText
-                android:id="@+id/regist_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/regist_lastname"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginBottom="35dp"
-                android:ems="10"
-                android:hint="Номер:"
-                android:inputType="phone"
-                app:met_mask="+7(###) ### ## ##" />
-
-
-            <EditText
-                android:id="@+id/regist_passwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/regist_number"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginBottom="35dp"
-                android:ems="10"
-                android:hint="Пароль:"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/regist_passwd2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/regist_passwd"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                android:layout_marginBottom="35dp"
-                android:ems="10"
-                android:hint="Подтвердите пароль:"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content"></TextView>
 
             <ImageButton
                 android:id="@+id/regist_image"
-                android:layout_width="134dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/regist_txt"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="38dp"
-                android:layout_marginBottom="47dp"
-                app:srcCompat="@drawable/add_a_photo_black_20dp" />
+                android:layout_marginTop="20dp"
+                app:srcCompat="@drawable/camera3_48px" />
+
+            <LinearLayout
+                android:id="@+id/registr_scroll_llayout"
+                android:layout_width="match_parent"
+                android:padding="10sp"
+                android:layout_below="@id/regist_image"
+                android:orientation="vertical"
+                android:layout_marginBottom="20sp"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/regist_name"
+                    android:layout_width="match_parent"
+                    android:hint="Имя"
+                    android:textColorHint="@color/colorMutedText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:textColorHint="@color/colorMutedText"
+                        android:textColor="@color/colorMutedGray2"
+                        android:inputType="textPersonName"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:hint="Фамилия"
+                    android:id="@+id/regist_lastname"
+                    android:layout_marginTop="10sp"
+                    android:textColorHint="@color/colorMutedText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:textColorHint="@color/colorMutedText"
+                        android:textColor="@color/colorMutedGray2"
+                        android:inputType="textPersonName"
+                        android:layout_height="wrap_content">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:hint="Номер"
+                    android:layout_marginTop="10sp"
+                    android:textColorHint="@color/colorMutedText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_height="wrap_content">
+                    <com.santalu.maskedittext.MaskEditText
+                        android:id="@+id/regist_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+7"
+                        android:inputType="phone"
+                        app:met_mask="+7(###) ### ## ##" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:hint="Пароль"
+                    android:id="@+id/regist_passwd"
+                    android:layout_marginTop="10sp"
+                    app:passwordToggleEnabled="true"
+                    android:textColorHint="@color/colorMutedText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:textColorHint="@color/colorMutedText"
+                        android:textColor="@color/colorMutedGray2"
+                        android:inputType="textPassword"
+                        android:layout_height="wrap_content">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:hint="Подтвердите пароль"
+                    android:layout_marginTop="10sp"
+                    app:passwordToggleEnabled="true"
+                    android:id="@+id/regist_passwd2"
+                    android:textColorHint="@color/colorMutedText"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:textColorHint="@color/colorMutedText"
+                        android:textColor="@color/colorMutedGray2"
+                        android:inputType="textPassword"
+                        android:layout_height="wrap_content">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:id="@+id/regist_btnOk"
+                    android:enabled="true"
+                    android:textColor="@color/colorWhite"
+                    android:background="@color/colorMutedGray2"
+                    android:text="Зарегистрироваться"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20sp"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:layout_height="wrap_content"/>
+                ></LinearLayout>
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

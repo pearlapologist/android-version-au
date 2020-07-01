@@ -24,6 +24,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Message;
 import models.MyDataProvider;
 import models.MyUtils;
@@ -32,6 +33,7 @@ import models.Persons;
 public class Messages_adapter_frg extends RecyclerView.Adapter<Messages_adapter_frg.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Integer> personsId;
 
     Persons curPerson;
@@ -54,11 +56,12 @@ public class Messages_adapter_frg extends RecyclerView.Adapter<Messages_adapter_
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         final int personId = personsId.get(position);
 
-        final Persons person1 = provider.getPerson(personId);
+        final Persons person1 = apiProvider.getPerson(personId);  // provider.getPerson(personId);
 
 
         if (person1 == null) {

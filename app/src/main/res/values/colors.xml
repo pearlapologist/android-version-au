@@ -9,4 +9,11 @@
     <color name="colorYellow">#A6FFE600</color>
     <color name="colorMutedText">#992F434D</color>
     <color name="colorBackground">#27009688</color>
+
+    <color name="custom_gray">#B1AFAA</color>
+    <color name="custom_blue">#01305a</color>
+    <color name="custom_red">#f14a41</color>
+    <color name="custom_muted_rose">#bc9c9b</color>
+    <color name="custom_black">#161719</color>
+
 </resources>

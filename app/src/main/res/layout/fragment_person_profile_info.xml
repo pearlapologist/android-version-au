@@ -81,7 +81,13 @@
             android:layout_marginRight="5sp"
             android:padding="5sp"
             android:text="Связаться"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:background="@color/colorMutedGray2"
+            android:enabled="true"
+            android:ems="7"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            />
     </RelativeLayout>
 
 </FrameLayout>

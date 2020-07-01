@@ -19,6 +19,7 @@ import com.example.projectwnavigation.MyProfile_reviews_activity;
 import com.example.projectwnavigation.MyProfile_createFormActivity;
 import com.example.projectwnavigation.R;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -28,6 +29,7 @@ public class MyProfileActivity extends AppCompatActivity {
     Button btn_orders, btn_form, btn_reviews;
     ImageView photo;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Persons person;
 
     @Override
@@ -43,6 +45,7 @@ public class MyProfileActivity extends AppCompatActivity {
         btn_reviews = findViewById(R.id.profile_reviews);
         photo = findViewById(R.id.profile_image);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
 
 
         initData();
@@ -57,7 +60,7 @@ public class MyProfileActivity extends AppCompatActivity {
         btn_form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isexecutor = provider.getPersonIsExecutorField(person.getId());
+                boolean isexecutor =apiProvider.getPersonIsExecutorField(person.getId());  //provider.getPersonIsExecutorField(person.getId());
                 if (isexecutor == false) {
                     Intent form = new Intent(MyProfileActivity.this, MyProfile_createFormActivity.class);
                     startActivity(form);
@@ -91,7 +94,8 @@ public class MyProfileActivity extends AppCompatActivity {
         }
         tv_status.setText("Статус: " + "Онлайн");
 
-        tv_registr.setText("Дата регистрации " + person.getCreatedDate());
+        String c = MyUtils.convertLongToDataString(person.getCreatedDate());
+        tv_registr.setText("Дата регистрации: " + c);
     }
 
 

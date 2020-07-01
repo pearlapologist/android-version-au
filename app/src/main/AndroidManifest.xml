@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +19,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Conversation_view_activity"></activity>
+        <activity android:name=".OnBoadingActivity"></activity>
+        <activity android:name=".Verify_numberActivity" />
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Conversation_view_activity" />
         <activity
             android:name="fragments.PersonProfile_AddReviewActivity"
             android:label="Написать отзыв" />
@@ -52,13 +64,7 @@
             android:label="Мой профиль" />
         <activity
             android:name=".Navigation_activity"
-            android:theme="@style/AppTheme.woutActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.woutActionBar" />
         <activity
             android:name=".MyProfile_createFormActivity"
             android:label="Создать анкету" />

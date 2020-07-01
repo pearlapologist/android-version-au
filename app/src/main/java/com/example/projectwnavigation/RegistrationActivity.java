@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.santalu.maskedittext.MaskEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -37,12 +38,12 @@ import models.Persons;
 
 public class RegistrationActivity extends AppCompatActivity {
     MyDataProvider provider;
-    Button btn;
-    EditText name, lastname, passwd, passwd2;
+    Button btn, btnToAuth;
     MaskEditText number;
     ImageView image;
     ApiProvider apiprovider;
     ProgressDialog pd;
+    TextInputLayout name, lastname, passwd, passwd2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,42 +61,49 @@ public class RegistrationActivity extends AppCompatActivity {
         image = findViewById(R.id.regist_image);
 
         btn = findViewById(R.id.regist_btnOk);
+        btnToAuth = findViewById(R.id.regist_btnToAuth);
 
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                if (number == null || passwd == null || name == null || lastname == null) {
-                    Toast.makeText(RegistrationActivity.this, "Заполните все необходимые поля", Toast.LENGTH_SHORT).show();
+                if(!validateName() || !validatePasswd()){
                     return;
                 }
-                String num = number.getRawText().trim() + "";
-                String n = "+7" + num;
-                if (passwd.getText().toString().trim().
-                        equals(passwd2.getText().toString().trim())) {
-                    Persons person = new Persons();
-                    person.setName(name.getText().toString().trim());
-                    person.setLastname(lastname.getText().toString().trim());
-                    person.setPasswd(passwd.getText().toString().trim());
-                    person.setPhoto(MyUtils.imageViewToByte(image));
-                    person.setNumber(n);
-                    person.setRating(0);
-                    person.setCreatedDate(MyUtils.getCurrentDateInString());
-                    person.setBirthday(MyUtils.getCurrentDateInString());
+                try {
+                    if (number == null || passwd == null || name == null || lastname == null) {
+                        Toast.makeText(RegistrationActivity.this, "Заполните все необходимые поля", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String num = number.getRawText().trim() + "";
+                    String n = "+7" + num;
+                    if (passwd.getEditText().getText().toString().trim().
+                            equals(passwd2.getEditText().getText().toString().trim())) {
+                        Persons person = new Persons();
+                        person.setName(name.getEditText().getText().toString().trim());
+                        person.setLastname(lastname.getEditText().getText().toString().trim());
+                        person.setPasswd(passwd.getEditText().getText().toString().trim());
+                        //person.setPhoto(MyUtils.imageViewToByte(image));
+                        person.setNumber(n);
+                        person.setRating(0);
+                         person.setBirthday(MyUtils.getCurentDateInLong());
 
-                  //  provider.addPerson(person);
-                    RegistrationTask task2 = new RegistrationTask();
-                    task2.execute(person);
-                    //  apiprovider.addPerson(person);
 
+                        RegistrationTask task2 = new RegistrationTask();
+                        task2.execute(person);
 
-                } else {
-                    Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e("onclick", e.getMessage());
                 }
             }
         });
+
+
+
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +113,61 @@ public class RegistrationActivity extends AppCompatActivity {
                 );
             }
         });
+
+        btnToAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RegistrationActivity.this, AuthorizationActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            }
+        });
     }
+    private Boolean validateName(){
+        String w = "\\A\\w{4,20}\\z";
+        String s = name.getEditText().getText().toString().trim();
+        if(s.isEmpty()){
+            name.setError("Заполните поле");
+            return false;
+        }else if(!s.matches(w)){
+            name.setError("Инвалидное имя");
+            return false;
+        }
+        else{
+            name.setError(null);
+            name.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+    private Boolean validatePasswd(){
+String c= passwd2.getEditText().getText().toString().trim();
+        String p = "^" +
+                "(?=.*[a-zA-Z])" +      //any letter
+                "(?=\\S+$)" +           //no white spaces
+                ".{4,}" +               //at least 4 characters
+                "$";
+        String s = passwd.getEditText().getText().toString().trim();
+        if(s.isEmpty()){
+            name.setError("Заполните поле");
+            return false;
+        }else if(!s.matches(p)){
+            name.setError("Пароль слишком легкий");
+            return false;
+        }else if(!(s.equals(c))){
+            passwd2.setError("Пароли не совпадают");
+            return false;
+        }
+        else{
+            name.setError(null);
+            name.setErrorEnabled(false);
+            return true;
+        }
+
+    }
+
+
 
     private class RegistrationTask extends AsyncTask<Persons, Void, Void> {
 

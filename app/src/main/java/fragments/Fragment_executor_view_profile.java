@@ -20,6 +20,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
 import models.Persons;
@@ -35,9 +36,11 @@ public class Fragment_executor_view_profile extends Fragment {
     Button number;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     private int gottenExecutorId;
+    Executor curExecutor;
 
     public Fragment_executor_view_profile() {
 
@@ -54,6 +57,7 @@ public class Fragment_executor_view_profile extends Fragment {
 
     public void setContext(Context context) {
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         this.context = context;
 
     }
@@ -78,33 +82,33 @@ public class Fragment_executor_view_profile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         servicesRv = view.findViewById(R.id.fragment_executor_view_profile_rv);
+        curExecutor = apiProvider.getExecutor(gottenExecutorId);
         insertArray();
         executor_services_adapter_frg = new Executor_services_adapter_frg(getActivity(), context, services);
         servicesRv.setAdapter(executor_services_adapter_frg);
         servicesRv.setLayoutManager(new LinearLayoutManager(context));
-        Executor executor = provider.getExecutor(gottenExecutorId);
 
         spec = view.findViewById(R.id.fragment_executor_view_profile_spec);
         desc = view.findViewById(R.id.fragment_executor_view_profile_desc);
         contacts = view.findViewById(R.id.fragment_executor_view_profile_contacts);
         number = view.findViewById(R.id.fragment_executor_view_profile_contacts_btn);
-        String special = executor.getSpecialztn();
+        String special = curExecutor.getSpecialztn();
 
         spec.setText(special);
 
-        Persons p = provider.getPerson(executor.getPersonId());
+        Persons p = apiProvider.getPerson(curExecutor.getPersonId()); //provider.getPerson(executor.getPersonId());
         String numb = "телефон";
         if (p != null) {
             numb = p.getNumber();
         }
         contacts.setText(numb);
 
-        String description = executor.getDescriptn();
-        if(description == null){
+        String description = curExecutor.getDescriptn();
+        if (description == null) {
             description = "(Пользователь не указал о себе ничего)";
             desc.setText(description);
             desc.setTextColor(getResources().getColor(R.color.colorMutedText));
-        }else {
+        } else {
             desc.setText(description);
         }
 
@@ -112,10 +116,9 @@ public class Fragment_executor_view_profile extends Fragment {
     }
 
     void insertArray() {
-        Executor executor = provider.getExecutor(gottenExecutorId);
-        try{
-        services = provider.getExecutorServices(executor.getId());}
-        catch (NullPointerException e){
+        try {
+            services = provider.getExecutorServices(curExecutor.getId());
+        } catch (NullPointerException e) {
             Log.e("insertArray", e.getMessage());
         }
     }

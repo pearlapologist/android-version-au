@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import fragments.MyProfileActivity;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
@@ -27,7 +31,9 @@ public class MyProfile_edit_activity extends AppCompatActivity {
     Button btnOk, btnCh;
     ImageView image;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     EditText etName, etLastname, etBirthday, etNumber;
+    ProgressDialog pd;
 
 
     @Override
@@ -39,6 +45,7 @@ public class MyProfile_edit_activity extends AppCompatActivity {
         btnOk = findViewById(R.id.profile_edit_btnOk);
         btnCh = findViewById(R.id.profile_edit_btnChoose);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
         etName = findViewById(R.id.profile_edit_etName);
         etLastname = findViewById(R.id.profile_edit_etLast);
         etBirthday = findViewById(R.id.profile_edit_etBirthday);
@@ -64,10 +71,14 @@ public class MyProfile_edit_activity extends AppCompatActivity {
                     pers.setName(etName.getText().toString().trim());
                     pers.setLastname(etLastname.getText().toString().trim());
                     pers.setNumber(etNumber.getText().toString().trim());
-                    pers.setPhoto(MyUtils.imageViewToByte(image));
-                    provider.updatePerson(pers);
+                    pers.setBirthday(MyUtils.getCurentDateInLong());
+                  //  pers.setPhoto(MyUtils.imageViewToByte(image));
+
+                    EditTask task2 = new EditTask();
+                    task2.execute(pers);
                     Toast.makeText(MyProfile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
-                    image.setImageResource(R.drawable.executors_default_image);
+                    Intent i = new Intent(MyProfile_edit_activity.this, MyProfileActivity.class);
+                    startActivity(i);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MyProfile_edit_activity.this, "error", Toast.LENGTH_SHORT).show();
@@ -86,6 +97,37 @@ public class MyProfile_edit_activity extends AppCompatActivity {
         etNumber.setText(person.getNumber());
     }
 
+
+    private class EditTask extends AsyncTask<Persons, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MyProfile_edit_activity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Persons... params) {
+            try {
+                apiProvider.updatePerson(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -47,37 +47,19 @@
                 android:text="specialization"
                 android:textColor="@color/colorMutedGray2" />
 
-            <TextView
-                android:id="@+id/executors_adapter_frg_txtrating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/executors_adapter_frg_spec"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="5sp"
-                android:layout_toRightOf="@id/executors_adapter_frg_photo"
-                android:text="Рейтинг:"
-                android:textColor="@color/colorMutedText" />
+         <RatingBar
+             android:id="@+id/executors_adapter_frg_ratingBar"
+             android:layout_width="wrap_content"
+             android:rating="8.4"
+             android:layout_marginTop="10sp"
+             android:layout_toRightOf="@id/executors_adapter_frg_photo"
+             android:layout_below="@id/executors_adapter_frg_spec"
+             android:numStars="10"
+             android:layout_marginStart="10sp"
+             style="@style/Widget.AppCompat.RatingBar.Small"
+             android:layout_height="wrap_content"
+             ></RatingBar>
 
-            <TextView
-                android:id="@+id/executors_adapter_frg_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/executors_adapter_frg_spec"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="5sp"
-                android:layout_toRightOf="@id/executors_adapter_frg_txtrating"
-                android:hint="50"
-                android:textColor="@color/colorMutedGray2" />
-
-            <TextView
-                android:id="@+id/executors_adapter_frg_txtrating2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/executors_adapter_frg_spec"
-                android:layout_marginTop="5sp"
-                android:layout_toRightOf="@id/executors_adapter_frg_rating"
-                android:text="/100"
-                android:textColor="@color/colorMutedText" />
 
 
             <ImageView

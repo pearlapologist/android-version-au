@@ -7,66 +7,209 @@
     tools:context="fragments.PersonProfileActivity">
 
     <ScrollView
-        android:layout_width="match_parent"
         android:id="@+id/person_profile_scroll"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/person_profile_relativelayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:background="@color/colorBackground"
+            android:layout_height="match_parent"
+           >
 
-            <ImageView
-                android:id="@+id/person_profile_image"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25sp"
-                android:src="@drawable/executors_default_image"></ImageView>
+            <RelativeLayout
+                android:id="@+id/person_profile_relativelayout"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:padding="20sp">
 
-            <TextView
-                android:id="@+id/person_profile_tvName"
-                android:layout_width="wrap_content"
+
+                <ImageView
+                    android:id="@+id/person_profile_image"
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="20sp"
+                    android:layout_marginTop="35sp"
+                    android:src="@drawable/executors_default_image"></ImageView>
+
+                <TextView
+                    android:id="@+id/person_profile_tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+         android:layout_alignTop="@id/person_profile_image"
+                    android:layout_marginEnd="20sp"
+                    android:layout_toEndOf="@id/person_profile_image"
+                    android:text="Imya Familiya"
+                    android:textColor="@color/colorMutedGray2"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/person_profile_btnChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/person_profile_tvName"
+                    android:layout_marginStart="40sp"
+                    android:layout_marginTop="10sp"
+                    android:text="Открыть чат"
+                    android:layout_toEndOf="@id/person_profile_image"
+                    android:background="@color/colorMutedGray2"
+                    android:enabled="true"
+                    android:ems="7"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp">
+
+                </Button>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/person_profile_lLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/person_profile_image"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10sp"
-                android:text="Name" />
+                android:layout_below="@id/person_profile_relativelayout"
+                android:layout_marginTop="-100sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginStart="10sp"
+                android:orientation="horizontal"
+             >
 
-            <Button
-                android:id="@+id/person_profile_btnChat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/person_profile_tvName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15sp"
-                android:text="Открыть чат">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20sp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardElevation="10sp">
 
-            </Button>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                       android:padding="5sp">
+
+                        <ImageView
+                            android:id="@+id/person_profile_ic_rating"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10sp"
+                            android:src="@drawable/ic_actions_star"></ImageView>
+
+                        <TextView
+                            android:id="@+id/person_profile_txtrating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/person_profile_ic_rating"
+                            android:layout_marginTop="5sp"
+                            android:layout_toLeftOf="@id/person_profile_ic_rating"
+                            android:hint="30"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/person_profile_txtrating2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/person_profile_ic_rating"
+                            android:layout_marginTop="5sp"
+                            android:layout_toRightOf="@id/person_profile_txtrating"
+                            android:hint="/100"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/person_profile_txtrating3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/person_profile_txtrating2"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="10sp"
+                            android:text="Рейтинг"
+                            android:textColor="@color/colorMutedGray2"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20sp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardElevation="10sp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:padding="5sp"
+                        android:layout_height="match_parent"
+                       >
+
+                        <ImageView
+                            android:id="@+id/person_profile_ic_reviews"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10sp"
+                            android:src="@drawable/ic_actions_thumbs_up"></ImageView>
+
+                        <TextView
+                            android:id="@+id/person_profile_txtreviews"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/person_profile_ic_reviews"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5sp"
+                            android:hint="30"
+                            android:includeFontPadding="false"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/person_profile_txtreviews3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/person_profile_txtreviews"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="10sp"
+                            android:text="Отзывов"
+                            android:textColor="@color/colorMutedGray2"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/person_profile_navbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/person_profile_btnChat"
-                android:layout_marginTop="14dp"
+                android:layout_below="@id/person_profile_lLayout"
+                android:layout_marginTop="-8dp"
+                android:background="@color/colorBackground"
+                android:textColor="@color/colorMutedGray2"
                 android:visibility="visible"
                 app:itemHorizontalTranslationEnabled="true"
                 app:labelVisibilityMode="auto"
                 app:menu="@menu/person_profile_bottomnavbar"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
             <FrameLayout
+                android:id="@+id/person_profile_framelayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
-                android:layout_alignParentBottom="true"
-                android:id="@+id/person_profile_framelayout"
                 android:layout_below="@id/person_profile_navbar"
-                ></FrameLayout>
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorBackground"></FrameLayout>
+
 
         </RelativeLayout>
-
-
     </ScrollView>
 
 </LinearLayout>

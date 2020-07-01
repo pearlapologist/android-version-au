@@ -39,6 +39,7 @@ import fragments.Fragment_specials;
 import fragments.MyProfileActivity;
 import fragments.Orders_view_activity;
 import fragments.PersonProfileActivity;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Notify;
@@ -49,6 +50,7 @@ public class Navigation_activity extends AppCompatActivity {
     int notifyCounter = 0;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Fragment_specials fragment_specials;
     Fragment_orders fragment_orders;
     Fragment_bkmrk fragment_bkmrk;
