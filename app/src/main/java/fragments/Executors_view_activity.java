@@ -147,7 +147,7 @@ public class Executors_view_activity extends AppCompatActivity {
 
            personName.setText(p.getName() + " " + p.getLastname());
 
-           Section_of_services sectiontlt = provider.getSection(cur.getSectionId());
+           Section_of_services sectiontlt = apiProvider.getSection(cur.getSectionId()); //provider.getSection(cur.getSectionId());
            section.setText(sectiontlt.getTitle());
        }  else {
             Toast.makeText(Executors_view_activity.this, "error", Toast.LENGTH_SHORT).show();

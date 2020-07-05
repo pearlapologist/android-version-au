@@ -325,7 +325,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //region Executor
     //CREATE EXECUTOR
     public void addExecutor(Executor executor) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+        /*SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_EXECUTOR + "(" + KEY_EXECUTOR_PERSON_ID +
@@ -348,25 +348,26 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //READ EXECUTOR
     private Executor getExecutorFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_EXECUTOR_ID));
+     /*   int id = c.getInt(c.getColumnIndex(KEY_EXECUTOR_ID));
         int personId = c.getInt(c.getColumnIndex(KEY_EXECUTOR_PERSON_ID));
         int sectionId = c.getInt(c.getColumnIndex(KEY_EXECUTOR_SECTION_ID));
         String spcltn = c.getString(c.getColumnIndex(KEY_EXECUTOR_SPECIALIZATION));
         String dscrp = c.getString(c.getColumnIndex(KEY_EXECUTOR_DESCRIPTION));
-
-        Executor executor = new Executor(id, personId, sectionId, spcltn, dscrp);
+*/
+        Executor executor = new Executor(); //(id, personId, sectionId, spcltn, dscrp);
         return executor;
     }
 
     public Executor getExecutor(int executorId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Executor executor = new Executor();
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_EXECUTOR + " where " + KEY_EXECUTOR_ID + "=" + executorId,
@@ -379,13 +380,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-            return executor;
-        }
+
+        }*/
+       return executor;
     }
 
     public ArrayList<Executor> getAllExecutors() {
-        ArrayList<Executor> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       ArrayList<Executor> result = new ArrayList<>();
+        /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -400,13 +402,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
     public ArrayList<Executor> getExecutorsBySectionId(int cId) {
-        ArrayList<Executor> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      ArrayList<Executor> result = new ArrayList<>();
+       /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -421,15 +423,16 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
 
     public ArrayList<Service> getExecutorServices(int executorId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         ArrayList<Service> result = new ArrayList<>();
+  /*      SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             String sql = "SELECT " + TABLE_SERVICE + "." + KEY_SERVICE_ID + ", "
                     + TABLE_SERVICE + "." + KEY_SERVICE_TITLE + ", "
@@ -438,13 +441,6 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
                     + KEY_SERVICE_ID + "=" + TABLE_EXECUTORNSERVICES + "." +
                     KEY_EXECUTORNSERVICES_SERVICE_ID + " WHERE " + TABLE_EXECUTORNSERVICES
                     + "." + KEY_EXECUTORNSERVICES_EXECUTOR_ID + "=" + executorId;
-        /*
-select service.id, service.title, service.price from service
-join executor_services
-on service.id = executor_services.service_id
-where executor_services.executor_id = 1
-
- */
             Executor executor = this.getExecutor(executorId);
             Cursor c2 = sqLiteDb.rawQuery(sql, null);
             if (executor != null) {
@@ -458,13 +454,13 @@ where executor_services.executor_id = 1
         } finally {
             sqLiteDb.endTransaction();
         }
-
+*/
         return result;
     }
 
     //UPDATE EXECUTOR
     public void updateExecutor(Executor executor) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+     /*   SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_EXECUTOR + " SET " +
@@ -480,12 +476,12 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //DELETE EXECUTOR
     public void deleteExecutor(int id) {
-        SQLiteDatabase sqLDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLDb = db.getWritableDatabase();
         try {
             int personId = getPersonIdByExecutorId(id);
             setPersonIsExecutorField(personId, false);
@@ -495,7 +491,7 @@ where executor_services.executor_id = 1
             sqLDb.execSQL(sql);
         } finally {
 
-        }
+        }*/
     }
 
     //endregion
@@ -531,7 +527,7 @@ where executor_services.executor_id = 1
     //READ SERVICE
 
     public Service getService(int serviceId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+     /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -546,12 +542,12 @@ where executor_services.executor_id = 1
         } finally {
             sqLiteDb.endTransaction();
         }
-
+*/
         return null;
     }
 
     public void createExecutorServices(Executor executor) {
-        if (executor.getServices() == null || executor.getId() == 0) {
+       /* if (executor.getServices() == null || executor.getId() == 0) {
             return;
         }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
@@ -575,16 +571,16 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
 
     public Service getServiceFromCursor(Cursor c) {
 
-        int id = c.getInt(c.getColumnIndex(KEY_SERVICE_ID));
+        /*int id = c.getInt(c.getColumnIndex(KEY_SERVICE_ID));
         String title = c.getString(c.getColumnIndex(KEY_SERVICE_TITLE));
-        Double price = c.getDouble(c.getColumnIndex(KEY_SERVICE_PRICE));
-        Service service = new Service(id, title, price);
+        Double price = c.getDouble(c.getColumnIndex(KEY_SERVICE_PRICE));*/
+        Service service = new Service(); //(id, title, price);
         return service;
     }
 
@@ -605,17 +601,17 @@ where executor_services.executor_id = 1
     }
 
     public void updateExecutorServices(Executor executor) {
-        if (executor.getServices() == null || executor.getId() == 0) {
+      /*  if (executor.getServices() == null || executor.getId() == 0) {
             return;
         }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
-           /* ArrayList<Integer> servicesId = getExecutorsServicesId(executor.getId());
-            for (int i = 0; i < servicesId.size(); i++) {
-                String sql = "DELETE FROM " + TABLE_SERVICE +
-                        " WHERE " + KEY_SERVICE_ID + "=" + i;
-                sqLiteDb.execSQL(sql);}*/
+          //  ArrayList<Integer> servicesId = getExecutorsServicesId(executor.getId());
+          //            for (int i = 0; i < servicesId.size(); i++) {
+          //                String sql = "DELETE FROM " + TABLE_SERVICE +
+          //                        " WHERE " + KEY_SERVICE_ID + "=" + i;
+          //                sqLiteDb.execSQL(sql);}
             deleteExecutorServices(executor.getId());
             String sql = "DELETE FROM " + TABLE_EXECUTORNSERVICES
                     + " WHERE " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + "=" + executor.getId();
@@ -640,7 +636,7 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     public void deleteExecutorServices(int executorId) {
@@ -680,24 +676,12 @@ where executor_services.executor_id = 1
 
     //region Section
     //CREATE SECTION
-    public void addSection(Section_of_services section) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            String sql = "INSERT INTO " + TABLE_SECTIONS + "(" + KEY_SECTION_TITLE + ") VALUES ( '"
-                    + section.getTitle() + ")";
-            sqLiteDb.execSQL(sql);
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-    }
 
     //READ SECTION
     public Section_of_services getSection(int sectionId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Section_of_services section = new Section_of_services();
+        /*SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_SECTIONS + " where " + KEY_SECTION_ID + "=" + sectionId,
@@ -711,36 +695,13 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return section;
-    }
-
-
-    public ArrayList<Section_of_services> getSections() {
-        ArrayList<Section_of_services> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_SECTIONS + " order by " + KEY_SECTION_ID,
-                    null);
-            while (c.moveToNext()) {
-                int id = c.getInt(c.getColumnIndex(KEY_SECTION_ID));
-                String title = c.getString(c.getColumnIndex(KEY_SECTION_TITLE));
-                Section_of_services section = new Section_of_services(id, title);
-                result.add(section);
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return result;
     }
 
     public ArrayList<String> getSectionListInString() {
         ArrayList<String> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.enableWriteAheadLogging();
         sqLiteDb.beginTransaction();
         try {
@@ -755,14 +716,14 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
     public int getSectionIdByTitle(String title) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         int id = -1;
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
         try {
             Cursor cursor = sqLiteDb.rawQuery("select " + KEY_SECTION_ID + " from "
                     + TABLE_SECTIONS + " where " + KEY_SECTION_TITLE + " = '" + title + "'", null);
@@ -773,7 +734,7 @@ where executor_services.executor_id = 1
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return id;
     }
 

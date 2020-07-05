@@ -59,6 +59,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_myprofile_reviews_txtallreviews" />
 
+        <ImageView
+            android:id="@+id/fragment_myprofile_reviews_img_no_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="400sp"
+            android:layout_below="@id/fragment_myprofile_reviews_txtallreviews"
+            android:layout_marginTop="30sp"
+            android:src="@drawable/no_reviews"
+            android:visibility="gone"></ImageView>
+
     </RelativeLayout>
 
 

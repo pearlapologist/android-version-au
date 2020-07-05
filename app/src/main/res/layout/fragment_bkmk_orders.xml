@@ -8,12 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
     <Spinner
         android:layout_marginTop="10sp"
         android:id="@+id/frg_bkmk_orders_spinenr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         ></Spinner>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_below="@id/frg_bkmk_orders_spinenr"
@@ -21,6 +23,14 @@
             android:layout_marginTop="10sp"
             android:padding="5sp"
             android:layout_height="match_parent" />
+
+        <ImageView
+            android:src="@drawable/no_bookm"
+            android:visibility="gone"
+            android:id="@+id/frg_bkmk_orders_no_orders"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ImageView>
 
     </RelativeLayout>
 </FrameLayout>

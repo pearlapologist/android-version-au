@@ -32,6 +32,7 @@ import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.Executor;
 import models.MyUtils;
@@ -44,6 +45,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
     Context context;
     Activity activity;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Order> orders;
 
     Persons curPerson;
@@ -88,6 +90,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
     @Override
     public void onBindViewHolder(@NonNull Orders_adapter_frg.MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         final Order order = orders.get(position);
@@ -100,7 +103,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
         holder.deadline.setText("" + deadlinetext);
         final int id = order.getId();
-        Section_of_services section = provider.getSection(order.getSection());
+        Section_of_services section =apiProvider.getSection(order.getSection()); // provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
@@ -216,14 +219,14 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         Spinner spinner = dialog.findViewById(R.id.dialog_orders_update_section);
         Button btnCancel = dialog.findViewById(R.id.dialog_orders_update_btnCancel);
 
-        ArrayList<String> sectionList = provider.getSectionListInString();
+        ArrayList<String> sectionList =apiProvider.getSectionListInString(); // provider.getSectionListInString();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String str = parent.getItemAtPosition(position).toString();
-                sectionId = provider.getSectionIdByTitle(str);
+                sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
             }
 
             @Override
@@ -232,6 +235,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
             }
         });
 
+        dialog.getWindow().setLayout(720, 1300);
         dialog.setCancelable(true);
         dialog.show();
         final Order order = provider.getOrder(orderId);

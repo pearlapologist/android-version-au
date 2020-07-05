@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -45,7 +47,10 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
     public Boolean contextModeEnable = false;
 
     ArrayList<Service> services;
+    ProgressDialog pd;
     ArrayList<Service> selectionList;
+
+    Executor curExecutor=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +61,11 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         apiProvider = new ApiProvider();
         Persons p = provider.getLoggedInPerson();
         int executorId = provider.getExecutorIdByPersonId(p.getId());
-        final Executor r =apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
+        curExecutor  =apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
 
         recyclerView = findViewById(R.id.myForm_rv);
         try {
-            services = r.getServices();
+            services = curExecutor.getServices();
         } catch (NullPointerException e) {
             Log.e("insertArray", e.getMessage());
         }
@@ -87,8 +92,9 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String[] choose = getResources().getStringArray(R.array.sections);
-                sectionId = provider.getSectionIdByTitle(choose[position]);
+              //  String[] choose = getResources().getStringArray(R.array.sections);
+                String str = parent.getItemAtPosition(position).toString();
+                sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
             }
 
             @Override
@@ -97,9 +103,9 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
             }
         });
 
-        spec.setText(r.getSpecialztn());
-        descrp.setText(r.getDescriptn());
-        descrp.setText(r.getDescriptn());
+        spec.setText(curExecutor.getSpecialztn());
+        descrp.setText(curExecutor.getDescriptn());
+        descrp.setText(curExecutor.getDescriptn());
 
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -109,18 +115,19 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
                 String descriptn = descrp.getText().toString().trim();
 
                 if (specializtn.length() >= 7 && descriptn != null && descriptn.length() >= 7 && services.size() >= 1) {
-                    r.setSectionId(sectionId);
-                    r.setSpecialztn(specializtn);
-                    r.setDescriptn(descriptn);
-                    r.setPersonId(provider.getLoggedInPerson().getId());
-                    r.setServices(services);
+                    curExecutor.setSectionId(sectionId);
+                    curExecutor.setSpecialztn(specializtn);
+                    curExecutor.setDescriptn(descriptn);
+                    curExecutor.setPersonId(provider.getLoggedInPerson().getId());
+                    curExecutor.setServices(services);
                     try {
-                        provider.updateExecutor(r);
+                        UpdateExecutorTask task = new UpdateExecutorTask();
+                        task.execute(curExecutor);
+                    //  apiProvider.updateExecutor(r); // provider.updateExecutor(r);
+                        Toast.makeText(MyProfile_myForm_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    Toast.makeText(MyProfile_myForm_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(MyProfile_myForm_activity.this, MyProfileActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
@@ -153,9 +160,10 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    provider.deleteExecutor(provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId()));
+                    DeleteExecutorTask task = new DeleteExecutorTask();
+                    task.execute(curExecutor.getId());
+               //     provider.deleteExecutor(provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId()));
                     Toast.makeText(MyProfile_myForm_activity.this, "Анкета успешно удалена", Toast.LENGTH_SHORT).show();
-
                 } catch (Exception e) {
                     Log.e("Delete error", e.getMessage());
                 }
@@ -268,5 +276,59 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         selectionList.clear();
         adapter.notifyDataSetChanged();
         invalidateOptionsMenu();
+    }
+
+    private class UpdateExecutorTask extends AsyncTask<Executor, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MyProfile_myForm_activity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Executor... params) {
+            apiProvider.updateExecutor(params[0]);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
+
+    private class DeleteExecutorTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MyProfile_myForm_activity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            apiProvider.deleteExecutor(params[0]);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
     }
 }

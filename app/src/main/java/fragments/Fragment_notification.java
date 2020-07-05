@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
@@ -33,6 +34,7 @@ public class Fragment_notification extends Fragment  {
     RecyclerView recyclerView;
     ArrayList<Notify> notifies = new ArrayList<>();
     Fragment_notification_adapter notify_adapter;
+    ImageView img_no_notify;
 
 
     public Fragment_notification() {
@@ -69,6 +71,7 @@ public class Fragment_notification extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.frg_notification_rv);
+        img_no_notify =  view.findViewById(R.id.frg_notification_img_nonotify);
         provider = new MyDataProvider(context);
 
         insertArray();
@@ -85,7 +88,9 @@ public class Fragment_notification extends Fragment  {
     void insertArray() {
         notifies = provider.getAllMyNotifies();
         if (notifies == null || notifies.size() <= 0) {
-            Toast.makeText(getContext(), "У вас нет уведомлений", Toast.LENGTH_SHORT).show();
+          img_no_notify.setVisibility(View.VISIBLE);
+        }else{
+            img_no_notify.setVisibility(View.GONE);
         }
     }
 }

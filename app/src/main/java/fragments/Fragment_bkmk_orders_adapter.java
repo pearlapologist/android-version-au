@@ -24,6 +24,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.MyDataProvider;
 import models.MyUtils;
@@ -34,6 +35,7 @@ import models.Section_of_services;
 public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_bkmk_orders_adapter.MyViewHolder>{
     private Context context;
     MyDataProvider provider;
+    ApiProvider apiProvider;
     ArrayList<Bookmarks> orders;
     Fragment_bkmk_orders fragment_bkmk_orders;
 
@@ -57,6 +59,7 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
 
         Bookmarks bookm = orders.get(position);
@@ -71,7 +74,7 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
         holder.deadline.setText("" + deadlinetext);
 
-        Section_of_services section = provider.getSection(order.getSection());
+        Section_of_services section =apiProvider.getSection(order.getSection()); // provider.getSection(order.getSection());
         holder.section.setText(section.getTitle());
 
         if (fragment_bkmk_orders.contextModeEnable) {

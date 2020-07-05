@@ -44,7 +44,7 @@ public class OnBoadingActivity extends AppCompatActivity {
         btn_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i  = new Intent(OnBoadingActivity.this, FirstActivity.class);
+                Intent i  = new Intent(OnBoadingActivity.this, Navigation_activity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 startActivity(i);
@@ -62,7 +62,7 @@ public class OnBoadingActivity extends AppCompatActivity {
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i  = new Intent(OnBoadingActivity.this, FirstActivity.class);
+                Intent i  = new Intent(OnBoadingActivity.this, Navigation_activity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 startActivity(i);

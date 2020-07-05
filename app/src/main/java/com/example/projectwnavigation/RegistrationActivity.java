@@ -68,7 +68,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!validateName() || !validatePasswd()){
+                if (!validateName() || !validatePasswd()) {
                     return;
                 }
                 try {
@@ -87,7 +87,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         //person.setPhoto(MyUtils.imageViewToByte(image));
                         person.setNumber(n);
                         person.setRating(0);
-                         person.setBirthday(MyUtils.getCurentDateInLong());
+                        person.setBirthday(MyUtils.getCurentDateInLong());
 
 
                         RegistrationTask task2 = new RegistrationTask();
@@ -101,8 +101,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
 
         image.setOnClickListener(new View.OnClickListener() {
@@ -123,17 +121,17 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
     }
-    private Boolean validateName(){
+
+    private Boolean validateName() {
         String w = "\\A\\w{4,20}\\z";
         String s = name.getEditText().getText().toString().trim();
-        if(s.isEmpty()){
+        if (s.isEmpty()) {
             name.setError("Заполните поле");
             return false;
-        }else if(!s.matches(w)){
+        } else if (!s.matches(w)) {
             name.setError("Инвалидное имя");
             return false;
-        }
-        else{
+        } else {
             name.setError(null);
             name.setErrorEnabled(false);
             return true;
@@ -141,32 +139,30 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private Boolean validatePasswd(){
-String c= passwd2.getEditText().getText().toString().trim();
+    private Boolean validatePasswd() {
+        String c = passwd2.getEditText().getText().toString().trim();
         String p = "^" +
                 "(?=.*[a-zA-Z])" +      //any letter
                 "(?=\\S+$)" +           //no white spaces
                 ".{4,}" +               //at least 4 characters
                 "$";
         String s = passwd.getEditText().getText().toString().trim();
-        if(s.isEmpty()){
+        if (s.isEmpty()) {
             name.setError("Заполните поле");
             return false;
-        }else if(!s.matches(p)){
+        } else if (!s.matches(p)) {
             name.setError("Пароль слишком легкий");
             return false;
-        }else if(!(s.equals(c))){
+        } else if (!(s.equals(c))) {
             passwd2.setError("Пароли не совпадают");
             return false;
-        }
-        else{
+        } else {
             name.setError(null);
             name.setErrorEnabled(false);
             return true;
         }
 
     }
-
 
 
     private class RegistrationTask extends AsyncTask<Persons, Void, Void> {

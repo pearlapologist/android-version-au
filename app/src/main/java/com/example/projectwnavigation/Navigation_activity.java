@@ -73,6 +73,7 @@ public class Navigation_activity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navListener);
+        navigationView.setCheckedItem(R.id.nav_orders);
         fragment_specials = new Fragment_specials(getApplicationContext());
         fragment_orders = new Fragment_orders(this);
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());

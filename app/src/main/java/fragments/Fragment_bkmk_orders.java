@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
 
     RecyclerView ordersRv;
     Fragment_bkmk_orders_adapter orders_adapter;
+    ImageView img_noorders;
     Spinner spinner;
     ArrayList<Bookmarks> orders;
 
@@ -90,6 +92,7 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ordersRv = view.findViewById(R.id.frg_bkmk_orders_rv);
         spinner = view.findViewById(R.id.frg_bkmk_orders_spinenr);
+        img_noorders = view.findViewById(R.id.frg_bkmk_orders_no_orders);
         selectionList = new ArrayList<>();
         insertArray();
 
@@ -103,7 +106,9 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     void insertArray() {
      orders = provider.getOrdersListFromMyBookmarks();
         if(orders == null || orders.size() <= 0){
-            Toast.makeText(context, "Ваш список закладок пуст", Toast.LENGTH_SHORT).show();
+            img_noorders.setVisibility(View.VISIBLE);
+        }else{
+            img_noorders.setVisibility(View.GONE);
         }
     }
 

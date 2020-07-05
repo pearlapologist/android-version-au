@@ -233,29 +233,11 @@ public class ApiProvider {
                 response.append(responseLine.trim());
             }
             String r = response.toString();
+            Log.i("updatePerson", r);
         } catch (Exception e) {
             Log.e("updatePerson", e.getMessage());
         }
     }
-
-
-    public void setPersonIsExecutorField(int personId, Boolean b) {
-        int value;
-        if (b == true) {
-            value = 1;
-        } else {
-            value = 0;
-        }
-        try {
-            String surl = "https://aualmaty.herokuapp.com/SetPersonIsExecutorField?id=" + personId + "&b=" + value;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(surl);
-
-        } catch (Exception e) {
-            Log.e("setPersonIsExecutor", e.getMessage());
-        }
-    }
-
 
     public void updatePersonRatingById(int personId) {
         try {
@@ -286,7 +268,7 @@ public class ApiProvider {
     public void addExecutor(Executor executor) {
         try {
 
-            URL url = new URL("https://aualmaty.herokuapp.com/AddPerson");
+            URL url = new URL("https://aualmaty.herokuapp.com/AddExecutor");
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -325,7 +307,7 @@ public class ApiProvider {
             int eid = Integer.parseInt(r);
             executor.setId(eid);
         } catch (Exception e) {
-            Log.e("updatePersonRatingById", e.getMessage());
+            Log.e("addExecutor", e.getMessage());
         }
     }
 
@@ -353,9 +335,9 @@ public class ApiProvider {
                 JSONArray arr = jsonObject.getJSONArray("services");
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject jsonService = arr.getJSONObject(i);
-                    int id2 = jsonService.getInt("id");
-                    String title = jsonService.getString("title");
-                    Double price = jsonService.getDouble("price");
+                    int id2 = jsonService.getInt("sId");
+                    String title = jsonService.getString("sTitle");
+                    Double price = jsonService.getDouble("sPrice");
                     Service service = new Service(id2, title, price);
                     services.add(service);
                 }
@@ -373,7 +355,7 @@ public class ApiProvider {
     public ArrayList<Executor> getAllExecutors() {
         ArrayList<Executor> executors = new ArrayList<>();
         try {
-            String url = "https://aualmaty.herokuapp.com/getAllExecutors";
+            String url = "https://aualmaty.herokuapp.com/GetAllExecutors";
             MyJsonTask task = new MyJsonTask();
             task.execute(url);
             String result = task.get();
@@ -390,19 +372,17 @@ public class ApiProvider {
                 String spec = jsonService.getString("spec");
                 Executor executor = new Executor(id, personId, sectionId, spec, desc);
 
-                if (executor.getServices() != null) {
-                    executor.getServices().clear();
-                } else {
-                    ArrayList<Service> services = new ArrayList<>();
-                    JSONArray arr2 = jsonObject.getJSONArray("services");
-                    for (int k = 0; k < arr2.length(); k++) {
-                        JSONObject jsonService2 = arr2.getJSONObject(k);
-                        int id2 = jsonService2.getInt("id");
-                        String title = jsonService2.getString("title");
-                        Double price = jsonService2.getDouble("price");
-                        Service service = new Service(id2, title, price);
-                        services.add(service);
-                    }
+
+                ArrayList<Service> services = new ArrayList<>();
+                JSONArray arr2 = jsonObject.getJSONArray("services");
+                for (int k = 0; k < arr2.length(); k++) {
+                    JSONObject jsonService2 = arr2.getJSONObject(k);
+                    int id2 = jsonService2.getInt("sId");
+                    String title = jsonService2.getString("sTitle");
+                    Double price = jsonService2.getDouble("sPrice");
+                    Service service = new Service(id2, title, price);
+                    services.add(service);
+
                     executor.setServices(services);
                 }
 
@@ -418,7 +398,7 @@ public class ApiProvider {
     public ArrayList<Executor> getExecutorsBySectionId(int cId) {
         ArrayList<Executor> executors = new ArrayList<>();
         try {
-            String url = "https://aualmaty.herokuapp.com/getAllExecutors";
+            String url = "https://aualmaty.herokuapp.com/GetExecutorsBySectionId";
             MyJsonTask task = new MyJsonTask();
             task.execute(url);
             String result = task.get();
@@ -442,9 +422,9 @@ public class ApiProvider {
                     JSONArray arr2 = jsonObject.getJSONArray("services");
                     for (int k = 0; k < arr2.length(); k++) {
                         JSONObject jsonService2 = arr2.getJSONObject(k);
-                        int id2 = jsonService2.getInt("id");
-                        String title = jsonService2.getString("title");
-                        Double price = jsonService2.getDouble("price");
+                        int id2 = jsonService2.getInt("sId");
+                        String title = jsonService2.getString("sTitle");
+                        Double price = jsonService2.getDouble("sPrice");
                         Service service = new Service(id2, title, price);
                         services.add(service);
                     }
@@ -461,7 +441,7 @@ public class ApiProvider {
 
     public void updateExecutor(Executor executor) {
         try {
-            URL url = new URL("https://aualmaty.herokuapp.com/UpdateExecutorById?id=" + executor.getId());
+            URL url = new URL("https://aualmaty.herokuapp.com/UpdateExecutor?id=" + executor.getId());
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -477,8 +457,8 @@ public class ApiProvider {
             JSONArray services = new JSONArray();
             for (Service s : executor.getServices()) {
                 JSONObject service = new JSONObject();
-                service.put("title", s.getTitle());
-                service.put("price", s.getPrice());
+                service.put("sTitle", s.getTitle());
+                service.put("sPrice", s.getPrice());
                 services.put(service);
             }
             jsonObject.put("services", services);
@@ -490,9 +470,6 @@ public class ApiProvider {
             os.flush();
             os.close();
 
-            /*
-             * */
-
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), "utf-8"));
             StringBuilder response = new StringBuilder();
@@ -501,16 +478,16 @@ public class ApiProvider {
                 response.append(responseLine.trim());
             }
             String r = response.toString();
-            Log.i("updatePerson", r);
+            Log.i("updateExecutor", r);
         } catch (Exception e) {
-            Log.e("updatePerson", e.getMessage());
+            Log.e("updateExecutor", e.getMessage());
         }
     }
 
     //DELETE EXECUTOR
     public void deleteExecutor(int id) {
         try {
-            String surl = "https://aualmaty.herokuapp.com/DeleteExecutor?id=" + id;
+            String surl = "https://aualmaty.herokuapp.com/deleteExecutor?id=" + id;
             MyJsonTask task = new MyJsonTask();
             task.execute(surl);
         } catch (Exception e) {
@@ -520,8 +497,8 @@ public class ApiProvider {
 
     //endregion
 
-    //region
-    public void loadExecutorServices(Executor executor) {
+
+ /*   public void loadExecutorServices(Executor executor) {
         try {
             String url = "https://aualmaty.herokuapp.com/LoadExecutorServices?id=" + executor.getId();
             MyJsonTask task = new MyJsonTask();
@@ -548,9 +525,75 @@ public class ApiProvider {
         } catch (Exception e) {
             Log.e("loadServices", e.getMessage());
         }
+    }*/
+
+    //region section
+    public Section_of_services getSection(int sectionId) {
+        try {
+            String url = "https://aualmaty.herokuapp.com/GetSection?id=" + sectionId;
+            MyJsonTask task = new MyJsonTask();
+            task.execute(url);
+            String result = task.get();
+
+            JSONObject jsonObject = new JSONObject(result);
+            String title = jsonObject.getString("title");
+
+            Section_of_services division = new Section_of_services(sectionId, title);
+
+            return division;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("getSection", e.getMessage());
+        }
+        return null;
     }
+
+    public ArrayList<String> getSectionListInString() {
+        ArrayList<String> divisions = new ArrayList<>();
+        try {
+            String url = "https://aualmaty.herokuapp.com/GetSectionListInString";
+            MyJsonTask task = new MyJsonTask();
+            task.execute(url);
+            String result = task.get();
+
+            JSONObject jsonObject = new JSONObject(result);
+
+            JSONArray arr = jsonObject.getJSONArray("sections");
+            for (int i = 0; i < arr.length(); i++) {
+                String division = arr.getString(i);
+
+                divisions.add(division);
+            }
+            return divisions;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("getSectionListInString", e.getMessage());
+        }
+        return null;
+    }
+
+    public int getSectionIdByTitle(String title) {
+        try {
+            String url = "https://aualmaty.herokuapp.com/GetSectionIdByTitle?title=" + title;
+            MyJsonTask task = new MyJsonTask();
+            task.execute(url);
+            String result = task.get();
+
+            JSONObject jsonObject = new JSONObject(result);
+            int id = jsonObject.getInt("id");
+
+            return id;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("getSectionIdByTitle", e.getMessage());
+        }
+        return -1;
+    }
+
     //endregion
 
+
+    //region message
     public Message addMessage(Message message) throws Exception {
         try {
             URL url = new URL("https://aualmaty.herokuapp.com/AddMessage");
@@ -639,6 +682,7 @@ public class ApiProvider {
         }
         return null;
     }
+    //endregion
 
     private class MyJsonTask extends AsyncTask<String, String, String> {
         @Override

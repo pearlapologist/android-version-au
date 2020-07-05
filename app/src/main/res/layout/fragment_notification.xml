@@ -12,6 +12,7 @@
             android:layout_height="match_parent">
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_marginTop="20sp"
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -21,8 +22,22 @@
                     android:layout_alignParentTop="true"
                     android:padding="10sp">
                 </androidx.recyclerview.widget.RecyclerView>
+
+
+
             </RelativeLayout>
+
+
+
         </ScrollView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/frg_notification_img_nonotify"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/no_notify"></ImageView>
 
     </RelativeLayout>
 

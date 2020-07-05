@@ -47,8 +47,7 @@
     <string name="first_slide_desc">Вы можете искать подходящие заказы и нужных специалистов в соответстующих разделах</string>
     <string name="second_slide_desc">Вы можете разместить свои услуги и контакты</string>
 
-    <string name="btn_skip">Пропустить</string>
-    <string name="btn_next">Продолжить</string>
+
     <string name="btn_start">Начать</string>
     <string name="search_txt">Поиск...</string>
 

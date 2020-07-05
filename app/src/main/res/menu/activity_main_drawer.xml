@@ -21,14 +21,14 @@
 
         <item
             android:id="@+id/nav_messages"
-            android:icon="@drawable/response"
+            android:icon="@drawable/ic_contact_chat"
             android:title="Сообщения"
             app:actionViewClass="android.widget.TextView" />
 
 
         <item
             android:id="@+id/nav_bkmr"
-            android:icon="@drawable/ic_bookmark"
+            android:icon="@drawable/ic_actions_bookmark"
             android:title="Закладки" />
 
     </group>

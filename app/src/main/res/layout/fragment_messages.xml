@@ -4,23 +4,36 @@
     android:layout_height="match_parent"
     tools:context="fragments.Fragment_messages">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/textView2"
+            android:layout_marginTop="20sp"
             android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fargment_msg_rv"
-            android:layout_marginTop="10sp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/textView2"
+            android:layout_marginTop="20sp">
 
-    </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/fargment_msg_nomessages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/no_messages"
+            android:visibility="gone"
+           ></ImageView>
+
+    </RelativeLayout>
 
 </FrameLayout>

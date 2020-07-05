@@ -24,6 +24,7 @@ import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyUtils;
 import models.MyDataProvider;
 import models.Order;
@@ -37,6 +38,7 @@ public class Fragment_orders_add extends Fragment {
     private String mParam2;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     EditText title, price, descr;
@@ -52,6 +54,7 @@ public class Fragment_orders_add extends Fragment {
 
     public Fragment_orders_add(Context context) {
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         this.context = context;
     }
 
@@ -103,7 +106,7 @@ public class Fragment_orders_add extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String str = parent.getItemAtPosition(position).toString();
-                sectionId = provider.getSectionIdByTitle(str);
+                sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
             }
 
 

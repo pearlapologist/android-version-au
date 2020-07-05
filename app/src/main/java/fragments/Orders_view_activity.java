@@ -22,6 +22,7 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyUtils;
 import models.MyDataProvider;
 import models.Notify;
@@ -36,6 +37,7 @@ public class Orders_view_activity extends AppCompatActivity {
     Button btn_response, btn_viewprofile;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     TextView spinnerSection;
     RecyclerView recyclerView;
     ArrayList<Response> responses = new ArrayList<>();
@@ -61,6 +63,8 @@ public class Orders_view_activity extends AppCompatActivity {
         recyclerView = findViewById(R.id.order_view_recycler_act);
         btn_viewprofile = findViewById(R.id.order_view_btnViewPrf);
         provider = new MyDataProvider(this);
+        apiProvider = new ApiProvider();
+
         curPerson = provider.getLoggedInPerson();
 
         if (getIntent().hasExtra("orderIdFragment")) {
@@ -76,7 +80,7 @@ public class Orders_view_activity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        Section_of_services section = provider.getSection(cur.getSection());
+        Section_of_services section =apiProvider.getSection(cur.getSection()); // provider.getSection(cur.getSection());
         spinnerSection.setText(section.getTitle());
 
         title.setText(cur.getTitle());

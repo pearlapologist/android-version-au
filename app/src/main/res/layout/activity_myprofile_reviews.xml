@@ -19,10 +19,10 @@
         app:menu="@menu/profile_reviews_navbar" />
 
     <FrameLayout
+        android:id="@+id/profile_reviews_framelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:id="@+id/profile_reviews_framelayout"
         android:layout_below="@id/profile_reviews_navbar"
-        ></FrameLayout>
+        android:layout_marginTop="10sp"></FrameLayout>
+
 </RelativeLayout>

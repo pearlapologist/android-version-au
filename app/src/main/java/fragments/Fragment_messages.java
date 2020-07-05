@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
@@ -39,6 +40,7 @@ public class Fragment_messages extends Fragment {
 
     RecyclerView recyclerView;
     Messages_adapter_frg messages_adapter;
+    ImageView nomessages;
     ArrayList<Integer> personsId;
     Persons cur;
 
@@ -77,6 +79,8 @@ public class Fragment_messages extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.fargment_msg_rv);
+        nomessages = view.findViewById(R.id.fargment_msg_nomessages);
+
         apiProvider = new ApiProvider();
         cur = provider.getLoggedInPerson();
 
@@ -99,8 +103,12 @@ public class Fragment_messages extends Fragment {
         } catch (Exception e) {
             Log.e("insertMessages", e.getMessage());
         }
+
         if (personsId == null || personsId.size() <= 0) {
-            Toast.makeText(context, "Пока что у вас нет сообщений", Toast.LENGTH_SHORT).show();
+          nomessages.setVisibility(View.VISIBLE);
+        }else{
+            nomessages.setVisibility(View.GONE);
         }
+
     }
 }

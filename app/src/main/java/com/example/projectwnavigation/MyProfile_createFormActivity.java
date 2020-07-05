@@ -1,7 +1,9 @@
 package com.example.projectwnavigation;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import fragments.MyProfileActivity;
 import models.ApiProvider;
 import models.Executor;
 import models.MyDataProvider;
+import models.Persons;
 import models.Service;
 
 public class MyProfile_createFormActivity extends AppCompatActivity implements View.OnLongClickListener {
@@ -39,6 +42,7 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
     RecyclerView recyclerView;
     MyProfile_createform_services_adapter adapter;
     public Boolean contextModeEnable = false;
+    ProgressDialog pd;
 
     ArrayList<Service> services;
     ArrayList<Service> selectionList;
@@ -74,8 +78,9 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-             String[] choose = getResources().getStringArray(R.array.sections);
-              sectionId = provider.getSectionIdByTitle(choose[position]);
+           //  String[] choose = getResources().getStringArray(R.array.sections);
+                String str = parent.getItemAtPosition(position).toString();
+              sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
             }
 
             @Override
@@ -93,15 +98,19 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
                 exec.setDescriptn(descrp.getText().toString().trim());
                 exec.setPersonId(provider.getLoggedInPerson().getId());
                 exec.setServices(services);
+
                 try {
-                    apiProvider.addExecutor(exec);
+
+                    CreateExecutorTask task = new CreateExecutorTask();
+                    task.execute(exec);
                    // provider.addExecutor(exec);
+            Toast.makeText(MyProfile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                Toast.makeText(MyProfile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(MyProfile_createFormActivity.this, MyProfileActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
             }
         });
@@ -219,4 +228,31 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         invalidateOptionsMenu();
     }
 
+
+    private class CreateExecutorTask extends AsyncTask<Executor, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MyProfile_createFormActivity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Executor... params) {
+                apiProvider.addExecutor(params[0]);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 }

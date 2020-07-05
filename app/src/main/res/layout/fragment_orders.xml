@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/colorBackground"
     android:layout_height="match_parent"
     tools:context="fragments.Fragment_orders">
 
@@ -34,7 +35,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="10sp"
                 android:layout_marginTop="20sp"
-                android:layout_marginRight="10sp"></Spinner>
+                android:layout_marginRight="10sp"/>
 
             <RelativeLayout
                 android:id="@+id/orders_listf_rlayout"
@@ -44,7 +45,7 @@
                 android:layout_marginLeft="10sp"
                 android:layout_marginTop="10sp"
                 android:layout_marginRight="10sp"
-                android:background="@color/colorWhite"
+                android:background="@drawable/corners"
                 android:elevation="1sp">
 
                 <TextView
@@ -61,7 +62,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15sp"
-                    android:src="@drawable/search">
+                    android:src="@drawable/ic_search_black_24dp">
 
                 </ImageView>
 
@@ -78,6 +79,16 @@
                 android:layout_marginLeft="10sp"
                 android:layout_marginRight="10sp"
                 android:padding="4sp"></androidx.recyclerview.widget.RecyclerView>
+
+            <ImageView
+                android:id="@+id/orders_listf_no_orders"
+                android:layout_width="wrap_content"
+                android:layout_height="350sp"
+                android:layout_below="@id/orders_listf_rlayout"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="21dp"
+                android:src="@drawable/no_orders"></ImageView>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

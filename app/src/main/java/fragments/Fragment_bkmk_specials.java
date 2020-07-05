@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     RecyclerView specialsRv;
     Fragment_bkmk_specials_adapter specials_adapter;
     Spinner spinner;
+    ImageView img_nospecialists;
     ArrayList<Bookmarks> executors;
     
     public Boolean contextModeEnable = false;
@@ -56,7 +58,6 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
 
     public Fragment_bkmk_specials(Context context) {
         this.context = context;
-        provider = new MyDataProvider(context);
     }
 
     public Fragment_bkmk_specials() {
@@ -92,7 +93,8 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         specialsRv = view.findViewById(R.id.frg_bkmk_specials_rv);
         spinner = view.findViewById(R.id.frg_bkmk_specials_spinner);
-
+        img_nospecialists = view.findViewById(R.id.frg_bkmk_specials_no_specialists);
+        provider = new MyDataProvider(context);
         selectionList = new ArrayList<>();
 
         insertArray();
@@ -108,7 +110,9 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     void insertArray() {
    executors = provider.getExecutorsListFromMyBookmarks();
         if(executors == null || executors.size() <= 0){
-            Toast.makeText(context, "Ваш список закладок пуст", Toast.LENGTH_SHORT).show();
+           img_nospecialists.setVisibility(View.VISIBLE);
+        }else{
+            img_nospecialists.setVisibility(View.GONE);
         }
     }
 

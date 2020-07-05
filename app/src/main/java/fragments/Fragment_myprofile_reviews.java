@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,7 @@ public class Fragment_myprofile_reviews extends Fragment {
 
     MyDataProvider provider;
     Context context;
-
+    ImageView img_noreviews;
     Persons curPerson;
 
     public Fragment_myprofile_reviews(Context context) {
@@ -93,6 +94,7 @@ public class Fragment_myprofile_reviews extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         reviewsRv = view.findViewById(R.id.fragment_myprofile_reviews_rv);
         rating = view.findViewById(R.id.fragment_myprofile_reviews_rating);
+        img_noreviews  = view.findViewById(R.id.fragment_myprofile_reviews_img_no_reviews);
 
         curPerson = provider.getLoggedInPerson();
         insertArray();
@@ -114,9 +116,10 @@ public class Fragment_myprofile_reviews extends Fragment {
 
     void insertArray() {
         reviews = provider.getAllPersonReviewByPersonId(curPerson.getId());
-        if(reviews == null){
-            Toast.makeText(context, "Вам пока не оставили отзыв", Toast.LENGTH_SHORT).show();
+        if(reviews == null || reviews.size() <= 0){
+            img_noreviews.setVisibility(View.VISIBLE);
+        }else{
+            img_noreviews.setVisibility(View.GONE);
         }
     }
-
 }

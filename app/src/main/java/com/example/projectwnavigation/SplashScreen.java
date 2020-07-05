@@ -50,28 +50,28 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 sPref = getSharedPreferences("onBoarding", MODE_PRIVATE);
                 boolean isFirstTime = sPref.getBoolean("isFirstTime", true);
-                Intent i = new Intent(SplashScreen.this, FirstActivity.class);
-            //    if (isFirstTime) {
-                if(true){
+                Intent i = new Intent(SplashScreen.this, Navigation_activity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                 if (isFirstTime) {
                     SharedPreferences.Editor editor = sPref.edit();
                     editor.putBoolean("isFirstTime", false);
                     editor.commit();
-
                     i = new Intent(SplashScreen.this, OnBoadingActivity.class);
-                }
-
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View, String>(txtPoweredBy, "splash_transition_powered");
-                pairs[1] = new Pair<View, String>(background, "transition_splash_image");
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SplashScreen.this, pairs);
-                    startActivity(i, options.toBundle());
-                    finish();
-                } else {
                     startActivity(i);
                     finish();
+                } else {
+                    Pair[] pairs = new Pair[2];
+                    pairs[0] = new Pair<View, String>(txtPoweredBy, "splash_transition_powered");
+                    pairs[1] = new Pair<View, String>(background, "transition_splash_image");
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SplashScreen.this, pairs);
+                        startActivity(i, options.toBundle());
+                        finish();
+                    } else {
+                        startActivity(i);
+                        finish();
+                    }
                 }
             }
         }, 2000);

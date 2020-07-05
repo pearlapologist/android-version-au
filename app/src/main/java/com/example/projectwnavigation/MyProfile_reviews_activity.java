@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,12 +29,9 @@ public class MyProfile_reviews_activity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.profile_reviews_navbar);
         bottomNavigation.setOnNavigationItemSelectedListener(listener);
-        getPersonReviews();
-
 
         getSupportFragmentManager().beginTransaction().replace(R.id.profile_reviews_framelayout, fragment_myprofile_reviews)
                 .commit();
-
 
     }
 
@@ -55,7 +53,4 @@ public class MyProfile_reviews_activity extends AppCompatActivity {
         }
     };
 
-    public void getPersonReviews() {
-
-             }
 }

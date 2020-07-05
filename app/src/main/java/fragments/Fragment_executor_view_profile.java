@@ -117,7 +117,7 @@ public class Fragment_executor_view_profile extends Fragment {
 
     void insertArray() {
         try {
-            services = provider.getExecutorServices(curExecutor.getId());
+            services =curExecutor.getServices(); //provider.getExecutorServices(curExecutor.getId());
         } catch (NullPointerException e) {
             Log.e("insertArray", e.getMessage());
         }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,11 +25,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.Order;
 
 public class Fragment_orders extends Fragment implements AdapterView.OnItemSelectedListener {
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     RecyclerView recyclerView;
@@ -36,9 +39,12 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     ArrayList<Order> orders = new ArrayList<>();
     Orders_adapter_frg orders_adapter_frg;
     Spinner spinner;
+    ImageView img_noorders;
 
     public Fragment_orders(Context context) {
         this.context = context;
+        provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
     }
 
     public Fragment_orders() {
@@ -60,8 +66,9 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         add_button = view.findViewById(R.id.orders_listf_fb);
         recyclerView = view.findViewById(R.id.orders_listf_rv);
+        img_noorders = view.findViewById(R.id.orders_listf_no_orders);
         spinner = view.findViewById(R.id.orders_listf_spinner);
-        provider = new MyDataProvider(context);
+
         insertArray();
 
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
@@ -88,8 +95,9 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String[] choose = getResources().getStringArray(R.array.sections);
-        int sectionId = provider.getSectionIdByTitle(choose[position]);
+        //String[] choose = getResources().getStringArray(R.array.sections);
+        String str = parent.getItemAtPosition(position).toString();
+        int sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
         if (orders != null) {
             orders.clear();
         }
@@ -107,7 +115,9 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     void insertArray() {
         orders = provider.getOrders();
         if (orders == null || orders.size() <= 0) {
-            Toast.makeText(getContext(), "Пока что не было создано заказов", Toast.LENGTH_SHORT).show();
+            img_noorders.setVisibility(View.VISIBLE);
+        }else{
+            img_noorders.setVisibility(View.GONE);
         }
     }
 

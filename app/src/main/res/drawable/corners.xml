@@ -5,6 +5,6 @@
     ></corners>
 
     <solid
-        android:color="@color/colorMutedGray2"
+        android:color="@color/colorBackground"
         ></solid>
 </shape>

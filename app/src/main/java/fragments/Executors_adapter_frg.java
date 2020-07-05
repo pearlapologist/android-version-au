@@ -2,8 +2,10 @@ package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +45,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
 
     Persons curPerson;
     private Menu popup_menu;
-
+    ProgressDialog pd;
 
     Executors_adapter_frg(Context context, ArrayList<Executor> executors) {
         this.context = context;
@@ -94,7 +96,6 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         }
         holder.name.setText(p.getName());
         holder.ratingBar.setRating(p.getRating());
-
 
 
         final int id = executor.getId();
@@ -194,10 +195,12 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
             @Override
             public void onClick(View v) {
                 try {
-                    provider.deleteExecutor(executorId);
+                    DeleteExecutorTask task = new DeleteExecutorTask();
+                    task.execute(executorId);
+                 //   provider.deleteExecutor(executorId);
                     executors.remove(apiProvider.getExecutor(executorId));
                     //executors.remove(provider.getExecutor(executorId));
-                    Toast.makeText(context, "анкета успешно удалена", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Ваша анкета успешно удалена", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -252,6 +255,33 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
             return 0;
         }
         return executors.size();
+    }
+
+    private class DeleteExecutorTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            apiProvider.deleteExecutor(params[0]);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
     }
 
 }
