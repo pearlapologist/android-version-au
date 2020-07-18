@@ -59,49 +59,35 @@ public class RegistrationActivity extends AppCompatActivity {
         passwd = findViewById(R.id.regist_passwd);
         passwd2 = findViewById(R.id.regist_passwd2);
         image = findViewById(R.id.regist_image);
-
         btn = findViewById(R.id.regist_btnOk);
         btnToAuth = findViewById(R.id.regist_btnToAuth);
-
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validateName() || !validatePasswd()) {
                     return;
                 }
                 try {
-                    if (number == null || passwd == null || name == null || lastname == null) {
-                        Toast.makeText(RegistrationActivity.this, "Заполните все необходимые поля", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     String num = number.getRawText().trim() + "";
                     String n = "+7" + num;
-                    if (passwd.getEditText().getText().toString().trim().
-                            equals(passwd2.getEditText().getText().toString().trim())) {
-                        Persons person = new Persons();
-                        person.setName(name.getEditText().getText().toString().trim());
-                        person.setLastname(lastname.getEditText().getText().toString().trim());
-                        person.setPasswd(passwd.getEditText().getText().toString().trim());
-                        //person.setPhoto(MyUtils.imageViewToByte(image));
-                        person.setNumber(n);
-                        person.setRating(0);
-                        person.setBirthday(MyUtils.getCurentDateInLong());
 
+                    Persons person = new Persons();
+                    person.setName(name.getEditText().getText().toString().trim());
+                    person.setLastname(lastname.getEditText().getText().toString().trim());
+                    person.setPasswd(passwd.getEditText().getText().toString().trim());
+                    //person.setPhoto(MyUtils.imageViewToByte(image));
+                    person.setNumber(n);
+                    person.setRating(0);
+                    person.setBirthday(MyUtils.getCurentDateInLong());
 
-                        RegistrationTask task2 = new RegistrationTask();
-                        task2.execute(person);
-
-                    } else {
-                        Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
-                    }
+                    RegistrationTask task2 = new RegistrationTask();
+                    task2.execute(person);
                 } catch (Exception e) {
                     Log.e("onclick", e.getMessage());
                 }
             }
         });
-
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +109,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private Boolean validateName() {
-        String w = "\\A\\w{4,20}\\z";
+        String w = "\\A\\w{3,20}\\z";
         String s = name.getEditText().getText().toString().trim();
         if (s.isEmpty()) {
             name.setError("Заполните поле");
@@ -148,17 +134,22 @@ public class RegistrationActivity extends AppCompatActivity {
                 "$";
         String s = passwd.getEditText().getText().toString().trim();
         if (s.isEmpty()) {
-            name.setError("Заполните поле");
+            passwd.setError("Заполните поле");
+            return false;
+        } else if (c.isEmpty()) {
+            passwd2.setError("Заполните поле");
             return false;
         } else if (!s.matches(p)) {
-            name.setError("Пароль слишком легкий");
+            passwd.setError("Пароль слишком легкий");
             return false;
         } else if (!(s.equals(c))) {
             passwd2.setError("Пароли не совпадают");
             return false;
         } else {
-            name.setError(null);
-            name.setErrorEnabled(false);
+            passwd.setError(null);
+            passwd.setErrorEnabled(false);
+            passwd2.setError(null);
+            passwd2.setErrorEnabled(false);
             return true;
         }
 

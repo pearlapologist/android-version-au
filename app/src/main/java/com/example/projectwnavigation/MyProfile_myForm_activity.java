@@ -59,9 +59,14 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
 
         provider = new MyDataProvider(this);
         apiProvider = new ApiProvider();
-        Persons p = provider.getLoggedInPerson();
-        int executorId = provider.getExecutorIdByPersonId(p.getId());
-        curExecutor  =apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
+        final Persons p = provider.getLoggedInPerson();
+        int executorId = 0;
+        try {
+            executorId = apiProvider.getExecutorIdByPersonId(p.getId()); //provider.getExecutorIdByPersonId(p.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        curExecutor  = apiProvider.getExecutor(executorId);  // provider.getExecutor(executorId);
 
         recyclerView = findViewById(R.id.myForm_rv);
         try {
@@ -94,7 +99,11 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
               //  String[] choose = getResources().getStringArray(R.array.sections);
                 String str = parent.getItemAtPosition(position).toString();
-                sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
+                try {
+                    sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -118,7 +127,6 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
                     curExecutor.setSectionId(sectionId);
                     curExecutor.setSpecialztn(specializtn);
                     curExecutor.setDescriptn(descriptn);
-                    curExecutor.setPersonId(provider.getLoggedInPerson().getId());
                     curExecutor.setServices(services);
                     try {
                         UpdateExecutorTask task = new UpdateExecutorTask();
@@ -291,7 +299,11 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
 
         @Override
         protected Void doInBackground(Executor... params) {
-            apiProvider.updateExecutor(params[0]);
+            try {
+                apiProvider.updateExecutor(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

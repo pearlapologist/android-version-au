@@ -38,7 +38,7 @@ public class MyProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         tv_name = findViewById(R.id.profile_name);
         tv_rating = findViewById(R.id.profile_rating);
-        tv_status = findViewById(R.id.profile_status);
+      //  tv_status = findViewById(R.id.profile_status);
         tv_registr = findViewById(R.id.profile_registDate);
         btn_orders = findViewById(R.id.profile_orders);
         btn_form = findViewById(R.id.profile_form);
@@ -92,7 +92,7 @@ public class MyProfileActivity extends AppCompatActivity {
         if (rating != -1) {
             tv_rating.setText("Рейтинг: " + rating + "");
         }
-        tv_status.setText("Статус: " + "Онлайн");
+       // tv_status.setText("Статус: " + "Онлайн");
 
         String c = MyUtils.convertLongToDataString(person.getCreatedDate());
         tv_registr.setText("Дата регистрации: " + c);

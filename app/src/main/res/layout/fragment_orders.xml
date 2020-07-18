@@ -19,10 +19,9 @@
         android:src="@drawable/add_order" />
 
 
-    <ScrollView
+ <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -75,20 +74,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/orders_listf_rlayout"
-                android:layout_marginTop="20sp"
-                android:layout_marginLeft="10sp"
-                android:layout_marginRight="10sp"
-                android:padding="4sp"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_marginTop="20sp"></androidx.recyclerview.widget.RecyclerView>
 
             <ImageView
                 android:id="@+id/orders_listf_no_orders"
                 android:layout_width="wrap_content"
                 android:layout_height="350sp"
+                android:visibility="gone"
                 android:layout_below="@id/orders_listf_rlayout"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="21dp"
                 android:src="@drawable/no_orders"></ImageView>
         </RelativeLayout>
-    </ScrollView>
+ </ScrollView>
+
 </RelativeLayout>

@@ -53,10 +53,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fargment_specials_rv"
-        android:layout_marginTop="20sp"
-        android:layout_below="@id/fargment_specials_rlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/fargment_specials_rlayout"
+        android:layout_marginTop="20sp"
+        android:background="@color/colorBackground" />
 
     <ImageView
         android:layout_width="wrap_content"

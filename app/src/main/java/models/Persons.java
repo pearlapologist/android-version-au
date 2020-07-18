@@ -12,6 +12,7 @@ public class Persons {
     private String number;
     String desciption;
     boolean hasAccount;
+    int reviewscount;
     //upd
     private Long birthday;
 
@@ -171,5 +172,13 @@ public class Persons {
 
     public void setBirthday(Long birthday) {
         this.birthday = birthday;
+    }
+
+    public int getReviewscount() {
+        return reviewscount;
+    }
+
+    public void setReviewscount(int reviewscount) {
+        this.reviewscount = reviewscount;
     }
 }

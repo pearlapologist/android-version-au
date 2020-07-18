@@ -1,8 +1,10 @@
 package fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +41,7 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
 
     Menu answer_popup_menu;
 
+    ProgressDialog pd;
 
     public Fragment_profile_reviews_answers_adapter(Context context, ArrayList<Answer> answers) {
         this.context = context;
@@ -53,7 +56,7 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
         return new Fragment_profile_reviews_answers_adapter.MyViewHolder(view);
     }
 
-
+    Persons p = null;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -63,14 +66,21 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
 
         final Answer answer = answers.get(position);
         final int whoanswers = answer.getWhoanswersId();
-        final Persons p =apiProvider.getPerson(whoanswers); // provider.getPerson(whoanswers);
+
+        try {
+            p = apiProvider.getPerson(whoanswers);  // provider.getPerson(whoanswers);
+
+          holder.name.setText(p.getName() + " " + p.getLastname());
+
+            if (p.getPhoto() != null) {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String text = answer.getText();
         holder.text.setText(text);
-        holder.name.setText(p.getName() + " " + p.getLastname());
 
-        if (p.getPhoto() != null) {
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
         Long l = answer.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
 
@@ -78,7 +88,13 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
         holder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int executorId = provider.getExecutorIdByPersonId(whoanswers);
+                if(p != null){
+                int executorId = 0;
+                try {
+                    executorId = apiProvider.getExecutorIdByPersonId(whoanswers);  //provider.getExecutorIdByPersonId(whoanswers);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (whoanswers == curPerson.getId()) {
                     Intent intent = new Intent(context, MyProfileActivity.class);
                     context.startActivity(intent);
@@ -91,7 +107,7 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
                     intent.putExtra("orderview_PersonId", p.getId());
 
                     context.startActivity(intent);
-                }
+                }}
             }
         });
 
@@ -153,7 +169,9 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
             @Override
             public void onClick(View v) {
                 answer.setText(txtText.getText().toString().trim());
-                provider.updateAnswer(answer);
+                UpdateAnswerTask updateAnswerTask = new UpdateAnswerTask();
+                updateAnswerTask.execute(answer);
+                //provider.updateAnswer(answer);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -182,7 +200,11 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                provider.deleteAnswer(id);
+                try {
+                    apiProvider.deleteAnswer(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 notifyDataSetChanged();
                 Toast.makeText(context, "Ответ удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -225,6 +247,35 @@ public class Fragment_profile_reviews_answers_adapter  extends RecyclerView.Adap
 
             adapter_layout = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_layout);
 
+        }
+    }
+
+    private class UpdateAnswerTask extends AsyncTask<Answer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Answer... params) {
+            try {
+                apiProvider.updateAnswer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 }

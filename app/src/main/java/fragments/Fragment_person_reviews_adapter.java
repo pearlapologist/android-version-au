@@ -1,9 +1,10 @@
 package fragments;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,9 +44,10 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
     Persons curPerson;
     private Menu review_popupMenu;
 
-    Fragment_executor_reviews_answers_adapter exec_rev_answers_adapter;
+    Fragment_profile_reviews_answers_adapter person_reviews_answers_adapter;
     private RecyclerView.RecycledViewPool recyclerpool = new RecyclerView.RecycledViewPool();;
 
+    ProgressDialog pd;
 
     public Fragment_person_reviews_adapter(Context context, ArrayList<Review> reviews) {
         this.context = context;
@@ -60,6 +62,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
         return new Fragment_person_reviews_adapter.MyViewHolder(view);
     }
 
+     Persons p;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
@@ -73,34 +76,47 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
         }
 
         final int personId = review.getCustomerId();
-       final Persons p =apiProvider.getPerson(personId); // provider.getPerson(personId);
+
+        try {
+            p = apiProvider.getPerson(personId);  // provider.getPerson(personId);
+
+
+            holder.name.setText(p.getName()+ " "+p.getLastname());
+
+            if(p.getPhoto()!= null){
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String text = review.getReview_text();
         int rating =review.getAssessment();
+        holder.assessment.setText("Оценка: "+rating);
 
         holder.text.setText(text);
-        holder.assessment.setText("Оценка: "+rating);
-        holder.name.setText(p.getName()+ " "+p.getLastname());
 
-        if(p.getPhoto()!= null){
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
         Long l = review.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
 
-        exec_rev_answers_adapter = new Fragment_executor_reviews_answers_adapter(context, answers);
+        person_reviews_answers_adapter = new Fragment_profile_reviews_answers_adapter(context, answers);
         LinearLayoutManager lmanager = new LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL, false);
         lmanager.setInitialPrefetchItemCount(answers.size());
 
         holder.answersRv.setLayoutManager(lmanager);
-        holder.answersRv.setAdapter(exec_rev_answers_adapter);
+        holder.answersRv.setAdapter(person_reviews_answers_adapter);
         holder.answersRv.setRecycledViewPool(recyclerpool);
 
 
         holder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int executorId = provider.getExecutorIdByPersonId(personId);
+                int executorId = 0;
+                try {
+                    executorId = apiProvider.getExecutorIdByPersonId(personId);   //provider.getExecutorIdByPersonId(personId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 if (personId == curPerson.getId()) {
                     Intent intent = new Intent(context, MyProfileActivity.class);
@@ -138,7 +154,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
                                showDialogUpdate(review.getId());
                                 return true;
                             case R.id.review_popup_menu_delete:
-                                showDialogDelete(review.getId());
+                                showDialogDelete(review.getId(), review.getExecutrId());
                                 return true;
                             case R.id.review_popup_menu_complain:
                                 //TODO: доделать методы
@@ -183,9 +199,11 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
                         try {
                             Answer answer = new Answer(review.getId(), curPerson.getId(), review.getCustomerId(),
                                     etText.getText().toString().trim(), MyUtils.getCurentDateInLong());
-                            provider.addAnswer(answer);
+                            AddAnswerTask addAnswerTask = new AddAnswerTask();
+                            addAnswerTask.execute(answer);
+                            //provider.addAnswer(answer);
                             review.getAnswers().add(answer);
-                            provider.updateReviewNAnswers(review);
+                       // provider.updateReviewNAnswers(review);
                         }catch(Exception e){
                             Log.e("errpr", e.getMessage());
                         }
@@ -209,6 +227,7 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
 
     }
 
+    Review deleteReview;
     private void showDialogUpdate(final int reviewId) {
         final Dialog dialog = new Dialog(context);
 
@@ -222,34 +241,38 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
 
         dialog.setCancelable(true);
         dialog.show();
-        final Review review = provider.getReview(reviewId);
-        txtAssessment.setText(review.getAssessment() + "");
-        txtText.setText(review.getReview_text());
+        try {
+            deleteReview = apiProvider.getReview(reviewId);  // provider.getReview(reviewId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        txtAssessment.setText(deleteReview.getAssessment() + "");
+        txtText.setText(deleteReview.getReview_text());
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                review.setReview_text(txtText.getText().toString().trim());
-                review.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
+                deleteReview.setReview_text(txtText.getText().toString().trim());
+                deleteReview.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
 
-                provider.updateReview(review);
+                UpdateReviewTask updateReviewTask = new UpdateReviewTask();
+                updateReviewTask.execute(deleteReview);
+                //provider.updateReview(deleteReview);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
     }
 
 
-    private void showDialogDelete(final int id) {
+    private void showDialogDelete(final int id,final int executorId) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_answer_delete);
 
@@ -262,7 +285,11 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                provider.deleteReview(id);
+                try {
+                    apiProvider.deleteReview(id, executorId); // provider.deleteReview(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 notifyDataSetChanged();
                 Toast.makeText(context, "Отзыв удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -306,6 +333,66 @@ public class Fragment_person_reviews_adapter extends RecyclerView.Adapter<Fragme
             answersRv = itemView.findViewById(R.id.fragment_profile_reviews_adapter_answersrecycler);
 
             adapter_layout = itemView.findViewById(R.id.fragment_profile_reviews_adapter_layout);
+        }
+    }
+
+    private class UpdateReviewTask extends AsyncTask<Review, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Review... params) {
+            try {
+                apiProvider.updateReview(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
+
+
+    private class AddAnswerTask extends AsyncTask<Answer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Answer... params) {
+            try {
+                apiProvider.addAnswer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 }

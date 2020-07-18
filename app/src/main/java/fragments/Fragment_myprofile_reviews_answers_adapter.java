@@ -1,8 +1,10 @@
 package fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,8 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
 
     Persons curPerson;
 
+    ProgressDialog pd;
+
     public Fragment_myprofile_reviews_answers_adapter(Context context, ArrayList<Answer> answers) {
         this.context = context;
         this.answers = answers;
@@ -50,6 +54,7 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
         return new Fragment_myprofile_reviews_answers_adapter.MyViewHolder(view);
     }
 
+    Persons p = null;
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -59,56 +64,62 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
 
         final Answer answer = answers.get(position);
         final int whoanswers = answer.getWhoanswersId();
-        final Persons p =apiProvider.getPerson(whoanswers); // provider.getPerson(whoanswers);
+
+        try {
+            p = apiProvider.getPerson(whoanswers);  // provider.getPerson(whoanswers);
+
+            holder.name.setText(p.getName() + " " + p.getLastname());
+
+            if (p.getPhoto() != null) {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String text = answer.getText();
         holder.text.setText(text);
-        holder.name.setText(p.getName() + " " + p.getLastname());
 
-        if (p.getPhoto() != null) {
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
         Long l = answer.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
-
 
         holder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(p != null){
                 Intent intent = new Intent(context, PersonProfileActivity.class);
                 intent.putExtra("orderview_PersonId", p.getId());
 
-                context.startActivity(intent);
-        }
-    });
-
-        holder.btn_popup_menu.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View v){
-        PopupMenu popup = new PopupMenu(context, v);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.review_answer_popup_menu_edit:
-                        showDialogUpdate(answer);
-                        return true;
-                    case R.id.review_answer_popup_menu_delete:
-                        showDialogDelete(answer.getId());
-                        return true;
-                    default:
-                        return false;
-                }
-
+                context.startActivity(intent);}
             }
         });
-        popup.inflate(R.menu.review_answer_popup_menu);
-        popup.getMenu().findItem(R.id.review_answer_popup_menu_complain).setVisible(false);
-        popup.show();
+
+        holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(context, v);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.review_answer_popup_menu_edit:
+                                showDialogUpdate(answer);
+                                return true;
+                            case R.id.review_answer_popup_menu_delete:
+                                showDialogDelete(answer.getId());
+                                return true;
+                            default:
+                                return false;
+                        }
+
+                    }
+                });
+                popup.inflate(R.menu.review_answer_popup_menu);
+                popup.getMenu().findItem(R.id.review_answer_popup_menu_complain).setVisible(false);
+                popup.show();
+            }
+        });
     }
-    });
-}
 
     private void showDialogUpdate(final Answer answer) {
         final Dialog dialog = new Dialog(context);
@@ -126,7 +137,9 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
             @Override
             public void onClick(View v) {
                 answer.setText(txtText.getText().toString().trim());
-                provider.updateAnswer(answer);
+                UpdateAnswerTask updateAnswerTask = new UpdateAnswerTask();
+                updateAnswerTask.execute(answer);
+               // provider.updateAnswer(answer);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -155,7 +168,11 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                provider.deleteAnswer(id);
+                try {
+                    apiProvider.deleteAnswer(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 notifyDataSetChanged();
                 Toast.makeText(context, "Ответ удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -180,23 +197,52 @@ public class Fragment_myprofile_reviews_answers_adapter extends RecyclerView.Ada
     }
 
 
-public class MyViewHolder extends RecyclerView.ViewHolder {
-    private TextView text, name, date;
-    ImageView photo;
-    Button btn_popup_menu;
-    RelativeLayout adapter_layout;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        private TextView text, name, date;
+        ImageView photo;
+        Button btn_popup_menu;
+        RelativeLayout adapter_layout;
 
-    public MyViewHolder(@NonNull View itemView) {
-        super(itemView);
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-        text = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_text);
-        name = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_name);
-        photo = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_photo);
-        date = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_created);
-        btn_popup_menu = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_btn_popup);
+            text = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_text);
+            name = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_name);
+            photo = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_photo);
+            date = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_created);
+            btn_popup_menu = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_btn_popup);
 
-        adapter_layout = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_layout);
+            adapter_layout = itemView.findViewById(R.id.myprofile_reviews_answers_adapter_row_layout);
 
+        }
     }
-}
+
+    private class UpdateAnswerTask extends AsyncTask<Answer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Answer... params) {
+            try {
+                apiProvider.updateAnswer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 }

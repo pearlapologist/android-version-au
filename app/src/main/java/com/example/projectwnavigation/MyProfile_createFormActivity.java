@@ -23,6 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 
 import fragments.MyProfileActivity;
@@ -33,7 +36,7 @@ import models.Persons;
 import models.Service;
 
 public class MyProfile_createFormActivity extends AppCompatActivity implements View.OnLongClickListener {
-    EditText spclztn, descrp;
+    TextInputLayout spclztn, descrp;
     Button add_executor, add_service;
     MyDataProvider provider;
     ApiProvider apiProvider;
@@ -64,7 +67,7 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
 
         selectionList = new ArrayList<>();
 
-        insertArray();
+        services = new ArrayList<>();
         adapter = new MyProfile_createform_services_adapter(MyProfile_createFormActivity.this, this, services);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -80,7 +83,11 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
            //  String[] choose = getResources().getStringArray(R.array.sections);
                 String str = parent.getItemAtPosition(position).toString();
-              sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
+                try {
+                    sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -92,10 +99,13 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         add_executor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!validateSpec() || !validateDesc()) {
+                    return;
+                }
                 Executor exec = new Executor();
                 exec.setSectionId(sectionId);
-                exec.setSpecialztn(spclztn.getText().toString().trim());
-                exec.setDescriptn(descrp.getText().toString().trim());
+                exec.setSpecialztn(spclztn.getEditText().getText().toString().trim());
+                exec.setDescriptn(descrp.getEditText().getText().toString().trim());
                 exec.setPersonId(provider.getLoggedInPerson().getId());
                 exec.setServices(services);
 
@@ -123,8 +133,28 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         });
     }
 
-    void insertArray() {
-        services = new ArrayList<>();
+    private boolean validateDesc() {
+        String d = descrp.getEditText().getText().toString().trim();
+        if (d.isEmpty() || d.equals(" ")) {
+            descrp.setError("Заполните поле");
+            return false;
+        } else {
+            descrp.setError(null);
+            descrp.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    private boolean validateSpec() {
+        String s = spclztn.getEditText().getText().toString().trim();
+        if (s.isEmpty()) {
+            spclztn.setError("Заполните поле");
+            return false;
+        } else {
+            spclztn.setError(null);
+            spclztn.setErrorEnabled(false);
+            return true;
+        }
     }
 
     private void showDialogCreate() {
@@ -137,7 +167,6 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         Button btnSave = dialog.findViewById(R.id.createform_service_dialog_btnCreate);
         Button btnCancel = dialog.findViewById(R.id.createform_service_dialog_btnCancel);
 
-        dialog.getWindow().setLayout(720, 1280);
         dialog.setCancelable(false);
         dialog.show();
 
@@ -230,7 +259,6 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
 
 
     private class CreateExecutorTask extends AsyncTask<Executor, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

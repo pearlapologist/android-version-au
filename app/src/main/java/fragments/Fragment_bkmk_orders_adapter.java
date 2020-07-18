@@ -1,8 +1,10 @@
 package fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +34,7 @@ import models.Order;
 import models.Persons;
 import models.Section_of_services;
 
-public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_bkmk_orders_adapter.MyViewHolder>{
+public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_bkmk_orders_adapter.MyViewHolder> {
     private Context context;
     MyDataProvider provider;
     ApiProvider apiProvider;
@@ -41,7 +43,8 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
 
     Persons curPerson;
 
-    public Fragment_bkmk_orders_adapter( Fragment_bkmk_orders fragment_bkmk_orders, Context context, ArrayList<Bookmarks> orders) {
+
+    public Fragment_bkmk_orders_adapter(Fragment_bkmk_orders fragment_bkmk_orders, Context context, ArrayList<Bookmarks> orders) {
         this.context = context;
         this.fragment_bkmk_orders = fragment_bkmk_orders;
         this.orders = orders;
@@ -56,6 +59,8 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
 
     }
 
+    Order order = null;
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -64,7 +69,13 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
 
         Bookmarks bookm = orders.get(position);
         final int orderId = bookm.getOrderId();
-        final Order order =  provider.getOrder(orderId);
+
+
+        try {
+            order = apiProvider.getOrder(orderId); // provider.getOrder(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         holder.title.setText(order.getTitle());
         holder.descr.setText(order.getDescription());
@@ -74,8 +85,15 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
         holder.deadline.setText("" + deadlinetext);
 
-        Section_of_services section =apiProvider.getSection(order.getSection()); // provider.getSection(order.getSection());
-        holder.section.setText(section.getTitle());
+
+        Section_of_services section = null;
+        try {
+            section = apiProvider.getSection(order.getSection());// provider.getSection(order.getSection());
+            holder.section.setText(section.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         if (fragment_bkmk_orders.contextModeEnable) {
             holder.chbox.setVisibility(View.VISIBLE);
@@ -122,6 +140,9 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
 
 
     }
+
+    Order deleteOrder = null;
+
     private void showDialogDelete(final int orderId) {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
@@ -135,12 +156,18 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Order order = provider.getOrder(orderId);
-                    orders.remove(order);
-                    provider.deleteOrderFromMyBookmarks(orderId);
-                    notifyDataSetChanged();
+                try {
+                    deleteOrder = apiProvider.getOrder(orderId); // provider.getOrder(orderId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                orders.remove(deleteOrder);
+                DeleteOrderFromBookmTask task = new DeleteOrderFromBookmTask();
+                task.execute(curPerson.getId(), orderId);
+                //provider.deleteOrderFromMyBookmarks(orderId);
+                notifyDataSetChanged();
                 Toast.makeText(context, "Заказ удален из ваших закладок", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
+                dialog.dismiss();
 
             }
         });
@@ -165,7 +192,9 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
     public void removeItem(ArrayList<Bookmarks> selectionList) {
         for (int i = 0; i < selectionList.size(); i++) {
             orders.remove(selectionList.get(i));
-            provider.deleteOrderFromMyBookmarks(selectionList.get(i).getOrderId());
+            DeleteOrderFromBookmTask task = new DeleteOrderFromBookmTask();
+            task.execute(curPerson.getId(), selectionList.get(i).getOrderId());
+            //provider.deleteOrderFromMyBookmarks(selectionList.get(i).getOrderId());
             notifyDataSetChanged();
         }
         Toast.makeText(context, "Успешно удалено из закладок", Toast.LENGTH_SHORT).show();
@@ -179,7 +208,7 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         Button btn_popup_menu;
         LinearLayout adapter_layout;
 
-        public MyViewHolder(@NonNull View itemView,  Fragment_bkmk_orders fragment_bkmk_orders) {
+        public MyViewHolder(@NonNull View itemView, Fragment_bkmk_orders fragment_bkmk_orders) {
             super(itemView);
 
             view = itemView;
@@ -205,4 +234,27 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         }
     }
 
+
+    private class DeleteOrderFromBookmTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.deleteOrderFromPersonBookmarks(params[0], params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
 }

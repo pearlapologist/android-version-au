@@ -45,7 +45,6 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
 
     Persons curPerson;
     private Menu popup_menu;
-    ProgressDialog pd;
 
     Executors_adapter_frg(Context context, ArrayList<Executor> executors) {
         this.context = context;
@@ -79,7 +78,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         return new MyViewHolder(view);
     }
 
-
+    Persons p;
     @Override
     public void onBindViewHolder(@NonNull Executors_adapter_frg.MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
@@ -88,15 +87,22 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
 
         final Executor executor = executors.get(position);
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        final Persons p = apiProvider.getPerson(executor.getPersonId());   //provider.getPerson(executor.getPersonId());
-        if (p.getPhoto() == null) {
-            holder.photo.setImageResource(R.drawable.executors_default_image);
-        } else {
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
-        holder.name.setText(p.getName());
-        holder.ratingBar.setRating(p.getRating());
 
+        try {
+            p = apiProvider.getPerson(executor.getPersonId());  //provider.getPerson(executor.getPersonId());
+
+            if (p.getPhoto() == null) {
+                holder.photo.setImageResource(R.drawable.executors_default_image);
+            } else {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+
+            holder.name.setText(p.getName());
+            holder.ratingBar.setRating(p.getRating());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         final int id = executor.getId();
 
@@ -108,9 +114,14 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                     isCreator = true;
                 }
 
-
                 boolean exists = false;
-                Bookmarks b = provider.getBookmarkByExecutorId(executor.getId());
+
+                Bookmarks b = null;
+                try {
+                    b =apiProvider.getPersonBookmarkByExecutorId(curPerson.getId(), executor.getId()); // provider.getBookmarkByExecutorId(executor.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (b != null) {
                     exists = true;
                 }
@@ -122,7 +133,10 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.order_popup_bookm:
-                                provider.putExecutorInMyBookmarks(executor.getId());
+                                PutExecutorInBookmTask putExecutorTask = new PutExecutorInBookmTask();
+                                putExecutorTask.execute(curPerson.getId(), executor.getId());
+                                // apiProvider.putExecutorInPersonBookmarks(curPerson.getId(), executor.getId());
+                                // provider.putExecutorInMyBookmarks(executor.getId());
                                 Toast.makeText(context, "Специалист добавлен в ваши закладки", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.order_popup_edit:
@@ -167,7 +181,14 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (id == provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId())) {
+                int personId = -1;
+                try {
+                    personId = apiProvider.getExecutorIdByPersonId(curPerson.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                };
+
+                if (id == personId) {  //provider.getExecutorIdByPersonId(provider.getLoggedInPerson().getId())
                     Intent intent = new Intent(context, MyProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
@@ -197,7 +218,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
                 try {
                     DeleteExecutorTask task = new DeleteExecutorTask();
                     task.execute(executorId);
-                 //   provider.deleteExecutor(executorId);
+                    //   provider.deleteExecutor(executorId);
                     executors.remove(apiProvider.getExecutor(executorId));
                     //executors.remove(provider.getExecutor(executorId));
                     Toast.makeText(context, "Ваша анкета успешно удалена", Toast.LENGTH_SHORT).show();
@@ -231,7 +252,9 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                provider.deleteExecutorFromMyBookmarks(executorId);
+                DeleteExecutorFromBookmTask task = new DeleteExecutorFromBookmTask();
+                task.execute(curPerson.getId(), executorId);
+             //   provider.deleteExecutorFromMyBookmarks(executorId);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Специалист удален из ваших закладок", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -262,10 +285,6 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(context);
-            pd.setMessage("Пожалуйста, подождите");
-            pd.setCancelable(true);
-            pd.show();
         }
 
         @Override
@@ -278,10 +297,54 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
         @Override
         protected void onPostExecute(Void s) {
             super.onPostExecute(s);
-            if (pd.isShowing()) {
-                pd.dismiss();
-            }
         }
     }
 
+    private class PutExecutorInBookmTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.putExecutorInPersonBookmarks(params[0], params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private class DeleteExecutorFromBookmTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.deleteExecutorFromPersonBookmarks(params[0],params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
 }

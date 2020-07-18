@@ -31,16 +31,20 @@ public class TestJsonActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiProvider provider = new ApiProvider();
+                ApiProvider apiProvider = new ApiProvider();
                 int id = Integer.parseInt(et.getText().toString());
-                Persons p = provider.getPerson(id);
+                Persons p = null;
+                try {
+                    p = apiProvider.getPerson(id);
+                    tv.setText(p.getName() +" " + p.getLastname() + " " + p.getNumber());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 /*Executor r = myDataProvider.getExecutor(myDataProvider.getExecutorIdByPersonId(id));
                 String services = "пусто";
                 if(r != null){
                     services = r.getServicesString();
                 }*/
-                tv.setText(p.getName() +" " + p.getLastname() + " " + p.getNumber());
-
             }
         });
     }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context="fragments.Orders_view_activity">
 
@@ -12,10 +13,12 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
+                android:background="@color/colorBackground"
                 android:layout_width="match_parent"
                 android:id="@+id/orders_view_card"
                 android:layout_height="wrap_content">
@@ -24,7 +27,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5sp">
+                    android:padding="5sp"
+                    android:background="@color/colorBackground">
 
                     <TextView
                         android:id="@+id/order_view_section_act"
@@ -34,6 +38,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginStart="10dp"
+                        android:textColor="@color/colorMutedGray2"
                         android:layout_below="@id/order_view_desc_act"
                         android:layout_toLeftOf="@id/order_view_deadline_tv"
                         android:hint="section"
@@ -46,6 +51,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginStart="10dp"
+                        android:textColor="@color/colorMutedGray2"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
@@ -74,6 +80,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginEnd="10dp"
                         android:textAlignment="center"
+                        android:textColor="@color/colorMutedGray2"
                         android:text="created date" />
 
                     <TextView
@@ -84,6 +91,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:textAlignment="center"
+                        android:textColor="@color/colorMutedGray2"
                         android:layout_alignParentRight="true"
                         android:text="20/06/2020" />
                     <TextView
@@ -104,6 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="10dp"
+                        android:textColor="@color/colorMutedGray2"
                         android:layout_toRightOf="@id/order_view_price_tv"
                     android:layout_below="@id/order_view_title_act"
                     android:text="2300" />
@@ -123,6 +132,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:layout_marginStart="1sp"
+                        android:textColor="@color/colorMutedGray2"
                         android:layout_below="@id/order_view_title_act"
                        android:layout_toRightOf="@id/order_view_price_act"
                         android:text="тг" />
@@ -139,7 +150,13 @@
                 android:layout_marginTop="8dp"
                 android:textAllCaps="false"
                 android:text="Откликнуться"
-                android:textSize="11sp" />
+                android:padding="5sp"
+                android:textSize="13sp"
+                android:background="@color/colorMutedGray2"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                />
 
             <Button
                 android:id="@+id/order_view_btnViewPrf"
@@ -151,17 +168,21 @@
                 android:textAllCaps="false"
                 android:layout_marginRight="8sp"
                 android:text="Посмотреть профиль"
-                android:textSize="11sp" />
+                android:padding="5sp"
+                android:textSize="13sp"
+                android:background="@color/colorMutedGray2"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/order_view_recycler_act"
                 android:layout_width="match_parent"
-                android:layout_marginEnd="5sp"
-                android:layout_marginStart="5sp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/order_view_btn_act"
                 android:layout_marginTop="8sp"
-                android:orientation="vertical"></androidx.recyclerview.widget.RecyclerView>
+                android:orientation="vertical"/>
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

@@ -41,6 +41,8 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     Spinner spinner;
     ImageView img_noorders;
 
+    ArrayAdapter arrayAdapter;
+
     public Fragment_orders(Context context) {
         this.context = context;
         provider = new MyDataProvider(context);
@@ -74,7 +76,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
         recyclerView.setAdapter(orders_adapter_frg);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        orders_adapter_frg.notifyDataSetChanged( );
+        orders_adapter_frg.notifyDataSetChanged();
 
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,9 +87,7 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
             }
         });
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(arrayAdapter);
 
         super.onViewCreated(view, savedInstanceState);
@@ -97,30 +97,50 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //String[] choose = getResources().getStringArray(R.array.sections);
         String str = parent.getItemAtPosition(position).toString();
-        int sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
+
+        int sectionId = 0; // provider.getSectionIdByTitle(choose[position]);
+        try {
+            sectionId = apiProvider.getSectionIdByTitle(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (orders != null) {
             orders.clear();
         }
-        ArrayList<Order> n = provider.getOrdersBySectionId(sectionId);
+
+        ArrayList<Order> n = null;
+        try {
+            n = apiProvider.getOrdersBySectionId(sectionId); // provider.getOrdersBySectionId(sectionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         orders.addAll(n);
         orders_adapter_frg.notifyDataSetChanged();
-    }
 
+        arrayAdapter = new ArrayAdapter(context,
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    }
 
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
     void insertArray() {
-        orders = provider.getOrders();
+
+        try {
+            orders = apiProvider.getOrders(); // provider.getOrders();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (orders == null || orders.size() <= 0) {
             img_noorders.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             img_noorders.setVisibility(View.GONE);
         }
     }
-
 
 
 }

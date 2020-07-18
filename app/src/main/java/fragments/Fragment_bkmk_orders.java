@@ -27,8 +27,10 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.MyDataProvider;
+import models.Persons;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +53,7 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     }
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     RecyclerView ordersRv;
@@ -63,6 +66,7 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
 
     ArrayList<Bookmarks> selectionList;
 
+    Persons curPerson;
 
     public Fragment_bkmk_orders() {
     }
@@ -70,6 +74,7 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     public Fragment_bkmk_orders(Context context) {
         this.context = context;
         provider = new MyDataProvider(context);
+        apiProvider=new ApiProvider();
     }
 
 
@@ -94,6 +99,8 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
         spinner = view.findViewById(R.id.frg_bkmk_orders_spinenr);
         img_noorders = view.findViewById(R.id.frg_bkmk_orders_no_orders);
         selectionList = new ArrayList<>();
+        MyDataProvider provider2 = new MyDataProvider(context);
+        curPerson = provider2.getLoggedInPerson();
         insertArray();
 
         orders_adapter = new Fragment_bkmk_orders_adapter(this, context, orders);
@@ -104,7 +111,11 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
 
 
     void insertArray() {
-     orders = provider.getOrdersListFromMyBookmarks();
+        try {
+            orders =apiProvider.getOrdersListFromPersonBookmarks(curPerson.getId()); // provider.getOrdersListFromMyBookmarks();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(orders == null || orders.size() <= 0){
             img_noorders.setVisibility(View.VISIBLE);
         }else{

@@ -54,8 +54,13 @@ public class Conversation_messages_adapter extends RecyclerView.Adapter<Conversa
 
         final Message message = messages.get(position);
         holder.txt.setText(message.getText());
-        final Persons p =apiProvider.getPerson(message.getWhosends()); //provider.getPerson(message.getWhosends());
-        holder.name.setText(p.getName());
+        final Persons p; //provider.getPerson(message.getWhosends());
+        try {
+            p = apiProvider.getPerson(message.getWhosends());
+            holder.name.setText(p.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         final int id = message.getId();
 

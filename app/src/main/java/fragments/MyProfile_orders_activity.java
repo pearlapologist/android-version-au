@@ -46,16 +46,27 @@ public class MyProfile_orders_activity extends AppCompatActivity implements Adap
         recyclerView.setAdapter(profile_orders_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<String> sectionList = apiProvider.getSectionListInString(); //provider.getSectionListInString();
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-        spinner.setAdapter(adapter);
+
+        ArrayList<String> sectionList = null; //provider.getSectionListInString();
+        try {
+            sectionList = apiProvider.getSectionListInString();
+            ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+            spinner.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         spinner.setOnItemSelectedListener(this);
     }
 
 
     void insertArray() {
         loggedPerson =  provider.getLoggedInPerson();
-        orders = provider.getPersonOrdersById(loggedPerson.getId());
+
+        try {
+            orders =apiProvider.getPersonOrdersById(loggedPerson.getId()); // provider.getPersonOrdersById(loggedPerson.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (orders == null || orders.size() <= 0) {
           img_no_orders.setVisibility(View.VISIBLE);
         }else{

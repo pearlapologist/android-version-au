@@ -14,25 +14,27 @@
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent">
-     <com.google.android.material.bottomnavigation.BottomNavigationView
-         android:layout_width="match_parent"
-         android:layout_height="40sp"
-         android:id="@+id/frg_bkm_navbar"
-         android:layout_alignParentTop="true"
-         android:layout_marginTop="5sp"
-         android:visibility="visible"
-         app:itemHorizontalTranslationEnabled="true"
-         app:labelVisibilityMode="auto"
-         app:menu="@menu/menu_bookm_navbar"
-         ></com.google.android.material.bottomnavigation.BottomNavigationView>
+
+          <com.google.android.material.bottomnavigation.BottomNavigationView
+              android:id="@+id/frg_bkm_navbar"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:background="@color/colorBackground"
+              android:visibility="visible"
+              app:itemHorizontalTranslationEnabled="true"
+              app:labelVisibilityMode="auto"
+              app:menu="@menu/menu_bookm_navbar">
+
+          </com.google.android.material.bottomnavigation.BottomNavigationView>
 
           <FrameLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginTop="10sp"
               android:id="@+id/frg_bkm_framelayout"
-              android:layout_below="@id/frg_bkm_navbar"
-              ></FrameLayout>
+              android:layout_below="@id/frg_bkm_navbar">
+
+          </FrameLayout>
       </RelativeLayout>
 
   <!--</ScrollView>-->

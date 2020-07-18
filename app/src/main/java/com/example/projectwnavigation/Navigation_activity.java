@@ -60,6 +60,7 @@ public class Navigation_activity extends AppCompatActivity {
     TextView headerPersonName;
     ImageView headerImageView;
 
+    Persons currentPerson;
     private NotificationManager nManager;
 
 
@@ -75,7 +76,7 @@ public class Navigation_activity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(navListener);
         navigationView.setCheckedItem(R.id.nav_orders);
         fragment_specials = new Fragment_specials(getApplicationContext());
-        fragment_orders = new Fragment_orders(this);
+        fragment_orders = new Fragment_orders(getApplicationContext());
         fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
         fragment_notification = new Fragment_notification(getApplicationContext());
         fragment_settings = new Fragment_settings(getApplicationContext());
@@ -156,15 +157,24 @@ public class Navigation_activity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Persons currentPerson = provider.getLoggedInPerson();
+        currentPerson = provider.getLoggedInPerson();
         if (currentPerson == null) {
             Intent intent = new Intent(this, FirstActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
-            notifyCounter = provider.getCountOfAllMyNewNotifies();
+            try {
+                notifyCounter =apiProvider.getCountOfPersonNewNotifies(currentPerson.getId()); // provider.getCountOfAllMyNewNotifies();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (notifyCounter != 0) {
-                ArrayList<Notify> notifies = provider.getAllMyNotifies();
+                ArrayList<Notify> notifies = null; //provider.getAllMyNotifies();
+                try {
+                    notifies = apiProvider.getAllPersonNotifies(currentPerson.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (notifies != null) {
                     for (Notify n : notifies) {
                         Intent intent = new Intent(getApplicationContext(), MyProfile_reviews_activity.class);
@@ -243,10 +253,15 @@ public class Navigation_activity extends AppCompatActivity {
             } else if (id == R.id.nav_notificatn) {
                 fragment = fragment_notification;
                 if (notifyCounter != 0) {
-                    provider.setMyNotifiesToChecked();
-                    notifyCounter = provider.getCountOfAllMyNewNotifies();
-                }
 
+                    try {
+                        apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                  //provider.setMyNotifiesToChecked();
+                    notifyCounter =0;// provider.getCountOfAllMyNewNotifies();
+                }
             } else if (id == R.id.nav_settings) {
                 fragment = fragment_settings;
             } else if (id == R.id.nav_messages) {

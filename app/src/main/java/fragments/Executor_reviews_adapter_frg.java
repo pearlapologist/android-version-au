@@ -3,8 +3,10 @@ package fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Person;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,9 +44,10 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
     ArrayList<Review> reviews;
     Persons curPerson;
     private Menu review_popupMenu;
+    ProgressDialog pd;
 
     Fragment_executor_reviews_answers_adapter exec_rev_answers_adapter;
-    private RecyclerView.RecycledViewPool recyclerpool = new RecyclerView.RecycledViewPool();;
+    private RecyclerView.RecycledViewPool recyclerpool = new RecyclerView.RecycledViewPool();
 
     public Executor_reviews_adapter_frg(Context context, ArrayList<Review> reviews) {
         this.context = context;
@@ -74,7 +77,18 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         }
 
         final int personId = review.getCustomerId();
-        final Persons p = apiProvider.getPerson(personId); //provider.getPerson(personId);
+
+        final Persons p; //provider.getPerson(personId);
+        try {
+            p = apiProvider.getPerson(personId);
+            holder.name.setText(p.getName() + " " + p.getLastname());
+
+            if (p.getPhoto() != null) {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String text = "";
         int rating = -1;
 
@@ -87,11 +101,9 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
 
         holder.text.setText(text);
         holder.assessment.setText("Оценка: " + rating);
-        holder.name.setText(p.getName() + " " + p.getLastname());
 
-        if (p.getPhoto() != null) {
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
+
+
         Long l = review.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
 
@@ -109,13 +121,18 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         holder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int executorId = provider.getExecutorIdByPersonId(personId);
+                int executorId = 0; //provider.getExecutorIdByPersonId(personId);
+                try {
+                    executorId = apiProvider.getExecutorIdByPersonId(personId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 if (personId == curPerson.getId()) {
                     Intent intent = new Intent(context, MyProfileActivity.class);
                     context.startActivity(intent);
-                }  else if(executorId != 0 && executorId != -1){
-                    Intent intent = new Intent(context,  Executors_view_activity.class);
+                } else if (executorId != 0 && executorId != -1) {
+                    Intent intent = new Intent(context, Executors_view_activity.class);
                     intent.putExtra("executorIdFragment", executorId);
                     context.startActivity(intent);
                 } else {
@@ -126,7 +143,6 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                 }
             }
         });
-
 
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +162,7 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                                 showDialogUpdate(review.getId());
                                 return true;
                             case R.id.review_popup_menu_delete:
-                                showDialogDelete(review.getId());
+                                showDialogDelete(review.getId(), review.getExecutrId());
                                 return true;
                             case R.id.review_popup_menu_complain:
                                 //TODO: доделать методы
@@ -190,10 +206,12 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
                         try {
                             Answer answer = new Answer(review.getId(), curPerson.getId(), review.getCustomerId(),
                                     etText.getText().toString().trim(), MyUtils.getCurentDateInLong());
-                            provider.addAnswer(answer);
+                            AddAnswerTask addAnswerTask = new AddAnswerTask();
+                            addAnswerTask.execute(answer);
+                            //provider.addAnswer(answer);
                             review.getAnswers().add(answer);
-                            provider.updateReviewNAnswers(review);
-                        }catch(Exception e){
+                            //provider.updateReviewNAnswers(review);
+                        } catch (Exception e) {
                             Log.e("errpr", e.getMessage());
                         }
 
@@ -215,6 +233,8 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
 
     }
 
+    Review updateReview = null;
+
     private void showDialogUpdate(int id) {
         final Dialog dialog = new Dialog(context);
 
@@ -229,19 +249,26 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
 
         dialog.setCancelable(true);
         dialog.show();
-        final Review review = provider.getReview(id);
-        txtAssessment.setText(review.getAssessment() + "");
-        txtText.setText(review.getReview_text());
+
+        try {
+            updateReview = apiProvider.getReview(id);     //provider.getReview(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        txtAssessment.setText(updateReview.getAssessment() + "");
+        txtText.setText(updateReview.getReview_text());
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                review.setReview_text(txtText.getText().toString().trim());
-                review.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
+                updateReview.setReview_text(txtText.getText().toString().trim());
+                updateReview.setAssessment(Integer.parseInt(txtAssessment.getText().toString().trim()));
 
-                provider.updateReview(review);
-                apiProvider.updatePersonRatingById(review.getExecutrId());
-               // provider.updatePersonRatingById(review.getExecutrId());
+                UpdateReviewTask updateReviewTask = new UpdateReviewTask();
+                updateReviewTask.execute(updateReview);
+                // provider.updateReview(updateReview);
+               // apiProvider.updatePersonRatingById(updateReview.getExecutrId());
+                // provider.updatePersonRatingById(updateReview.getExecutrId());
 
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
@@ -257,7 +284,9 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         });
     }
 
-    private void showDialogDelete(final int id) {
+    Review deleteReview;
+
+    private void showDialogDelete(final int id, final int executorId) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_answer_delete);
 
@@ -270,10 +299,14 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Review review = provider.getReview(id);
-                provider.deleteReview(id);
-                apiProvider.updatePersonRatingById(review.getExecutrId());
-               // provider.updatePersonRatingById(review.getExecutrId());
+                try {
+                    deleteReview = apiProvider.getReview(id);// provider.getReview(id);
+                    apiProvider.deleteReview(id, executorId); // provider.deleteReview(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+              //  apiProvider.updatePersonRatingById(deleteReview.getExecutrId());
+                // provider.updatePersonRatingById(deleteReview.getExecutrId());
                 notifyDataSetChanged();
                 Toast.makeText(context, "Отзыв удален", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -321,6 +354,66 @@ public class Executor_reviews_adapter_frg extends RecyclerView.Adapter<Executor_
 
             adapter_layout = itemView.findViewById(R.id.executor_reviews_adapter_frg_layout);
 
+        }
+    }
+
+
+    private class UpdateReviewTask extends AsyncTask<Review, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Review... params) {
+            try {
+                apiProvider.updateReview(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
+
+    private class AddAnswerTask extends AsyncTask<Answer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Answer... params) {
+            try {
+                apiProvider.addAnswer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 }

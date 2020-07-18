@@ -25,6 +25,7 @@ import com.example.projectwnavigation.R;
 import java.util.ArrayList;
 
 import models.Answer;
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.Persons;
 import models.Review;
@@ -51,12 +52,14 @@ public class Fragment_myprofile_reviews extends Fragment {
     ArrayList<Review> reviews;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
     ImageView img_noreviews;
     Persons curPerson;
 
     public Fragment_myprofile_reviews(Context context) {
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
         this.context = context;
     }
 
@@ -115,7 +118,11 @@ public class Fragment_myprofile_reviews extends Fragment {
 
 
     void insertArray() {
-        reviews = provider.getAllPersonReviewByPersonId(curPerson.getId());
+        try {
+            reviews =apiProvider.getAllPersonReviewsById(curPerson.getId()); //provider.getAllPersonReviewByPersonId(curPerson.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(reviews == null || reviews.size() <= 0){
             img_noreviews.setVisibility(View.VISIBLE);
         }else{

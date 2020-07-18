@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,13 +24,15 @@ import android.widget.Toast;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.DateFormat;
+
 import fragments.MyProfileActivity;
 import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class MyProfile_edit_activity extends AppCompatActivity {
+public class MyProfile_edit_activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     Button btnOk, btnCh;
     ImageView image;
     MyDataProvider provider;
@@ -85,6 +90,14 @@ public class MyProfile_edit_activity extends AppCompatActivity {
                 }
             }
         });
+
+        etBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "date picker");
+            }
+        });
     }
 
     private void initData() {
@@ -95,6 +108,14 @@ public class MyProfile_edit_activity extends AppCompatActivity {
         etName.setText(person.getName());
         etLastname.setText(person.getLastname());
         etNumber.setText(person.getNumber());
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Long l = MyUtils.convertDataToLong(dayOfMonth, month, year);
+        String s = MyUtils.convertLongToDataString(l);
+        //String s = DateFormat.getDateInstance(DateFormat.FULL).format(year,month,dayOfMonth);
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ Button cancel, save;
 EditText assessment, text;
 MyDataProvider provider;
 ApiProvider apiProvider;
+
 private NotificationManager nManager;
 
     @Override
@@ -59,13 +62,16 @@ private NotificationManager nManager;
                 Review review  = new Review(executorId, curPersonId , text.getText().toString().trim(), Integer.parseInt(assessment.getText().toString()));
 
                 try {
-                    provider.addReview(review);
-                    apiProvider.updatePersonRatingById(executorId);
+                    AddREviewTask addREviewTask = new AddREviewTask();
+                    addREviewTask.execute(review);
+                  //provider.addReview(review);
+                  //  apiProvider.updatePersonRatingById(executorId);
                    // provider.updatePersonRatingById(executorId);
 
                     Notify notify = new Notify(executorId, "У вас новый отзыв", MyUtils.getCurentDateInLong(), 2, curPersonId, 0);
-                    provider.createNotify(notify);
-
+                    CreateNotifyTask task = new CreateNotifyTask();
+                    task.execute(notify);
+                   // provider.createNotify(notify);
                 }catch(Exception e){
                     Log.e("add review", e.getMessage());
                 }
@@ -78,4 +84,50 @@ private NotificationManager nManager;
 
     }
 
+    private class CreateNotifyTask extends AsyncTask<Notify, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Notify... params) {
+            try {
+                apiProvider.createNotify(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private class AddREviewTask extends AsyncTask<Review, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Review... params) {
+            try {
+                apiProvider.addReview(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
 }

@@ -20,8 +20,6 @@ public class Verify_numberActivity extends AppCompatActivity {
     EditText etCode;
     IntentFilter intentFilter;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

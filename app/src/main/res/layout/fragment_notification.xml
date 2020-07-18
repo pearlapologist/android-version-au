@@ -5,6 +5,7 @@
     tools:context="fragments.Fragment_notification">
     <RelativeLayout
         android:layout_width="match_parent"
+        android:background="@color/colorBackground"
         android:layout_height="match_parent"
         >
         <ScrollView
@@ -19,8 +20,7 @@
                     android:id="@+id/frg_notification_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:padding="10sp">
+                    android:layout_alignParentTop="true">
                 </androidx.recyclerview.widget.RecyclerView>
 
 

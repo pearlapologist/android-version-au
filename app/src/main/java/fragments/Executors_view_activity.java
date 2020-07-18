@@ -63,11 +63,7 @@ public class Executors_view_activity extends AppCompatActivity {
         photo = findViewById(R.id.fragment_executor_view_photo);
         chat = findViewById(R.id.fragment_executor_view_chat);
 
-
-
         // btn = findViewById(R.id.executor_update_btn_add);
-
-
 
         if (getIntent().hasExtra("executorIdFragment")) {
             final int executorId = getIntent().getIntExtra("executorIdFragment", 42);
@@ -138,17 +134,29 @@ public class Executors_view_activity extends AppCompatActivity {
 
     public void getAndSetExecutorIntentData() {
        if(cur !=null) {
-           Persons p =apiProvider.getPerson(cur.getPersonId());  // provider.getPerson(cur.getPersonId());
-           if (p.getPhoto() == null) {
-               photo.setImageResource(R.drawable.executors_default_image);
-           } else {
-               photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+           Persons p = null;
+           try {
+               p = apiProvider.getPerson(cur.getPersonId());   // provider.getPerson(cur.getPersonId());
+
+               if (p.getPhoto() == null) {
+                 //  photo.setImageResource(R.drawable.executors_default_image);
+               } else {
+                   photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+               }
+
+               personName.setText(p.getName() + " " + p.getLastname());
+           } catch (Exception e) {
+               e.printStackTrace();
            }
 
-           personName.setText(p.getName() + " " + p.getLastname());
+           Section_of_services sectiontlt = null; //provider.getSection(cur.getSectionId());
+           try {
+               sectiontlt = apiProvider.getSection(cur.getSectionId());
+               section.setText(sectiontlt.getTitle());
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
 
-           Section_of_services sectiontlt = apiProvider.getSection(cur.getSectionId()); //provider.getSection(cur.getSectionId());
-           section.setText(sectiontlt.getTitle());
        }  else {
             Toast.makeText(Executors_view_activity.this, "error", Toast.LENGTH_SHORT).show();
         }

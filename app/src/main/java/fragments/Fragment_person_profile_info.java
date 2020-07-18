@@ -55,11 +55,12 @@ public class Fragment_person_profile_info extends Fragment {
         this.context = context;
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-        receivedId = getArguments().getInt(P_ARG_ID);
+            receivedId = getArguments().getInt(P_ARG_ID);
         }
     }
 
@@ -69,39 +70,49 @@ public class Fragment_person_profile_info extends Fragment {
         return inflater.inflate(R.layout.fragment_person_profile_info, container, false);
     }
 
+    Persons person = null;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-       final Persons person =apiProvider.getPerson(receivedId); // provider.getPerson(receivedId);
+        String description = null;
+        try {
+            person = apiProvider.getPerson(receivedId);  // provider.getPerson(receivedId);
+
+            description = person.getDesciption();
+
+            contacts.setText(person.getNumber());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         desc = view.findViewById(R.id.fragment_person_profile_info_desc);
         contacts = view.findViewById(R.id.fragment_person_profile_info_contacts);
         btn_call = view.findViewById(R.id.fragment_person_profile_info_btn_call);
 
-        String description = person.getDesciption();
-        if(description == null){
+        if (description == null) {
             description = "(Пользователь не указал о себе ничего)";
             desc.setText(description);
             desc.setTextColor(getResources().getColor(R.color.colorMutedText));
-        }else {
+        } else {
             desc.setText(description);
         }
-        contacts.setText(person.getNumber());
 
         btn_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 
                 dialog.setTitle("Внимание!");
                 dialog.setMessage("Вы уверены?");
                 dialog.setPositiveButton("Да, позвонить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + person.getNumber()));
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Log.e("showDialog_profile_info", e.getMessage());
+                        if (person != null) {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + person.getNumber()));
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Log.e("showDialog_profile_info", e.getMessage());
+                            }
                         }
                     }
                 });

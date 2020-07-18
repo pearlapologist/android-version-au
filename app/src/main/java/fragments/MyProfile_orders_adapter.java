@@ -2,9 +2,11 @@ package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +49,8 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
     Persons curPerson;
     private Menu popup_menu;
     boolean isCreator = false;
+
+    ProgressDialog pd;
 
     public MyProfile_orders_adapter(Activity activity, Context context, ArrayList<Order> orders) {
         this.context = context;
@@ -96,8 +100,14 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
         holder.deadline.setText(""+deadlinetext);
         final int id = order.getId();
-        Section_of_services section =apiProvider.getSection(order.getSection()); //provider.getSection(order.getSection());
-        holder.section.setText(section.getTitle());
+
+        Section_of_services section = null;
+        try {
+            section = apiProvider.getSection(order.getSection()); //provider.getSection(order.getSection());
+            holder.section.setText(section.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         curPerson = provider.getLoggedInPerson();
         if (order.getCustomerId() == curPerson.getId()) {
@@ -157,7 +167,9 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    provider.deleteOrder(id);
+                    DeleteOrderTask task  = new DeleteOrderTask();
+                    task.execute(id);
+                   // provider.deleteOrder(id);
                     notifyDataSetChanged();
                     dialog.dismiss();
                 } catch (Exception e) {
@@ -177,6 +189,7 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
 
     int sectionId = -1;
 
+    Order order= null;
     private void showDialogUpdate(final int orderId) {
         final Dialog dialog = new Dialog(activity);
 
@@ -191,14 +204,24 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         Spinner spinner = dialog.findViewById(R.id.dialog_orders_update_section);
         Button btnCancel = dialog.findViewById(R.id.dialog_orders_update_btnCancel);
 
-        ArrayList<String> sectionList =apiProvider.getSectionListInString(); // provider.getSectionListInString();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-        spinner.setAdapter(adapter);
+        ArrayList<String> sectionList = null; // provider.getSectionListInString();
+        try {
+            sectionList = apiProvider.getSectionListInString();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+            spinner.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String str = parent.getItemAtPosition(position).toString();
-                sectionId = apiProvider.getSectionIdByTitle(str);// provider.getSectionIdByTitle(str);
+                try {
+                    sectionId = apiProvider.getSectionIdByTitle(str);// provider.getSectionIdByTitle(str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -210,7 +233,12 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         dialog.getWindow().setLayout(720, 1300);
         dialog.setCancelable(false);
         dialog.show();
-        final Order order = provider.getOrder(orderId);
+
+        try {
+            order =apiProvider.getOrder(orderId); // provider.getOrder(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         title.setText(order.getTitle());
         price.setText(order.getPrice() + "");
         deadline.setText(MyUtils.convertLongToDataString(order.getDeadline()));
@@ -226,7 +254,9 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
                 order.setPrice(Double.valueOf(price.getText().toString()));
                 order.setDeadline(l);
 
-                provider.updateOrder(order);
+                UpdateOrderTask task = new UpdateOrderTask();
+                task.execute(order);
+            //    provider.updateOrder(order);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -251,4 +281,68 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         return orders.size();
     }
 
+    private class UpdateOrderTask extends AsyncTask<Order, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Order... params) {
+
+            try {
+                apiProvider.updateOrder(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
+
+    private class DeleteOrderTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+
+            try {
+
+                apiProvider.deleteOrder(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 }

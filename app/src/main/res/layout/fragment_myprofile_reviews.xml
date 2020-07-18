@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5sp"
     tools:context="fragments.Fragment_myprofile_reviews">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="5sp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground">
 
         <TextView
             android:id="@+id/fragment_myprofile_reviews_rating"

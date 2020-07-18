@@ -1,11 +1,13 @@
 package fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +46,9 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
     Persons curPerson;
     private Menu popup_menu;
 
-    public Orders_responses_adapter( Orders_view_activity activity, Context context, ArrayList<Response> responses) {
+    ProgressDialog pd;
+
+    public Orders_responses_adapter(Orders_view_activity activity, Context context, ArrayList<Response> responses) {
         this.context = context;
         this.activity = activity;
         this.responses = responses;
@@ -57,7 +61,8 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
         View view = inflater.inflate(R.layout.fragment_order_responses_adapter, parent, false);
         return new Orders_responses_adapter.MyViewHolder(view);
     }
-
+    Persons person = null;
+    int personId = -1;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         provider = new MyDataProvider(context);
@@ -69,43 +74,60 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
         holder.price.setText(response.getPrice() + "");
         String created = MyUtils.convertLongToDataString(response.getCreatedDate());
         holder.date.setText(created);
-        final int responsId = response.getId();
-        final Persons person = apiProvider.getPerson(provider.getPersonIdByResponseId(responsId)); // provider.getPerson(provider.getPersonIdByResponseId(responsId));
-        String name = "";
+        final int responseId = response.getId();
+        int pId = -1;
+        try {
+            pId = apiProvider.getPersonIdByResponseId(responseId);
 
-        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.executors_default_image);
-        if (person != null) {
-            name = person.getName() + " " + person.getLastname();
-            if (person.getPhoto() != null) {
-                bmp = MyUtils.decodeByteToBitmap(person.getPhoto());
-            }
-        } else {
-            name = "Пользователь удален или не найден";
-            bmp = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.deleteduser);
+            person = apiProvider.getPerson(pId);  // provider.getPerson(provider.getPersonIdByResponseId(responseId));
+
+            personId = person.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        holder.personName.setText(name);
-        holder.image.setImageBitmap(bmp);
+            String name = "";
 
-        final int personId = person.getId();
-        final int executorId = provider.getExecutorIdByPersonId(personId);
+            Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.executors_default_image);
+            if (person != null) {
+                name = person.getName() + " " + person.getLastname();
+                if (person.getPhoto() != null) {
+                    bmp = MyUtils.decodeByteToBitmap(person.getPhoto());
+                }
+            } else {
+                name = "Пользователь удален или не найден";
+                bmp = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.deleteduser);
+            }
+
+            holder.personName.setText(name);
+            holder.image.setImageBitmap(bmp);
+
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (person.getId() == curPerson.getId()) {
-                    Intent intent = new Intent(context, MyProfileActivity.class);
-                    context.startActivity(intent);
-                } else if (executorId != 0 && executorId != -1) {
-                    Intent intent = new Intent(context, Executors_view_activity.class);
-                    intent.putExtra("executorIdFragment", executorId);
-                    context.startActivity(intent);
-                } else {
-                    Intent intent = new Intent(context, PersonProfileActivity.class);
-                    intent.putExtra("orderview_PersonId", personId);
-                    context.startActivity(intent);
+                if (personId != -1) {
+                    int executorId = -1;  //provider.getExecutorIdByPersonId(personId);
+                    try {
+                        executorId = apiProvider.getExecutorIdByPersonId(personId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (person.getId() == curPerson.getId()) {
+                        Intent intent = new Intent(context, MyProfileActivity.class);
+                        context.startActivity(intent);
+                    } else if (executorId != 0 && executorId != -1) {
+                        Intent intent = new Intent(context, Executors_view_activity.class);
+                        intent.putExtra("executorIdFragment", executorId);
+                        context.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, PersonProfileActivity.class);
+                        intent.putExtra("orderview_PersonId", personId);
+                        context.startActivity(intent);
+                    }
                 }
             }
         });
@@ -121,23 +143,23 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
                 PopupMenu popup = new PopupMenu(context, v);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.order_popup_edit) {
-                            showDialogUpdate(responsId);
-                            return true;
-                        } else if (item.getItemId() == R.id.order_popup_delete) {
-                            showDialogDelete(position);
-                            return true;
-                        } else if (item.getItemId() == R.id.order_popup_complain) {
-                            //TODO: доделать методы
-                            Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
+                                                     @Override
+                                                     public boolean onMenuItemClick(MenuItem item) {
+                                                         if (item.getItemId() == R.id.order_popup_edit) {
+                                                             showDialogUpdate(responseId);
+                                                             return true;
+                                                         } else if (item.getItemId() == R.id.order_popup_delete) {
+                                                             showDialogDelete(position);
+                                                             return true;
+                                                         } else if (item.getItemId() == R.id.order_popup_complain) {
+                                                             //TODO: доделать методы
+                                                             Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                                                             return true;
+                                                         }
 
-                        return false;
-                    }
-                }
+                                                         return false;
+                                                     }
+                                                 }
 
                 );
                 popup.inflate(R.menu.order_popup);
@@ -156,6 +178,8 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
 
     }
 
+    Response updateResponse;
+
     private void showDialogUpdate(final int id) {
         final Dialog dialog = new Dialog(context);
 
@@ -169,17 +193,23 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
 
         dialog.setCancelable(true);
         dialog.show();
-        final Response response = provider.getRespons(id);
-        price.setText(response.getPrice() + "");
-        descr.setText(response.getText());
+        try {
+            updateResponse = apiProvider.getResponse(id);      //provider.getRespons(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        price.setText(updateResponse.getPrice() + "");
+        descr.setText(updateResponse.getText());
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                response.setText(descr.getText().toString().trim());
-                response.setPrice(Double.valueOf(price.getText().toString()));
+                updateResponse.setText(descr.getText().toString().trim());
+                updateResponse.setPrice(Double.valueOf(price.getText().toString()));
 
-                provider.updateRespons(response);
+                UpdateResponseTask updateResponseTask = new UpdateResponseTask();
+                updateResponseTask.execute(updateResponse);
+                //provider.updateRespons(updateResponse);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -204,8 +234,9 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    provider.deleteRespons(responses.get(position).getId());
-                    //notifyItemRemoved(position);
+                    apiProvider.deleteResponse(responses.get(position).getId());
+                    // provider.deleteRespons(responses.get(position).getId());
+                    notifyItemRemoved(position);
                     dialog.dismiss();
                 } catch (Exception e) {
                     Log.e("showDialogDelete", e.getMessage());
@@ -248,6 +279,36 @@ public class Orders_responses_adapter extends RecyclerView.Adapter<Orders_respon
             btn_popup_menu = itemView.findViewById(R.id.order_responses_adapter_btn_popup);
 
             adapter_layout = itemView.findViewById(R.id.order_responses_adapter_row_layout);
+        }
+    }
+
+    private class UpdateResponseTask extends AsyncTask<Response, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Response... params) {
+            try {
+                apiProvider.updateResponse(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 }

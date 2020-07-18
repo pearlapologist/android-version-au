@@ -2,8 +2,10 @@ package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +48,8 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
     Fragment_myprofile_reviews_answers_adapter answers_adapter;
     private RecyclerView.RecycledViewPool recyclerpool = new RecyclerView.RecycledViewPool();
 
+    ProgressDialog pd;
+
     public Fragment_myprofile_reviews_adapter(Context context, ArrayList<Review> reviews) {
         this.context = context;
         this.reviews = reviews;
@@ -83,6 +87,8 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
         return new Fragment_myprofile_reviews_adapter.MyViewHolder(view);
     }
 
+    Persons p = null;
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -92,11 +98,24 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
 
         final Review review = reviews.get(position);
         ArrayList<Answer> answers = review.getAnswers();
-        if(answers == null) {
+
+        if (answers == null) {
             answers = new ArrayList<>();
         }
         int personId = review.getCustomerId();
-        final Persons p =apiProvider.getPerson(personId); // provider.getPerson(personId);
+
+        try {
+            p = apiProvider.getPerson(personId);   // provider.getPerson(personId);
+
+            holder.name.setText(p.getName()+ " "+p.getLastname());
+
+            if (p.getPhoto() != null) {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         String text = "";
         int rating = -1;
@@ -106,12 +125,8 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
         rating = review.getAssessment();
 
         holder.text.setText(text);
-        holder.assessment.setText("Оценка: "+rating);
-        holder.name.setText(p.getName()+ " "+p.getLastname());
+        holder.assessment.setText("Оценка: " + rating);
 
-        if(p.getPhoto()!= null){
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
-        }
         Long l = review.getCreatedDate();
         holder.date.setText(MyUtils.convertLongToDataString(l));
 
@@ -129,22 +144,27 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
         holder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int personId =  p.getId();
-                int executorId = provider.getExecutorIdByPersonId(personId);
+                if (p != null) {
+                    int personId = p.getId();
+                    int executorId = 0; //provider.getExecutorIdByPersonId(personId);
+                    try {
+                        executorId = apiProvider.getExecutorIdByPersonId(personId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                 if(executorId != 0 && executorId != -1){
-                    Intent intent = new Intent(context,  Executors_view_activity.class);
-                    intent.putExtra("executorIdFragment", executorId);
-                     context.startActivity(intent);
+                    if (executorId != 0 && executorId != -1) {
+                        Intent intent = new Intent(context, Executors_view_activity.class);
+                        intent.putExtra("executorIdFragment", executorId);
+                        context.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, PersonProfileActivity.class);
+                        intent.putExtra("orderview_PersonId", personId);
+                        context.startActivity(intent);
+                    }
                 }
-                else{
-                    Intent intent = new Intent(context, PersonProfileActivity.class);
-                    intent.putExtra("orderview_PersonId", personId);
-                     context.startActivity(intent);}
             }
         });
-
-
 
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
@@ -195,10 +215,12 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
                         try {
                             Answer answer = new Answer(review.getId(), curPerson.getId(), review.getCustomerId(),
                                     etText.getText().toString().trim(), MyUtils.getCurentDateInLong());
-                            provider.addAnswer(answer);
+                            AddAnswerTask addAnswerTask = new AddAnswerTask();
+                            addAnswerTask.execute(answer);
+                            //provider.addAnswer(answer);
                             review.getAnswers().add(answer);
-                            provider.updateReviewNAnswers(review);
-                        }catch(Exception e){
+                           // provider.updateReviewNAnswers(review);
+                        } catch (Exception e) {
                             Log.e("errpr", e.getMessage());
                         }
 
@@ -228,6 +250,33 @@ public class Fragment_myprofile_reviews_adapter extends RecyclerView.Adapter<Fra
         return reviews.size();
     }
 
+    private class AddAnswerTask extends AsyncTask<Answer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
 
+        @Override
+        protected Void doInBackground(Answer... params) {
+            try {
+                apiProvider.addAnswer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 
 }

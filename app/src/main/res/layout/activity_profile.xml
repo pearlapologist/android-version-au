@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Theme.AppCompat.DayNight.DarkActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context="fragments.MyProfileActivity">
 
 
@@ -26,15 +27,28 @@
                 android:src="@drawable/executors_default_image" />
 
             <TextView
-                android:id="@+id/profile_name"
+                android:id="@+id/profile_name_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/profile_image"
                 android:layout_marginStart="40sp"
                 android:layout_marginTop="65sp"
-                android:text="name" />
+                android:textColor="@color/colorMutedText"
+                android:textStyle="bold"
+                android:text="Имя:" />
 
             <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/profile_name_txt"
+                android:layout_marginStart="4sp"
+                android:layout_marginTop="65sp"
+                android:textColor="@color/colorMutedGray2"
+                android:textStyle="bold"
+                android:text="name" />
+
+           <!-- <TextView
                 android:id="@+id/profile_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +56,7 @@
                 android:layout_marginStart="40sp"
                 android:layout_below="@id/profile_name"
                 android:layout_marginTop="15sp"
-                android:text="status" />
+                android:text="status" />-->
 
             <TextView
                 android:id="@+id/profile_rating"
@@ -51,7 +65,7 @@
                 android:layout_toRightOf="@id/profile_image"
                 android:layout_marginStart="40sp"
                 android:layout_marginTop="15sp"
-                android:layout_below="@id/profile_status"
+                android:layout_below="@id/profile_name"
                 android:text="rating" />
 
             <Button
@@ -62,7 +76,14 @@
                 android:layout_marginStart="37dp"
                 android:layout_marginEnd="38dp"
                 android:layout_below="@id/profile_registDate"
-                android:text="@string/profile_orders" />
+                android:text="@string/profile_orders"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                />
 
             <Button
                 android:id="@+id/profile_form"
@@ -72,7 +93,14 @@
                 android:layout_marginEnd="38dp"
                 android:layout_marginTop="20sp"
                 android:layout_below="@id/profile_orders"
-                android:text="@string/profile_form" />
+                android:text="@string/profile_form"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                />
 
             <Button
                 android:id="@+id/profile_reviews"
@@ -80,9 +108,14 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="37dp"
                 android:layout_marginEnd="38dp"
-                android:layout_marginBottom="125dp"
                 android:text="@string/profile_reviews"
                 android:layout_marginTop="20sp"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textAllCaps="false"
                 android:layout_below="@id/profile_form" />
 
             <TextView
@@ -93,8 +126,10 @@
                 android:layout_marginStart="40sp"
                 android:layout_marginTop="15sp"
                 android:layout_below="@id/profile_rating"
-                android:text="date" />
+                android:text="date"
+
+                />
         </RelativeLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

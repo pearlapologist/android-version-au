@@ -161,7 +161,12 @@ public class MyDataProvider {
 
         if (personId != -1) {
             if (currentPerson == null || personId != currentPerson.getId()) {
-                Persons person = apiProvider.getPerson(personId);
+                Persons person = null;
+                try {
+                    person = apiProvider.getPerson(personId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 currentPerson = person;
             }
         }
@@ -183,7 +188,7 @@ public class MyDataProvider {
 
     //UPDATE PERSON
 
-   public void updatePerson(Persons person) {
+    public void updatePerson(Persons person) {
      /*   SQLiteDatabase sqlDatabase = db.getWritableDatabase();
         sqlDatabase.beginTransaction();
         try {
@@ -235,7 +240,7 @@ public class MyDataProvider {
 
 
     public boolean getPersonIsExecutorField(int personId) {
-       Boolean b = false;
+        Boolean b = false;
      /*   SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
 
@@ -259,7 +264,7 @@ public class MyDataProvider {
 
 
     public int getPersonRatingById(int id) {
-       int rating = -1;
+        int rating = -1;
        /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
 
@@ -382,11 +387,11 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.endTransaction();
 
         }*/
-       return executor;
+        return executor;
     }
 
     public ArrayList<Executor> getAllExecutors() {
-       ArrayList<Executor> result = new ArrayList<>();
+        ArrayList<Executor> result = new ArrayList<>();
         /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -407,7 +412,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     }
 
     public ArrayList<Executor> getExecutorsBySectionId(int cId) {
-      ArrayList<Executor> result = new ArrayList<>();
+        ArrayList<Executor> result = new ArrayList<>();
        /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -744,7 +749,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //region Order
     //CREATE ORDER
     public void addOrder(Order order) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         try {
             int i = 0;
@@ -775,14 +780,15 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         } finally {
             sqLiteDatabase.endTransaction();
         }
-
+*/
     }
 
     //READ ORDER
     public Order getOrder(int orderId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Order order = new Order();
+     /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_ORDERS + " where " + " " + KEY_ORDER_ID + "=" + orderId,
@@ -794,13 +800,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-            return order;
-        }
+
+        }*/
+        return order;
     }
 
 
     private Order getOrderFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_ORDER_ID));
+      /*  int id = c.getInt(c.getColumnIndex(KEY_ORDER_ID));
         String title = c.getString(c.getColumnIndex(KEY_ORDER_TITLE));
         int customerId = c.getInt(c.getColumnIndex(KEY_ORDER_CUSTOMER_ID));
         int sectionId = c.getInt(c.getColumnIndex(KEY_ORDER_SECTION_ID));
@@ -808,16 +815,17 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         String dscrp = c.getString(c.getColumnIndex(KEY_ORDER_DESCRIPTION));
         Long deadline = c.getLong(c.getColumnIndex(KEY_ORDER_DEADLINE));
         Long createdDate = c.getLong(c.getColumnIndex(KEY_ORDER_CREATED_DATE));
-
-        Order order = new Order(id, customerId, title, sectionId, price, dscrp, deadline, createdDate);
+*/
+        Order order = new Order(); //id, customerId, title, sectionId, price, dscrp, deadline, createdDate);
         return order;
     }
 
 
     public ArrayList<Order> getOrders() {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         ArrayList<Order> result = new ArrayList<>();
+     /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("SELECT * FROM "
                     + TABLE_ORDERS + " ORDER BY " + KEY_ORDER_CREATED_DATE +
@@ -830,14 +838,16 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-            return result;
-        }
+
+        }*/
+        return result;
     }
 
     public ArrayList<Order> getPersonOrdersById(int personId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         ArrayList<Order> result = new ArrayList<>();
+    /*    SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                     + TABLE_ORDERS + " where " + KEY_ORDER_CUSTOMER_ID + "= " + personId + " order by " + KEY_ORDER_CREATED_DATE +
@@ -849,12 +859,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
             sqLiteDb.setTransactionSuccessful();
         } finally {
-            sqLiteDb.endTransaction();
-            return result;
-        }
+            sqLiteDb.endTransaction();  }*/
+        return result;
+
     }
 
-    public ArrayList<Order> getOrders(Order_search search) {
+ /*
+   //TODO: delete method
+   public ArrayList<Order> getOrders(Order_search search) {
         if (search == null) {
             search = new Order_search();
         }
@@ -887,11 +899,11 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             result.add(order);
         }
         return result;
-    }
+    }*/
 
     public ArrayList<Order> getOrdersBySectionId(int rId) {
         ArrayList<Order> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       /*    SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -905,14 +917,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
 
     //UPDATE ORDER
     public void updateOrder(Order order) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_ORDERS + " SET " +
@@ -926,12 +938,12 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
     //DELETE ORDER
 
     public void deleteOrder(int orderId) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
+      /*  SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
             int result = sqL.delete(TABLE_ORDERS, KEY_ORDER_ID + " = " + orderId, null);
@@ -944,7 +956,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.setTransactionSuccessful();
         } finally {
             sqL.endTransaction();
-        }
+        }*/
     }
 
     //endregion
@@ -953,7 +965,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //CREATE NOTIFY
 
     public void createNotify(Notify notify) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_NOTIFY + "(" + KEY_NOTIFY_PERSONID + "," + KEY_NOTIFY_TEXT + "," +
@@ -974,40 +986,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
 
     //READ NOTIFICATION
-    public Notify getNotify(int notifyId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
-        try {
-            Cursor c = sqLiteDb.rawQuery("select * from "
-                            + TABLE_NOTIFY + " where " + KEY_NOTIFY_ID + "=" + notifyId,
-                    null);
-            if (c.moveToFirst()) {
-                int id = c.getInt(c.getColumnIndex(KEY_NOTIFY_ID));
-                int personId = c.getInt(c.getColumnIndex(KEY_NOTIFY_PERSONID));
-                String text = c.getString(c.getColumnIndex(KEY_NOTIFY_TEXT));
-                Long createdDate = c.getLong(c.getColumnIndex(KEY_NOTIFY_CREATED_DATE));
-                int sectionId = c.getInt(c.getColumnIndex(KEY_NOTIFY_SECTION_ID));
-                int srcId = c.getInt(c.getColumnIndex(KEY_NOTIFY_SRC_ID));
-                int status = c.getInt(c.getColumnIndex(KEY_NOTIFY_STATUS_ID));
-
-                Notify notify = new Notify(id, personId, text, createdDate, sectionId, srcId, status);
-                return notify;
-            }
-            c.close();
-            sqLiteDb.setTransactionSuccessful();
-        } finally {
-            sqLiteDb.endTransaction();
-        }
-        return null;
-    }
 
     public ArrayList<Notify> getAllMyNotifies() {
         ArrayList<Notify> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1018,9 +1004,9 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
                 int personId = c.getInt(c.getColumnIndex(KEY_NOTIFY_PERSONID));
                 String text = c.getString(c.getColumnIndex(KEY_NOTIFY_TEXT));
                 int srcId = c.getInt(c.getColumnIndex(KEY_NOTIFY_SRC_ID));
-                Long createdDate = c.getLong(c.getColumnIndex(KEY_NOTIFY_CREATED_DATE));
                 int sectionId = c.getInt(c.getColumnIndex(KEY_NOTIFY_SECTION_ID));
                 int status = c.getInt(c.getColumnIndex(KEY_NOTIFY_STATUS_ID));
+                Long createdDate = c.getLong(c.getColumnIndex(KEY_NOTIFY_CREATED_DATE));
 
                 Notify notify = new Notify(id, personId, text, createdDate, sectionId, srcId, status);
                 result.add(notify);
@@ -1029,14 +1015,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
 
     public int getCountOfAllMyNewNotifies() {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         int count = 0;
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select count(*) from "
@@ -1049,12 +1035,12 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return count;
     }
 
     public void setMyNotifiesToChecked() {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_NOTIFY + " SET " +
@@ -1064,40 +1050,16 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //DELETE NOTIFICATION
-    public void deleteNotify(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            String sql = "DELETE FROM  " + TABLE_NOTIFY + " WHERE " + KEY_NOTIFY_ID + "=" + id;
-            sqL.execSQL(sql);
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
-
-    public void deleteAllNotification() {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            String sql = "DELETE FROM " + TABLE_NOTIFY;
-            sqL.execSQL(sql);
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
 //endregion
 
     //region Bookmark
     //CREATE BOOKMARK
-
     public void putExecutorInMyBookmarks(int executorId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "";
         try {
@@ -1112,11 +1074,11 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
 
     public void putOrderInMyBookmarks(int orderId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "";
         try {
@@ -1131,14 +1093,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
-
 
     //READ BOOKMARK
 
     public Bookmarks getBookmarkByOrderId(int orderId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1156,14 +1117,15 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return null;
     }
 
     public Bookmarks getBookmarkByExecutorId(int executorId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Bookmarks b = new Bookmarks();
+     /*   SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_BOOKMARKS + " where" + " " + KEY_BOOKMARK_EXECUTOR_ID + "=" + executorId +
@@ -1182,14 +1144,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return b;
     }
 
 
     public ArrayList<Bookmarks> getExecutorsListFromMyBookmarks() {
         ArrayList<Bookmarks> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1206,13 +1168,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
     public ArrayList<Bookmarks> getOrdersListFromMyBookmarks() {
-        ArrayList<Bookmarks> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       ArrayList<Bookmarks> result = new ArrayList<>();
+       /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "SELECT * FROM "
@@ -1232,30 +1194,15 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             Log.e("getOrdersListFromMyb", e.getMessage());
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
 
     //DELETE BOOKMARK
-    public void deleteBookm(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
-        sqL.beginTransaction();
-        try {
-            int result = sqL.delete(TABLE_BOOKMARKS, KEY_BOOKMARK_PART_ID + " = " + id, null);
-            if (result == -1) {
-                Toast.makeText(db.context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(db.context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-            }
-            sqL.setTransactionSuccessful();
-        } finally {
-            sqL.endTransaction();
-        }
-    }
 
     public void deleteExecutorFromMyBookmarks(int executorId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "";
         try {
@@ -1269,11 +1216,11 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
 
     public void deleteOrderFromMyBookmarks(int orderId) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+    /*    SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "";
         try {
@@ -1286,19 +1233,19 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
             sqLiteDatabase.endTransaction();
-        }
+        }*/
     }
 //endregion
-
 
     //region Review
     //CREATE Review
     public void addReview(Review review) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "INSERT INTO " + TABLE_REVIEWS + "(" + KEY_REVIEW_EXECUTOR_ID +
                 ", " + KEY_REVIEW_CUSTOMER_ID + ", " + KEY_REVIEW_REVIEW_TEXT + ", "
-                + KEY_REVIEW_ASSESSMENT + ", " + KEY_REVIEW_CREATED_DATE + ") VALUES (" + review.getExecutrId() + ", " + review.getCustomerId() + ", '"
+                + KEY_REVIEW_ASSESSMENT + ", " + KEY_REVIEW_CREATED_DATE + ") VALUES (" +
+                review.getExecutrId() + ", " + review.getCustomerId() + ", '"
                 + review.getReview_text() + "', "
                 + review.getAssessment() + ", " + review.getCreatedDate() + ")";
         sqLiteDatabase.execSQL(sql);
@@ -1312,14 +1259,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         }
         sqLiteDatabase.setTransactionSuccessful();
         sqLiteDatabase.endTransaction();
-        review.setId(maxId);
+        review.setId(maxId);*/
     }
 
     //READ Review
     public Review getReview(int id) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Review review = new Review();
+        /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_REVIEWS + " where " + " " + KEY_REVIEW_PART_ID + "=" + id,
@@ -1332,27 +1279,27 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return review;
     }
 
 
     private Review getReviewFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_REVIEW_PART_ID));
+        /*int id = c.getInt(c.getColumnIndex(KEY_REVIEW_PART_ID));
         int executorId = c.getInt(c.getColumnIndex(KEY_REVIEW_EXECUTOR_ID));
         int customerId = c.getInt(c.getColumnIndex(KEY_REVIEW_CUSTOMER_ID));
         String text = c.getString(c.getColumnIndex(KEY_REVIEW_REVIEW_TEXT));
         int assessment = c.getInt(c.getColumnIndex(KEY_REVIEW_ASSESSMENT));
         Long createddate = c.getLong(c.getColumnIndex(KEY_REVIEW_CREATED_DATE));
-
-        Review review = new Review(id, executorId, customerId, text, assessment);
-        review.setCreatedDate(createddate);
+*/
+        Review review = new Review();//id, executorId, customerId, text, assessment);
+        //review.setCreatedDate(createddate);
         return review;
     }
 
     public ArrayList<Review> getAllPersonReviewByPersonId(int personId) {
         ArrayList<Review> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1370,18 +1317,18 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             Log.e("error", e.getMessage());
         } finally {
             sqLiteDb.endTransaction();
-            return result;
-        }
+
+        } */  return result;
 
     }
 
-
     public ArrayList<Integer> getLeavedReviewPersonsIdList(int personId) {
-        Persons person = null;// getPerson(personId);
+        ArrayList<Integer> arrID = new ArrayList();
+      /*  Persons person = null;// getPerson(personId);
         if (person == null) {
             return null;
         }
-        ArrayList<Integer> arrID = new ArrayList();
+
         SQLiteDatabase database = db.getReadableDatabase();
         database.beginTransaction();
         try {
@@ -1396,13 +1343,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
 
         } finally {
             database.endTransaction();
-            return arrID;
-        }
+
+        }*/
+        return arrID;
     }
 
     //UPDATE Review
     public void updateReview(Review review) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_REVIEWS + " SET " +
@@ -1413,13 +1361,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //DELETE Review
 
     public void deleteReview(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
+      /*  SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
             int result = sqL.delete(TABLE_REVIEWS, KEY_REVIEW_PART_ID + " = " + id, null);
@@ -1431,7 +1379,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.setTransactionSuccessful();
         } finally {
             sqL.endTransaction();
-        }
+        }*/
     }
 
     //endregion
@@ -1439,7 +1387,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //region Executor and Person
     //CREATE EXECUTNPERSON TABLE
     public void onExecutorCreate(Executor executor) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_EXECUTORNPERSON + "(" + KEY_EXECUTORNPERSON_EXECUTOR_ID +
@@ -1450,17 +1398,18 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //READ EXECUTORNPERSON
 
     public int getExecutorIdByPersonId(int personId) {
-        Persons person =null;// this.getPerson(personId);
+        int id = 0;
+        /*Persons person = null;// this.getPerson(personId);
         if (person == null) {
             return -1;
         }
-        int id = 0;
+
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -1479,18 +1428,19 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
-            return id;
-        }
 
+        }*/
+        return id;
     }
 
     public int getPersonIdByExecutorId(int executorId) {
-        Executor r = this.getExecutor(executorId);
+        int id = -1;
+        /*Executor r = this.getExecutor(executorId);
         if (r == null) {
             return -1;
         }
 
-        int id = -1;
+
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
@@ -1507,14 +1457,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return id;
     }
 
     //DELETE EXECUTORNPERSON
 
     public void onExecutorDelete(int executorId) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+     /*   SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "DELETE FROM " + TABLE_EXECUTORNPERSON + " WHERE " +
@@ -1524,14 +1474,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 //endregion
 
     //region Executor and services
 
     public void onExecutorServicesCreate(Executor executor) {
-        if (executor.getServices() == null || executor.getId() == 0) {
+      /*  if (executor.getServices() == null || executor.getId() == 0) {
             return;
         }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
@@ -1546,12 +1496,12 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     // READ EXECUTORNSERVICES
     public void loadExecutorServices(Executor executor) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "SELECT " + TABLE_SERVICE + "." + KEY_SERVICE_ID + ", "
@@ -1561,12 +1511,6 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
                     + TABLE_SERVICE + "." + KEY_SERVICE_ID + "=" + TABLE_EXECUTORNSERVICES
                     + "." + KEY_EXECUTORNSERVICES_SERVICE_ID + " WHERE " + TABLE_EXECUTORNSERVICES +
                     "." + KEY_EXECUTORNSERVICES_EXECUTOR_ID + "=" + executor.getId();
-
-            //SELECT distinct Service.ed, service.title, service.price from service
-         /*join executernservices
-         on service._id = executernservices.serviceid
-         where executernservices.executorid = executorid
-          */
             Cursor c2 = sqLiteDb.rawQuery(sql, null);
             if (executor.getServices() != null) {
                 executor.getServices().clear();
@@ -1584,13 +1528,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             {
                 sqLiteDb.endTransaction();
             }
-        }
+        }*/
     }
 
 
     //UPDATE EXECUTORNSERVICES
     public void updateExecutorNServices(Executor executor) {
-        if (executor.getServices() == null || executor.getId() == 0) {
+      /*  if (executor.getServices() == null || executor.getId() == 0) {
             return;
         }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
@@ -1606,13 +1550,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //DELETE EXECUTORNSERVICES
 
     public void deleteFromExecutorNServicesByExecutorId(int id) {
-        SQLiteDatabase sqLDb = db.getWritableDatabase();
+      /*  SQLiteDatabase sqLDb = db.getWritableDatabase();
         sqLDb.beginTransaction();
         try {
             String sql = "DELETE FROM " + TABLE_EXECUTORNSERVICES + " WHERE " + KEY_EXECUTORNSERVICES_EXECUTOR_ID + " = " + id;
@@ -1620,7 +1564,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLDb.setTransactionSuccessful();
         } finally {
             sqLDb.endTransaction();
-        }
+        }*/
     }
 
 
@@ -1629,7 +1573,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //region ORDERNPERSON
     //CREATE ORDERNPERSON
     public void addOrderNPerson(OrderNPerson orNPer) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "INSERT INTO " + TABLE_ORDERNPERSON + "(" + KEY_ORDERNPERSON_ORDER_ID +
                 ", " + KEY_ORDERNPERSON_CUSTOMER_ID + ", " + KEY_ORDERNPERSON_EXECUTOR_ID + ", " +
@@ -1646,11 +1590,11 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         }
         sqLiteDatabase.setTransactionSuccessful();
         sqLiteDatabase.endTransaction();
-        orNPer.setId(maxId);
+        orNPer.setId(maxId);*/
     }
 
     public void onOrderCreate(Order order) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_ORDERNPERSON + "(" + KEY_ORDERNPERSON_ORDER_ID +
@@ -1661,12 +1605,12 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //READ OrderNPerson TABLE
     public OrderNPerson getOrderNPerson(int ordNPerId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        /*SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1685,17 +1629,17 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return null;
     }
 
     public int getCustomerIdByOrderId(int orderId) {
-        Order order = this.getOrder(orderId);
+        int personId = -1;
+       /* Order order = this.getOrder(orderId);
         if (order == null) {
             return -1;
         }
-        int personId = -1;
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor cursor = sqLiteDb.rawQuery("SELECT " + KEY_ORDERNPERSON_CUSTOMER_ID +
@@ -1707,12 +1651,12 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
-            return personId;
-        }
+        }*/
+       return personId;
     }
 
     public void onOrderDelete(int orderId) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "delete from " + TABLE_ORDERNPERSON + " where " +
@@ -1721,7 +1665,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
     //endregion
 
@@ -1794,8 +1738,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
 
     //create responses
     public void addRespons(Response response) {
-
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "INSERT INTO " + TABLE_RESPONSES + "(" + KEY_RESPONSES_ORDER_ID + ", " + KEY_RESPONSES_PERSON_ID + ", "
@@ -1822,18 +1765,18 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //get responses
     public int getPersonIdByResponseId(int responsId) {
-        Response response = this.getRespons(responsId);
+        int id = 0;
+       /* Response response = this.getRespons(responsId);
         if (response == null) {
             return -1;
         }
         SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
-        int id = 0;
         try {
             Cursor cursor = sqLiteDb.rawQuery("SELECT " + KEY_RESPONSES_PERSON_ID +
                     " FROM " + TABLE_RESPONSES + " WHERE " + KEY_RESPONSES_ID + "= " + responsId, null);
@@ -1844,13 +1787,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             cursor.close();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return id;
     }
 
 
     public Response getRespons(int responseId) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1864,17 +1807,17 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return null;
     }
 
-    //TODO: птимизировать
+    //TODO: oтимизировать
     public ArrayList<Integer> getRespondedPersonsIdListByOrderId(int orderId) {
-        Order order = this.getOrder(orderId);
+        ArrayList<Integer> arrID = new ArrayList();
+       /* Order order = this.getOrder(orderId);
         if (order == null) {
             return null;
         }
-        ArrayList<Integer> arrID = new ArrayList();
         SQLiteDatabase database = db.getReadableDatabase();
         database.beginTransaction();
         try {
@@ -1889,13 +1832,14 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
         } finally {
             database.endTransaction();
-            return arrID;
-        }
+
+        }*/
+        return arrID;
     }
 
     public ArrayList<Response> getAllOrderResponsesByOrderId(int orderId) {
         ArrayList<Response> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -1909,26 +1853,26 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
         return result;
     }
 
     public Response getResponsFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_RESPONSES_ID));
+       /* int id = c.getInt(c.getColumnIndex(KEY_RESPONSES_ID));
         int orderId = c.getInt(c.getColumnIndex(KEY_RESPONSES_ORDER_ID));
         int personId = c.getInt(c.getColumnIndex(KEY_RESPONSES_PERSON_ID));
         String text = c.getString(c.getColumnIndex(KEY_RESPONSES_TEXT));
         Double price = c.getDouble(c.getColumnIndex(KEY_RESPONSES_SUGGESTEDPRICE));
-        Long created = c.getLong(c.getColumnIndex(KEY_RESPONSES_CREATEDDATE));
+        Long created = c.getLong(c.getColumnIndex(KEY_RESPONSES_CREATEDDATE));*/
 
-        Response r = new Response(id, orderId, personId, text, price, created);
+        Response r = new Response();//id, orderId, personId, text, price, created);
         return r;
     }
 
 
     //UPDATE Responses
     public void updateRespons(Response r) {
-        SQLiteDatabase sqlDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqlDatabase = db.getWritableDatabase();
         sqlDatabase.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_RESPONSES + " SET " +
@@ -1945,13 +1889,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         } finally {
             sqlDatabase.endTransaction();
             sqlDatabase.close();
-        }
+        }*/
     }
 
 
     //DELETE Responses
     public void deleteRespons(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
+     /*   SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
             int result = sqL.delete(TABLE_RESPONSES, KEY_RESPONSES_ID + " = " + id, null);
@@ -1963,7 +1907,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.setTransactionSuccessful();
         } finally {
             sqL.endTransaction();
-        }
+        }*/
     }
     //endregion
 
@@ -1971,7 +1915,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
     //region Answer
     //CREATE Answer
     public void addAnswer(Answer answer) {
-        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String sql = "INSERT INTO " + TABLE_ANSWERS + "(" + KEY_ANSWER_REVIEW_ID +
                 ", " + KEY_ANSWER_WHOANSWERS_ID + ", " + KEY_ANSWER_WHOPOSTED_ID + ", "
@@ -1987,16 +1931,18 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
         if (c.moveToFirst()) {
             maxId = c.getInt(0);
         }
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
         answer.setId(maxId);
+       // onReviewAnswersCreate(answer);
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();*/
     }
 
     //READ Answer
     public Answer getAnswer(int id) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
-        sqLiteDb.beginTransaction();
         Answer answer = new Answer();
+       /* SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+        sqLiteDb.beginTransaction();
+
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
                             + TABLE_REVIEWS + " where " + " " + KEY_REVIEW_PART_ID + "=" + id,
@@ -2009,27 +1955,27 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-            return answer;
-        }
+
+        }*/  return answer;
     }
 
 
     private Answer getAnswerFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex(KEY_ANSWER_PART_ID));
+       /* int id = c.getInt(c.getColumnIndex(KEY_ANSWER_PART_ID));
         int reviewId = c.getInt(c.getColumnIndex(KEY_ANSWER_REVIEW_ID));
         int whoanswersId = c.getInt(c.getColumnIndex(KEY_ANSWER_WHOANSWERS_ID));
         int whoposted = c.getInt(c.getColumnIndex(KEY_ANSWER_WHOPOSTED_ID));
         String text = c.getString(c.getColumnIndex(KEY_ANSWER_TEXT));
-        Long created = c.getLong(c.getColumnIndex(KEY_ANSWER_CREATED_DATE));
+        Long created = c.getLong(c.getColumnIndex(KEY_ANSWER_CREATED_DATE));*/
 
-        Answer answer = new Answer(id, reviewId, whoanswersId, whoposted, text, created);
+        Answer answer = new Answer(); //id, reviewId, whoanswersId, whoposted, text, created);
         return answer;
     }
 
 
     public ArrayList<Answer> getAllReviewAnswersByReviewId(int reviewId) {
         ArrayList<Answer> result = new ArrayList<>();
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             Cursor c = sqLiteDb.rawQuery("select * from "
@@ -2044,15 +1990,15 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             c.close();
         } finally {
             sqLiteDb.endTransaction();
-            return result;
-        }
 
+        }*/
+        return result;
     }
 
 
     //UPDATE Answer
     public void updateAnswer(Answer answer) {
-        SQLiteDatabase sqLiteDb = db.getWritableDatabase();
+       /* SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "UPDATE " + TABLE_ANSWERS + " SET " +
@@ -2062,13 +2008,13 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
+        }*/
     }
 
     //DELETE Answer
 
     public void deleteAnswer(int id) {
-        SQLiteDatabase sqL = db.getWritableDatabase();
+      /*  SQLiteDatabase sqL = db.getWritableDatabase();
         sqL.beginTransaction();
         try {
             int result = sqL.delete(TABLE_ANSWERS, KEY_ANSWER_PART_ID + " = " + id, null);
@@ -2080,35 +2026,33 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.setTransactionSuccessful();
         } finally {
             sqL.endTransaction();
-        }
+        }*/
     }
     //endregion
 
     //region Answersnreviews
     //CREATE REVIEWNANSWERS
     //TODO: удалить этот не нужный метод
-  /*  public void onReviewAnswersCreate(Review review) {
-        if (review.getAnswers() == null || review.getId() == 0) {
+   public void onReviewAnswersCreate(Answer answer) {
+       /* if (answer == null) {
             return;
         }
         SQLiteDatabase sqLiteDb = db.getWritableDatabase();
         sqLiteDb.beginTransaction();
         try {
-            for (Answer answer : review.getAnswers()) {
                 String sql = "INSERT INTO " + TABLE_REVIEWNANSWERS + "(" +
                         KEY_REVIEWNANSWERS_REVIEW_ID + ", " + KEY_REVIEWNANSWERS_ANSWER_ID +
                         ") VALUES (" + answer.getReviewId() + ", " + answer.getId()+ ")";
                 sqLiteDb.execSQL(sql);
-            }
             sqLiteDb.setTransactionSuccessful();
         } finally {
             sqLiteDb.endTransaction();
-        }
-    }*/
+        }*/
+    }
 
     // READ REVIEWNANSWERS
     public void loadReviewAnswers(Review review) {
-        SQLiteDatabase sqLiteDb = db.getReadableDatabase();
+      /*  SQLiteDatabase sqLiteDb = db.getReadableDatabase();
         sqLiteDb.beginTransaction();
         try {
             String sql = "SELECT * FROM " +
@@ -2134,7 +2078,7 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             {
                 sqLiteDb.endTransaction();
             }
-        }
+        }*/
     }
 
 
@@ -2178,8 +2122,6 @@ select (select sum(assessment) from reviews where executor_id  = 2)/2
             sqL.endTransaction();
         }
     }
-
-
     //endregion
 
 

@@ -52,7 +52,7 @@ public class Messages_adapter_frg extends RecyclerView.Adapter<Messages_adapter_
         View view = inflater.inflate(R.layout.fragment_msg_adapter_item, parent, false);
         return new MyViewHolder(view);
     }
-
+     Persons person1 = null;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -61,20 +61,20 @@ public class Messages_adapter_frg extends RecyclerView.Adapter<Messages_adapter_
 
         final int personId = personsId.get(position);
 
-        final Persons person1 = apiProvider.getPerson(personId);  // provider.getPerson(personId);
+        try {
+            person1 = apiProvider.getPerson(personId);   // provider.getPerson(personId);
 
-
-        if (person1 == null) {
-            holder.photo.setImageResource(R.drawable.executors_default_image);
-            holder.name.setText("Пользователь не найден, либо удален");
-        } else {
             holder.name.setText(person1.getName() + " " + person1.getLastname());
 
-            if (person1.getPhoto() == null) {
+            if (person1.getPhoto() != null) {
                 holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(person1.getPhoto()));
+            } else {
+                holder.photo.setImageResource(R.drawable.executors_default_image);
+                holder.name.setText("Пользователь не найден либо удален");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,11 +131,14 @@ public class Messages_adapter_frg extends RecyclerView.Adapter<Messages_adapter_
         });
 
         holder.photo.setOnClickListener(new View.OnClickListener() {
-            int executorId = provider.getExecutorIdByPersonId(personId);
-
             @Override
             public void onClick(View v) {
-
+                int executorId = 0;
+                try {
+                    executorId = apiProvider.getExecutorIdByPersonId(personId);   //provider.getExecutorIdByPersonId(personId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (personId == curPerson.getId()) {
                     Intent intent = new Intent(context, MyProfileActivity.class);
                     context.startActivity(intent);

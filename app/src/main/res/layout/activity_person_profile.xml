@@ -105,7 +105,7 @@
                             android:layout_below="@id/person_profile_ic_rating"
                             android:layout_marginTop="5sp"
                             android:layout_toLeftOf="@id/person_profile_ic_rating"
-                            android:hint="30"
+                            android:hint="3"
                             android:textSize="14sp"
                             android:textStyle="bold"></TextView>
 
@@ -116,7 +116,7 @@
                             android:layout_below="@id/person_profile_ic_rating"
                             android:layout_marginTop="5sp"
                             android:layout_toRightOf="@id/person_profile_txtrating"
-                            android:hint="/100"
+                            android:hint="/10"
                             android:textSize="14sp"
                             android:textStyle="bold"></TextView>
 
@@ -175,8 +175,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/person_profile_txtreviews"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="5sp"
+                            android:layout_marginTop="4dp"
                             android:layout_marginBottom="10sp"
                             android:text="Отзывов"
                             android:textColor="@color/colorMutedGray2"

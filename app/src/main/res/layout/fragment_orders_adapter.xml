@@ -5,114 +5,145 @@
     android:id="@+id/orders_adapter_fragment_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="4sp"
     android:orientation="vertical"
-    android:padding="5sp">
+>
 
-
-    <TextView
-        android:id="@+id/orders_adapter_fragment_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_desc"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_toLeftOf="@id/orders_adapter_fragment_txtdeadline"
-        android:hint="раздел по ремонту и бытовым проблемам"
-        android:textColor="@color/colorMutedGray2" />
-
-    <TextView
-        android:id="@+id/orders_adapter_fragment_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10sp"
-        android:layout_toLeftOf="@id/orders_adapter_fragment_created"
-        android:hint="title"
-        android:textColor="@color/colorMutedGray2"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/orders_adapter_fragment_desc"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_price"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10sp"
-        android:layout_marginEnd="10dp"
-        android:hint="description"
-        android:textColor="@color/colorMutedGray2"></TextView>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/orders_adapter_fragment_created"
-        android:layout_width="90sp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10sp"
-        android:layout_toLeftOf="@id/orders_adapter_fragment_btn_popup"
-        android:hint="08/06/2020"
-        android:textAlignment="center"
-        android:textColor="@color/colorMutedGray2"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            android:padding="5sp">
 
-        />
+            <TextView
+                android:id="@+id/orders_adapter_fragment_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@id/orders_adapter_fragment_txtdeadline"
+                android:text="Прочее"
+                android:textColor="@color/colorMutedGray2" />
 
-    <TextView
-        android:id="@+id/orders_adapter_fragment_txtdeadline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_desc"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@id/orders_adapter_fragment_deadline"
-        android:text="До: "
-        android:textColor="@color/colorMutedText" />
+            <View
+                android:id="@+id/orders_adapter_fragment_view"
+                android:layout_width="match_parent"
+                android:layout_height="0.5sp"
+                android:layout_below="@id/orders_adapter_fragment_section"
+                android:layout_marginTop="10sp"
+                android:background="@color/colorMutedGray2"
+                android:padding="10sp">
+            </View>
+            <TextView
+                android:id="@+id/orders_adapter_fragment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10sp"
+                android:layout_toStartOf="@id/orders_adapter_fragment_created"
+                android:text="title"
+                android:textColor="@color/colorMutedGray2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/orders_adapter_fragment_deadline"
-        android:layout_width="90sp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_desc"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:hint="08/06/202008/06/2020"
-        android:textColor="@color/colorMutedGray2" />
+            <TextView
+                android:id="@+id/orders_adapter_fragment_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_price"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10sp"
+                android:layout_marginEnd="10dp"
+                android:text="description"
+                android:textColor="@color/colorMutedGray2">
 
-    <TextView
-        android:id="@+id/orders_adapter_fragment_txtprice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_title"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/colorMutedText"
-        android:text="Бюджет: "/>
+            </TextView>
 
-    <TextView
-        android:id="@+id/orders_adapter_fragment_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/orders_adapter_fragment_title"
-     android:layout_toRightOf="@id/orders_adapter_fragment_txtprice"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:hint="22203"
-        android:textColor="@color/colorMutedGray2" />
+            <TextView
+                android:id="@+id/orders_adapter_fragment_created"
+                android:layout_width="90sp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10sp"
+                android:layout_toStartOf="@id/orders_adapter_fragment_btn_popup"
+                android:text="08/06/2020"
+                android:textAlignment="center"
+                android:textColor="@color/colorMutedGray2" />
 
-    <Button
-        android:id="@+id/orders_adapter_fragment_btn_popup"
-        android:layout_width="20sp"
-        android:layout_height="20sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="4sp"
-        android:background="@drawable/menu_icon"
-        android:clickable="true"></Button>
+            <TextView
+                android:id="@+id/orders_adapter_fragment_txtdeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toStartOf="@id/orders_adapter_fragment_deadline"
+                android:text="До: "
+                android:textColor="@color/colorMutedText" />
+
+            <TextView
+                android:id="@+id/orders_adapter_fragment_deadline"
+                android:layout_width="90sp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_desc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:text="08/06/2020"
+                android:textColor="@color/colorMutedGray2" />
+
+            <TextView
+                android:id="@+id/orders_adapter_fragment_txtprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_title"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Бюджет: "
+                android:textColor="@color/colorMutedText" />
+
+            <TextView
+                android:id="@+id/orders_adapter_fragment_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_title"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/orders_adapter_fragment_txtprice"
+                android:text="22203"
+                android:textColor="@color/colorMutedGray2" />
+
+            <TextView
+                android:id="@+id/orders_adapter_fragment_price2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orders_adapter_fragment_title"
+                android:layout_marginStart="1sp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/orders_adapter_fragment_price"
+                android:text="тг"
+                android:textColor="@color/colorMutedText" />
+
+            <Button
+                android:id="@+id/orders_adapter_fragment_btn_popup"
+                android:layout_width="25sp"
+                android:layout_height="25sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="4sp"
+                android:background="@drawable/ic_actions_more_vert"
+                android:clickable="true">
+
+            </Button>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

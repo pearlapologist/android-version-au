@@ -19,16 +19,18 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 import models.Notify;
 
-public class Fragment_notification extends Fragment  {
-     private static final String ARG_PARAM1 = "param1";
+public class Fragment_notification extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
 
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
 
     RecyclerView recyclerView;
@@ -39,9 +41,11 @@ public class Fragment_notification extends Fragment  {
 
     public Fragment_notification() {
     }
+
     public Fragment_notification(Context context) {
         this.context = context;
         this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();
     }
 
     public static Fragment_notification newInstance(String param1, String param2) {
@@ -71,7 +75,7 @@ public class Fragment_notification extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.frg_notification_rv);
-        img_no_notify =  view.findViewById(R.id.frg_notification_img_nonotify);
+        img_no_notify = view.findViewById(R.id.frg_notification_img_nonotify);
         provider = new MyDataProvider(context);
 
         insertArray();
@@ -79,17 +83,21 @@ public class Fragment_notification extends Fragment  {
         notify_adapter = new Fragment_notification_adapter(context, notifies);
         recyclerView.setAdapter(notify_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        notify_adapter.notifyDataSetChanged( );
+        notify_adapter.notifyDataSetChanged();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
 
     void insertArray() {
-        notifies = provider.getAllMyNotifies();
+        try {
+            notifies = apiProvider.getAllPersonNotifies(provider.getLoggedInPerson().getId()); // provider.getAllMyNotifies();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (notifies == null || notifies.size() <= 0) {
-          img_no_notify.setVisibility(View.VISIBLE);
-        }else{
+            img_no_notify.setVisibility(View.VISIBLE);
+        } else {
             img_no_notify.setVisibility(View.GONE);
         }
     }

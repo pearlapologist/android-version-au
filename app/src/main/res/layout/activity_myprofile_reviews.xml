@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".MyProfile_reviews_activity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="40sp"
         android:layout_alignParentTop="true"
+        android:background="@color/colorBackground"
         android:scrollbarSize="3sp"
         android:visibility="visible"
         app:itemHorizontalTranslationEnabled="true"
@@ -23,6 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_reviews_navbar"
-        android:layout_marginTop="10sp"></FrameLayout>
+ ></FrameLayout>
 
 </RelativeLayout>

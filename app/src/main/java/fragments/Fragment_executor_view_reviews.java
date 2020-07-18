@@ -92,13 +92,40 @@ public class Fragment_executor_view_reviews extends Fragment {
         rating = view.findViewById(R.id.fragment_executor_view_reviews_rating);
         btn_add = view.findViewById(R.id.fragment_executor_view_reviews_fb);
 
-        insertArray();
+        curPerson = provider.getLoggedInPerson();
+
+        Executor executor = apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
+
+        Persons p = null;
+        try {
+            p = apiProvider.getPerson(executor.getPersonId());  // provider.getPerson(executor.getPersonId());
+            reviews =apiProvider.getAllPersonReviewsById(p.getId()); // provider.getAllPersonReviewByPersonId(executorId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        boolean b = false;
+        ArrayList<Integer> arrId = new ArrayList<>();
+        try {
+            arrId =apiProvider.getLeavedReviewPersonsIdList(executorId); //provider.getLeavedReviewPersonsIdList(executorId);
+
+            for (int i : arrId) {
+                if (curPerson.getId() == i) {
+                    b = true;
+                }
+            }
+            if (b == true || curPerson.getId() == executorId) {
+                btn_add.hide();
+            }
+
+        } catch (Exception e) {
+            Log.e("profile reviews frag", e.getMessage());
+        }
+
         executor_reviews_adapter_frg = new Executor_reviews_adapter_frg(context, reviews);
         reviewsRv.setAdapter(executor_reviews_adapter_frg);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
-        Executor executor = apiProvider.getExecutor(executorId); // provider.getExecutor(executorId);
-        Persons p =apiProvider.getPerson(executor.getPersonId()); // provider.getPerson(executor.getPersonId());
         int rat = -1;
         if (p != null) {
             rat = p.getRating();
@@ -109,7 +136,13 @@ public class Fragment_executor_view_reviews extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PersonProfile_AddReviewActivity.class);
-                intent.putExtra("addReview", executorId);
+                int id = executorId;
+                try {
+                     id = apiProvider.getPersonIdByExecutorId(executorId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                intent.putExtra("addReview", id);
                 startActivityForResult(intent, 1);
             }
         });
@@ -117,26 +150,6 @@ public class Fragment_executor_view_reviews extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    void insertArray() {
-        curPerson = provider.getLoggedInPerson();
-        reviews = provider.getAllPersonReviewByPersonId(executorId);
-
-        boolean b = false;
-        ArrayList<Integer> arrId = new ArrayList<>();
-        try {
-            arrId = provider.getLeavedReviewPersonsIdList(executorId);
-        } catch (Exception e) {
-            Log.e("profile reviews frag", e.getMessage());
-        }
-        for (int i : arrId) {
-            if (curPerson.getId() == i) {
-                b = true;
-            }
-        }
-        if (b == true || curPerson.getId() == executorId) {
-            btn_add.hide();
-        }
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == 1){

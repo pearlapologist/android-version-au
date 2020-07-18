@@ -50,5 +50,8 @@
 
     <string name="btn_start">Начать</string>
     <string name="search_txt">Поиск...</string>
+    <string name="btn_add_coverphoto">Добавить фото ообложки</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_add_service">Добавить услугу</string>
 
 </resources>

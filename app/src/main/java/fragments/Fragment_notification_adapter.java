@@ -89,13 +89,25 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
         int drawb = R.drawable.ic_notification;
         if (section == 1) {
             drawb = R.drawable.response;
-            Order order = provider.getOrder(src);
+
+            Order order = null;
+            try {
+                order =apiProvider.getOrder(src); //provider.getOrder(src);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (order != null) {
                 holder.subText.setText(order.getTitle());
             }
         } else if (section == 2) {
             drawb = R.drawable.review;
-            Persons p =apiProvider.getPerson(src); // provider.getPerson(src);
+
+            Persons p = null; // provider.getPerson(src);
+            try {
+                p = apiProvider.getPerson(src);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             String name = "";
             if(p != null){
                 name = p.getName() + " " + p.getLastname();
@@ -105,7 +117,13 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
             holder.subText.setText (name +" оставил(а) вам новый отзыв");
         } else if (section == 3) {
             drawb = R.drawable.msg;
-            Persons p =apiProvider.getPerson(src); // Persons p = provider.getPerson(src);
+
+            Persons p = null;
+            try {
+                p = apiProvider.getPerson(src);  // Persons p = provider.getPerson(src);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             holder.subText.setText(p.getName() + " " + p.getLastname());
         }
         holder.icon.setImageDrawable(ContextCompat.getDrawable(context, drawb));

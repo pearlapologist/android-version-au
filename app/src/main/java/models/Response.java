@@ -8,6 +8,7 @@ public class Response {
     private Double price;
     private Long createdDate;
 
+    public Response(){}
     public Response(int id, int orderId, int personId, String text, Double price, Long createdDate) {
         this.id = id;
         this.orderId = orderId;

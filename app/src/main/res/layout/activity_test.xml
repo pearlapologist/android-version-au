@@ -7,111 +7,23 @@
     tools:context=".TestActivity">
 
     <Button
-        android:id="@+id/test_list_of_persons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="29dp"
-        android:text="list of persons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/test_list_of_executors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="28dp"
-        android:text="list of executors"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_list_of_persons" />
-
-    <Button
-        android:id="@+id/test_list_of_orders"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="26dp"
-        android:text="orders"
-        app:layout_constraintEnd_toEndOf="@+id/test_list_of_persons"
-        app:layout_constraintStart_toStartOf="@+id/test_list_of_executors"
-        app:layout_constraintTop_toBottomOf="@+id/test_list_of_executors" />
-
-    <Button
-        android:id="@+id/test_list_of_notify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="61dp"
-        android:text="notifications"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_list_of_orders" />
-
-    <Button
-        android:id="@+id/test_list_of_bkmrks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="63dp"
-        android:layout_marginTop="63dp"
-        android:text="Bookmarks"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_list_of_notify" />
-
-    <Button
-        android:id="@+id/test_list_of_services"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="49dp"
-        android:layout_marginEnd="82dp"
-        android:text="Services"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_list_of_bkmrks" />
-
-    <Button
         android:id="@+id/test_json"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="37dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="@+id/test_list_of_executors"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="232dp"
+        android:text="test_json"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/test_list_of_persons" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/test_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginBottom="198dp"
-        android:text="image"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        android:layout_marginTop="176dp"
+        android:layout_marginEnd="224dp"
+        android:text="test_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/test_choose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="54dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <Button
-        android:id="@+id/testbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="67dp"
-        android:layout_marginBottom="58dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

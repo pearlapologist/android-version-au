@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5sp"
+    android:background="@color/colorBackground"
     tools:context="fragments.Fragment_executor_view_reviews">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="5sp"
         android:layout_height="match_parent">
 
         <TextView

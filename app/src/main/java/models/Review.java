@@ -17,7 +17,6 @@ public class Review {
         this.customerId = customerId;
         this.review_text = review_text;
         this.assessment = assessment;
-        this.createdDate = MyUtils.getCurentDateInLong();
         answers = new ArrayList<>();
     }
 

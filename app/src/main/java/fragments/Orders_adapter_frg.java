@@ -1,9 +1,12 @@
 package fragments;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,7 +53,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     Persons curPerson;
     private Menu popup_menu;
-
 
     public Orders_adapter_frg(Activity activity, Context context, ArrayList<Order> orders) {
         this.context = context;
@@ -103,8 +105,13 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
         holder.deadline.setText("" + deadlinetext);
         final int id = order.getId();
-        Section_of_services section =apiProvider.getSection(order.getSection()); // provider.getSection(order.getSection());
-        holder.section.setText(section.getTitle());
+        Section_of_services section = null;
+        try {
+            section = apiProvider.getSection(order.getSection());    // provider.getSection(order.getSection());
+            holder.section.setText(section.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +122,14 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 }
 
                 boolean exists = false;
-                Bookmarks b = provider.getBookmarkByOrderId(order.getId());
+
+                Bookmarks b = null; // provider.getBookmarkByOrderId(order.getId());
+                try {
+                    b = apiProvider.getPersonBookmarkByOrderId(curPerson.getId(), order.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 if (b != null) {
                     exists = true;
                 }
@@ -126,7 +140,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.order_popup_bookm) {
-                            provider.putOrderInMyBookmarks(order.getId());
+                            PutOrderInBookmTask putOrder = new PutOrderInBookmTask();
+                            putOrder.execute(curPerson.getId(), order.getId());
+                            // provider.putOrderInMyBookmarks(order.getId());
                             Toast.makeText(context, "Заказ добавлен в ваши закладки", Toast.LENGTH_SHORT).show();
                             return true;
                         } else if (item.getItemId() == R.id.order_popup_edit) {
@@ -154,8 +170,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                     popup_menu.findItem(R.id.order_popup_delete).setVisible(isCreator);
                     popup_menu.findItem(R.id.order_popup_complain).setVisible(!isCreator);
                     popup_menu.findItem(R.id.order_popup_bookm_delete).setVisible(exists);
-                    if ((exists == true) || isCreator){
-                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);}
+                    if ((exists == true) || isCreator) {
+                        popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
+                    }
                 }
 
                 popup.show();
@@ -186,7 +203,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                provider.deleteOrderFromMyBookmarks(orderId);
+                DeleteOrderFromBookmTask task = new DeleteOrderFromBookmTask();
+                task.execute(curPerson.getId(), orderId);
+               // provider.deleteOrderFromMyBookmarks(orderId);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Заказ удален из ваших закладок", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -205,6 +224,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     int sectionId = -1;
 
+
+    Order order = null;
+
     private void showDialogUpdate(final int orderId) {
         final Dialog dialog = new Dialog(activity);
 
@@ -219,14 +241,25 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         Spinner spinner = dialog.findViewById(R.id.dialog_orders_update_section);
         Button btnCancel = dialog.findViewById(R.id.dialog_orders_update_btnCancel);
 
-        ArrayList<String> sectionList =apiProvider.getSectionListInString(); // provider.getSectionListInString();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-        spinner.setAdapter(adapter);
+
+        ArrayList<String> sectionList = null; // provider.getSectionListInString();
+        try {
+            sectionList = apiProvider.getSectionListInString();
+            ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
+            spinner.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String str = parent.getItemAtPosition(position).toString();
-                sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
+                try {
+                    sectionId = apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -238,7 +271,12 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         dialog.getWindow().setLayout(720, 1300);
         dialog.setCancelable(true);
         dialog.show();
-        final Order order = provider.getOrder(orderId);
+        // provider.getOrder(orderId);
+        try {
+            order = apiProvider.getOrder(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         title.setText(order.getTitle());
         price.setText(order.getPrice() + "");
         deadline.setText(MyUtils.convertLongToDataString(order.getDeadline()));
@@ -254,7 +292,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 order.setPrice(Double.valueOf(price.getText().toString()));
                 order.setDeadline(l);
 
-                provider.updateOrder(order);
+                UpdateOrderTask task = new UpdateOrderTask();
+                task.execute(order);
+                // provider.updateOrder(order);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -270,6 +310,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
     }
 
+
     private void showDialogDelete(final int orderId) {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
@@ -283,10 +324,18 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                orders.remove(provider.getOrder(orderId));
-                provider.deleteOrder(orderId);
+
+                try {
+                    orders.remove(apiProvider.getOrder(orderId)); //provider.getOrder(orderId));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                DeleteOrderTask task = new DeleteOrderTask();
+                task.execute(orderId);
+                //provider.deleteOrder(orderId);
                 notifyDataSetChanged();
                 dialog.dismiss();
+                Toast.makeText(context, "Заказ успешно удален", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -306,4 +355,103 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         }
         return orders.size();
     }
+
+
+    private class UpdateOrderTask extends AsyncTask<Order, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Order... params) {
+
+            try {
+                apiProvider.updateOrder(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private class DeleteOrderTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+
+            try {
+                apiProvider.deleteOrder(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private class PutOrderInBookmTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.putOrderInPersonBookmarks(params[0], params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private class DeleteOrderFromBookmTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.deleteOrderFromPersonBookmarks(params[0], params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+        }
+    }
+
 }

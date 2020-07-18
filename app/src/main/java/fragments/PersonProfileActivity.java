@@ -22,7 +22,7 @@ import models.MyUtils;
 import models.Persons;
 
 public class PersonProfileActivity extends AppCompatActivity {
-    TextView personName;
+    TextView personName, txtrating, txtreviews, txtreviewstermonator;
     ImageView photo;
     MyDataProvider provider;
     ApiProvider apiProvider;
@@ -42,6 +42,9 @@ public class PersonProfileActivity extends AppCompatActivity {
         provider = new MyDataProvider(this);
         apiProvider = new ApiProvider();
         personName = findViewById(R.id.person_profile_tvName);
+        txtrating = findViewById(R.id.person_profile_txtrating);
+        txtreviews = findViewById(R.id.person_profile_txtreviews);
+        txtreviewstermonator = findViewById(R.id.person_profile_txtreviews3);
         photo = findViewById(R.id.person_profile_image);
 
         if (getIntent().hasExtra("orderview_PersonId")) {
@@ -104,19 +107,55 @@ public class PersonProfileActivity extends AppCompatActivity {
     };
 
     public void getAndSetExecutorIntentData() {
-        if(curPersonId != -1){
-            Persons person = apiProvider.getPerson(curPersonId); //provider.getPerson(curPersonId);
+        if (curPersonId != -1) {
+            Persons person = null;
+            try {
+                person = apiProvider.getPerson(curPersonId);   //provider.getPerson(curPersonId);
 
-            if (person.getPhoto() == null) {
-                photo.setImageResource(R.drawable.executors_default_image);
-            } else {
-                photo.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
+                if (person.getPhoto() == null) {
+                    photo.setImageResource(R.drawable.executors_default_image);
+                } else {
+                    photo.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
+                }
+
+                personName.setText(person.getName() + " " + person.getLastname());
+                txtrating.setText(person.getRating() + " ");
+                int intreviews = person.getReviewscount();
+                txtreviews.setText(intreviews + "");
+
+                txtreviewstermonator.setText(getTermination(intreviews));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            personName.setText(person.getName() + " " + person.getLastname());
 
         } else {
             Toast.makeText(PersonProfileActivity.this, "error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    String getTermination(int num) {
+        String sreviews = num + "";
+        String sTerm = "term";
+
+        if (sreviews.length() > 2) {
+            sreviews = sreviews.substring(sreviews.length() - 2);
+            int n = Integer.parseInt(sreviews);
+            if (n > 10 & n < 15) {
+                sTerm = "ев";
+            }
+        } else {
+            sreviews = sreviews.substring(sreviews.length() - 1);
+            int n = Integer.parseInt(sreviews);
+            if (n == 0 || n > 5) {
+                sTerm = "ов";
+            }
+            if (n == 1) {
+                sTerm = "";
+            }
+            if (n > 1) {
+                sTerm = "а";
+            }
+        }
+        return "oтзыв" + sTerm;
     }
 }

@@ -2,16 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context="fragments.Fragment_executor_view_reviews">
-
     <RelativeLayout
         android:id="@+id/fragment_executor_view_profile_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5sp"
-        android:padding="5sp">
-
-
+        android:padding="5sp"
+   >
         <TextView
             android:id="@+id/fragment_executor_view_profile_tvspec"
             android:layout_width="wrap_content"
@@ -24,16 +23,6 @@
             android:text="Специализация"
             android:textColor="@color/colorMutedText"
             android:textSize="14sp" />
-
-        <View
-            android:id="@+id/fragment_executor_view_profile_view2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5sp"
-            android:layout_below="@id/fragment_executor_view_profile_spec"
-            android:layout_marginTop="5sp"
-            android:background="@color/gray"
-            android:padding="10sp"></View>
-
         <TextView
             android:id="@+id/fragment_executor_view_profile_spec"
             android:layout_width="match_parent"
@@ -45,8 +34,6 @@
             android:padding="5sp"
             android:text="TextView"
             android:textSize="14sp" />
-
-
         <View
             android:id="@+id/fragment_executor_view_profile_view"
             android:layout_width="match_parent"
@@ -55,10 +42,7 @@
             android:layout_marginTop="5sp"
             android:background="@color/gray"
             android:padding="10sp">
-
         </View>
-
-
         <TextView
             android:id="@+id/fragment_executor_view_profile_tvdesc"
             android:layout_width="wrap_content"
@@ -159,6 +143,12 @@
             android:layout_marginRight="5sp"
             android:padding="5sp"
             android:text="Связаться"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            android:background="@color/colorMutedGray2"
+            android:enabled="true"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            />
     </RelativeLayout>
 </FrameLayout>

@@ -90,8 +90,15 @@ public class Fragment_person_profile_reviews extends Fragment {
         reviewsRv.setAdapter(fragment_person_reviews_adapter);
         reviewsRv.setLayoutManager(new LinearLayoutManager(context));
 
-       Persons person =apiProvider.getPerson(executorId); // provider.getPerson(executorId);
-        rating.setText(person.getRating() +"");
+
+        Persons person = null;
+        try {
+            person = apiProvider.getPerson(executorId);// provider.getPerson(executorId);
+
+            rating.setText(person.getRating() +"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,12 +115,16 @@ public class Fragment_person_profile_reviews extends Fragment {
 
     void insertArray() {
         curPerson = provider.getLoggedInPerson();
-        reviews = provider.getAllPersonReviewByPersonId(executorId);
+        try {
+            reviews = apiProvider.getAllPersonReviewsById(executorId);  //provider.getAllPersonReviewByPersonId(executorId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         boolean b = false;
         ArrayList<Integer> arrId = new ArrayList<>();
         try {
-            arrId = provider.getLeavedReviewPersonsIdList(executorId);
+            arrId = apiProvider.getLeavedReviewPersonsIdList(executorId); //provider.getLeavedReviewPersonsIdList(executorId);
         } catch (Exception e) {
             Log.e("profile reviews frag", e.getMessage());
         }

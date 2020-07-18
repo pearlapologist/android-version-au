@@ -96,12 +96,18 @@ public class Fragment_executor_view_profile extends Fragment {
 
         spec.setText(special);
 
-        Persons p = apiProvider.getPerson(curExecutor.getPersonId()); //provider.getPerson(executor.getPersonId());
-        String numb = "телефон";
-        if (p != null) {
-            numb = p.getNumber();
+        Persons p = null;
+        try {
+            p = apiProvider.getPerson(curExecutor.getPersonId());   //provider.getPerson(executor.getPersonId());
+
+            String numb = "телефон";
+            if (p != null) {
+                numb = p.getNumber();
+            }
+            contacts.setText(numb);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        contacts.setText(numb);
 
         String description = curExecutor.getDescriptn();
         if (description == null) {

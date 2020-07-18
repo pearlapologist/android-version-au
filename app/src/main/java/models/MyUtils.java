@@ -48,7 +48,8 @@ public class MyUtils {
     }
 
     public static Long convertDataToLong(int day, int month, int year) {
-        String res = day + "/" + month + "/" + year;
+//        String res = day + "/" + month + "/" + year;
+        String res = year + "-" + month + "-" + day;
         long startDate = 0;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -72,9 +73,7 @@ public class MyUtils {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse(res);
-
             startDate = date.getTime();
-
         } catch (ParseException e) {
             e.printStackTrace();
         }

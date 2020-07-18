@@ -25,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = "CREATE TABLE " + MyDataProvider.TABLE_SECTIONS +
+      /*  String sql = "CREATE TABLE " + MyDataProvider.TABLE_SECTIONS +
                 "(" + MyDataProvider.KEY_SECTION_ID + " integer primary key autoincrement, "
                 + MyDataProvider.KEY_SECTION_TITLE + " text)";
         sqLiteDatabase.execSQL(sql);
@@ -204,13 +204,13 @@ public class DbHelper extends SQLiteOpenHelper {
                 MyDataProvider.KEY_RESPONSES_CREATEDDATE + " INTEGER)";
         sqLiteDatabase.execSQL(sql);
 
-
+*/
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + MyDataProvider.TABLE_PERSONS);
-        onCreate(db);
+       /* db.execSQL("DROP TABLE IF EXISTS " + MyDataProvider.TABLE_PERSONS);
+        onCreate(db);*/
     }
 
 }

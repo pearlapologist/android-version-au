@@ -2,21 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
     android:id="@+id/frg_bkmk_order_adapter_layout"
-    android:padding="5sp">
+   >
 
 <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
-    android:background="@color/colorWhite"
     android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:layout_marginTop="4sp"
-        android:orientation="vertical"
-        android:padding="5sp">
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
 
 
         <TextView
@@ -39,12 +36,13 @@
             android:layout_alignParentLeft="true"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="5sp"
             android:layout_toLeftOf="@id/frg_bkmk_order_adapter_created"
-            android:layout_marginTop="10dp"
             android:hint="title"
             android:textColor="@color/colorMutedGray2"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/frg_bkmk_order_adapter_desc"
@@ -67,18 +65,17 @@
             android:layout_toLeftOf="@id/frg_bkmk_order_adapter_btn_popup"
             android:hint="08/06/2020"
             android:textAlignment="center"
-            android:textColor="@color/colorMutedGray2"
+            android:textColor="@color/colorMutedGray2" />
 
-            />
         <TextView
             android:id="@+id/frg_bkmk_order_adapter_txtdeadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/frg_bkmk_order_adapter_desc"
             android:layout_marginStart="10dp"
-            android:text="До: "
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/frg_bkmk_order_adapter_deadline"
+            android:text="До: "
             android:textColor="@color/colorMutedText" />
 
         <TextView
@@ -99,17 +96,17 @@
             android:layout_alignParentLeft="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorMutedText"
-            android:text="Бюджет: "/>
+            android:text="Бюджет: "
+            android:textColor="@color/colorMutedText" />
 
         <TextView
             android:id="@+id/frg_bkmk_order_adapter_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/frg_bkmk_order_adapter_title"
-        android:layout_toRightOf="@id/frg_bkmk_order_adapter_txtprice"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_toRightOf="@id/frg_bkmk_order_adapter_txtprice"
             android:hint="22203"
             android:textColor="@color/colorMutedGray2" />
 
@@ -121,7 +118,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="4sp"
-            android:background="@drawable/menu_icon"
+            android:background="@drawable/ic_actions_more_vert"
             android:clickable="true"></Button>
 
 

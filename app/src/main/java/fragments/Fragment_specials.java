@@ -105,7 +105,12 @@ public class Fragment_specials extends Fragment implements AdapterView.OnItemSel
      /*   String[] choose = getResources().getStringArray(R.array.sections);
         String division = choose[position];*/
         String str = parent.getItemAtPosition(position).toString();
-        int sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(division);
+        int sectionId = 0; // provider.getSectionIdByTitle(division);
+        try {
+            sectionId = apiProvider.getSectionIdByTitle(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (executors != null) {
             executors.clear();
         }

@@ -7,21 +7,46 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_marginTop="20sp"
+        <RelativeLayout
+            android:id="@+id/fargment_msg_rlayout"
             android:layout_width="match_parent"
+            android:layout_height="40sp"
             android:layout_alignParentTop="true"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginLeft="10sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginRight="10sp"
+            android:background="@drawable/corners"
+            android:elevation="1sp">
+
+            <TextView
+                android:id="@+id/orders_listf_search_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15sp"
+                android:text="@string/search_txt" />
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15sp"
+                android:src="@drawable/ic_search_black_24dp">
+
+            </ImageView>
+
+
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fargment_msg_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/textView2"
+            android:layout_below="@id/fargment_msg_rlayout"
             android:layout_marginTop="20sp">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -31,8 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/no_messages"
-            android:visibility="gone"
-           ></ImageView>
+            android:visibility="gone"></ImageView>
 
     </RelativeLayout>
 

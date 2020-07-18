@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projectwnavigation.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -48,6 +51,8 @@ public class Orders_view_activity extends AppCompatActivity {
     boolean isCreator = false;
     private Menu options_menu;
 
+    ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +75,11 @@ public class Orders_view_activity extends AppCompatActivity {
         if (getIntent().hasExtra("orderIdFragment")) {
             final int gettedId = getIntent().getIntExtra("orderIdFragment", -1);
             if (gettedId != -1) {
-                cur = provider.getOrder(gettedId);
+                try {
+                    cur = apiProvider.getOrder(gettedId); // provider.getOrder(gettedId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -80,8 +89,14 @@ public class Orders_view_activity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        Section_of_services section =apiProvider.getSection(cur.getSection()); // provider.getSection(cur.getSection());
-        spinnerSection.setText(section.getTitle());
+        Section_of_services section = null; // provider.getSection(cur.getSection());
+        try {
+            section = apiProvider.getSection(cur.getSection());
+            spinnerSection.setText(section.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         title.setText(cur.getTitle());
         price.setText("" + cur.getPrice());
@@ -94,7 +109,7 @@ public class Orders_view_activity extends AppCompatActivity {
         boolean b = false;
         ArrayList<Integer> arrId = new ArrayList<>();
         try {
-            arrId = provider.getRespondedPersonsIdListByOrderId(cur.getId());
+            arrId = apiProvider.getRespondedPersonsIdListByOrderIdId(cur.getId());  //provider.getRespondedPersonsIdListByOrderId(cur.getId());
         } catch (Exception e) {
             Log.e("Orders view activity", e.getMessage());
         }
@@ -108,42 +123,53 @@ public class Orders_view_activity extends AppCompatActivity {
         }
 
 
-        btn_response.setOnClickListener(new View.OnClickListener()
+        btn_response.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogCreate();
+            }
+        });
 
-    {
-        @Override
-        public void onClick (View v){
-        showDialogCreate();
+        btn_viewprofile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int personId = 0;
+                try {
+                    personId = apiProvider.getCustomerIdByOrderId(cur.getId());  //provider.getCustomerIdByOrderId(cur.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int executorId = 0;
+                try {
+                    executorId = apiProvider.getExecutorIdByPersonId(personId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // provider.getExecutorIdByPersonId(personId);
+
+                if (personId == curPerson.getId()) {
+                    Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                } else if (executorId != 0 & executorId != -1) {
+                    Intent intent = new Intent(Orders_view_activity.this, Executors_view_activity.class);
+                    intent.putExtra("executorIdFragment", executorId);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
+                    intent.putExtra("orderview_PersonId", personId);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
-    });
-
-        btn_viewprofile.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View v){
-        int personId = provider.getCustomerIdByOrderId(cur.getId());
-        int executorId = provider.getExecutorIdByPersonId(personId);
-
-        if (personId == curPerson.getId()) {
-            Intent intent = new Intent(Orders_view_activity.this, MyProfileActivity.class);
-            startActivity(intent);
-        } else if (executorId != 0 && executorId != -1) {
-            Intent intent = new Intent(Orders_view_activity.this, Executors_view_activity.class);
-            intent.putExtra("executorIdFragment", executorId);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(Orders_view_activity.this, PersonProfileActivity.class);
-            intent.putExtra("orderview_PersonId", personId);
-            startActivity(intent);
-        }
-    }
-    });
-
-}
 
     public void insertRespones() {
-        responses = provider.getAllOrderResponsesByOrderId(cur.getId());
+        try {
+            responses =apiProvider.getOrderResponsesById(cur.getId());  //provider.getAllOrderResponsesByOrderId(cur.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showDialogCreate() {
@@ -152,8 +178,8 @@ public class Orders_view_activity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_createresponse);
         dialog.setTitle("Добавить отклик");
 
-        final EditText edDesc = dialog.findViewById(R.id.dialog_createresponse_desc);
-        final EditText edPrice = dialog.findViewById(R.id.dialog_createresponse_price);
+        final TextInputLayout edDesc = dialog.findViewById(R.id.dialog_createresponse_desc);
+        final TextInputLayout edPrice = dialog.findViewById(R.id.dialog_createresponse_price);
         Button btnSave = dialog.findViewById(R.id.dialog_createresponse_btnsave);
         Button btnCancel = dialog.findViewById(R.id.dialog_createresponse_btnCancel);
 
@@ -163,19 +189,23 @@ public class Orders_view_activity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Long date = MyUtils.getCurentDateInLong();
                 try {
                     Response response = new Response(cur.getId(), curPerson.getId(),
-                            edDesc.getText().toString().trim(),
-                            Double.parseDouble(edPrice.getText().toString().trim()),
+                            edDesc.getEditText().getText().toString().trim(),
+                            Double.parseDouble(edPrice.getEditText().getText().toString().trim()),
                             date);
 
-                    provider.addRespons(response);
+                    AddResponseTask addResponseTask = new AddResponseTask();
+                    addResponseTask.execute(response);
+                   //provider.addRespons(response);
                     adapter.notifyItemInserted(response.getId());
                     responses.add(response);
                     Notify notify = new Notify(cur.getCustomerId(), "У вашего заказа новый отклик", MyUtils.getCurentDateInLong(), 1, cur.getId(), 0);
-                    provider.createNotify(notify);
+                    CreateNotifyTask task = new CreateNotifyTask();
+                    task.execute(notify);
+
+                    //provider.createNotify(notify);
                 } catch (Exception error) {
                     Log.e("error", error.getMessage());
                 }
@@ -238,4 +268,64 @@ public class Orders_view_activity extends AppCompatActivity {
 
     }
 
+
+    private class CreateNotifyTask extends AsyncTask<Notify, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(Orders_view_activity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Notify... params) {
+            try {
+                apiProvider.createNotify(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
+
+    private class AddResponseTask extends AsyncTask<Response, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(Orders_view_activity.this);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Response... params) {
+            try {
+                apiProvider.addResponse(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
+    }
 }

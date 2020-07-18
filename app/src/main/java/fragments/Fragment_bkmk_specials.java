@@ -27,9 +27,11 @@ import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
 
+import models.ApiProvider;
 import models.Bookmarks;
 import models.Executor;
 import models.MyDataProvider;
+import models.Persons;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,20 +43,22 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
-    
+
     MyDataProvider provider;
+    ApiProvider apiProvider;
     Context context;
-    
+
     RecyclerView specialsRv;
     Fragment_bkmk_specials_adapter specials_adapter;
     Spinner spinner;
     ImageView img_nospecialists;
     ArrayList<Bookmarks> executors;
-    
+
     public Boolean contextModeEnable = false;
-    
+
     ArrayList<Bookmarks> selectionList;
 
+    Persons curPerson;
 
     public Fragment_bkmk_specials(Context context) {
         this.context = context;
@@ -94,13 +98,14 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
         specialsRv = view.findViewById(R.id.frg_bkmk_specials_rv);
         spinner = view.findViewById(R.id.frg_bkmk_specials_spinner);
         img_nospecialists = view.findViewById(R.id.frg_bkmk_specials_no_specialists);
+        apiProvider = new ApiProvider();
         provider = new MyDataProvider(context);
         selectionList = new ArrayList<>();
-
+        curPerson = provider.getLoggedInPerson();
         insertArray();
 
         specials_adapter = new Fragment_bkmk_specials_adapter(this, context, executors);
-        specialsRv.setAdapter(specials_adapter);  
+        specialsRv.setAdapter(specials_adapter);
         specialsRv.setLayoutManager(new LinearLayoutManager(context));
 
         super.onViewCreated(view, savedInstanceState);
@@ -108,10 +113,15 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
 
 
     void insertArray() {
-   executors = provider.getExecutorsListFromMyBookmarks();
-        if(executors == null || executors.size() <= 0){
-           img_nospecialists.setVisibility(View.VISIBLE);
-        }else{
+        try {
+            executors =apiProvider.getExecutorsListFromPersonBookmarks(curPerson.getId()); // provider.getExecutorsListFromMyBookmarks();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (executors == null || executors.size() <= 0) {
+            img_nospecialists.setVisibility(View.VISIBLE);
+        } else {
             img_nospecialists.setVisibility(View.GONE);
         }
     }
@@ -132,6 +142,7 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
             getActivity().invalidateOptionsMenu();
         }
     }
+
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         selectMenu(menu, getActivity().getMenuInflater());
@@ -167,8 +178,8 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 specials_adapter.removeItem(selectionList);
-                  removeContext();
+                specials_adapter.removeItem(selectionList);
+                removeContext();
                 dialog.dismiss();
             }
         });

@@ -1,8 +1,10 @@
 package fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +43,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
 
     Persons curPerson;
 
+    ProgressDialog pd;
     public Fragment_bkmk_specials_adapter( Fragment_bkmk_specials fragment_bkmk_specials, Context context, ArrayList<Bookmarks> specials) {
         this.context = context;
         this.fragment_bkmk_specials = fragment_bkmk_specials;
@@ -55,7 +58,7 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         View view = inflater.inflate(R.layout.fragment_bkmk_specials_adapter_row, parent, false);
         return new Fragment_bkmk_specials_adapter.MyViewHolder(view,fragment_bkmk_specials);
     }
-
+     Persons p;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -67,14 +70,23 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
        final Executor executor = apiProvider.getExecutor(executorId); //  provider.getExecutor(executorId);
 
         holder.spcltn_txt.setText(executor.getSpecialztn());
-        final Persons p = apiProvider.getPerson(executor.getPersonId());  //provider.getPerson(executor.getPersonId());
-        if (p.getPhoto() == null) {
-            holder.photo.setImageResource(R.drawable.executors_default_image);
-        } else {
-            holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+
+
+        try {
+            p = apiProvider.getPerson(executor.getPersonId());   //provider.getPerson(executor.getPersonId());
+
+            if (p.getPhoto() == null) {
+                holder.photo.setImageResource(R.drawable.executors_default_image);
+            } else {
+                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            }
+            holder.name.setText(p.getName());
+            holder.rating.setText(p.getRating() + "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        holder.name.setText(p.getName());
-        holder.rating.setText(p.getRating() + "");
+
 
         if (fragment_bkmk_specials.contextModeEnable) {
             holder.chbox.setVisibility(View.VISIBLE);
@@ -141,8 +153,13 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
             @Override
             public void onClick(View v) {
              //   Executor r =apiProvider.getExecutor(executor.getId()); // provider.getExecutor(executorId);
+                //TODO: передавать айди закладки
+
                 specials.remove(executor.getId());
-                provider.deleteExecutorFromMyBookmarks(executor.getId());
+
+                DeleteExecutorTask task = new DeleteExecutorTask();
+                task.execute(curPerson.getId() , executor.getId());
+               // provider.deleteExecutorFromMyBookmarks(executor.getId());
                 notifyDataSetChanged();
                 Toast.makeText(context, "Специалист удален из ваших закладок", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -168,7 +185,9 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
     public void removeItem(ArrayList<Bookmarks> selectionList) {
         for (int i = 0; i < selectionList.size(); i++) {
             specials.remove(selectionList.get(i));
-            provider.deleteExecutorFromMyBookmarks(selectionList.get(i).getExecutorId());
+            DeleteExecutorTask task = new DeleteExecutorTask();
+            task.execute(curPerson.getId(), selectionList.get(i).getExecutorId());
+         //provider.deleteExecutorFromMyBookmarks(selectionList.get(i).getExecutorId());
             notifyDataSetChanged();
         }
         Toast.makeText(context, "Успешно удалено из закладок", Toast.LENGTH_SHORT).show();
@@ -204,6 +223,37 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         @Override
         public void onClick(View v) {
             fragment_bkmk_specials.setSelection(v, getAdapterPosition());
+        }
+    }
+
+    private class DeleteExecutorTask extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(context);
+            pd.setMessage("Пожалуйста, подождите");
+            pd.setCancelable(true);
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            try {
+                apiProvider.deleteExecutorFromPersonBookmarks(params[0], params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void s) {
+            super.onPostExecute(s);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
         }
     }
 }
