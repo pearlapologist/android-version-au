@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +21,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 
-import fragments.Executors_view_activity;
 import fragments.Fragment_bkmrk;
 import fragments.Fragment_messages;
 import fragments.Fragment_notification;
@@ -39,7 +37,6 @@ import fragments.Fragment_settings;
 import fragments.Fragment_specials;
 import fragments.MyProfileActivity;
 import fragments.Orders_view_activity;
-import fragments.PersonProfileActivity;
 import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
@@ -64,24 +61,23 @@ public class Navigation_activity extends AppCompatActivity {
     Persons currentPerson;
     private NotificationManager nManager;
 
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         provider = new MyDataProvider(this);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navListener);
         navigationView.setCheckedItem(R.id.nav_orders);
-        fragment_specials = new Fragment_specials(getApplicationContext());
-        fragment_orders = new Fragment_orders(getApplicationContext());
-        fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
-        fragment_notification = new Fragment_notification(getApplicationContext());
-        fragment_settings = new Fragment_settings(getApplicationContext());
+
+        fragment_specials = new Fragment_specials(this);
+        fragment_orders = new Fragment_orders(this);
+        fragment_bkmrk = new Fragment_bkmrk(this);
+        fragment_notification = new Fragment_notification(this);
+        fragment_settings = new Fragment_settings(this);
         fragment_messages = new Fragment_messages(this);
 
         nManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -124,8 +120,9 @@ public class Navigation_activity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
                 R.anim.enter_from_right, R.anim.exit_to_right);
-       // transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.replace(R.id.fram, fragment_orders).commit();
+
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
@@ -161,7 +158,7 @@ public class Navigation_activity extends AppCompatActivity {
             startActivity(intent);
         } else {
             try {
-                notifyCounter =apiProvider.getCountOfPersonNewNotifies(currentPerson.getId()); // provider.getCountOfAllMyNewNotifies();
+                notifyCounter = apiProvider.getCountOfPersonNewNotifies(currentPerson.getId()); // provider.getCountOfAllMyNewNotifies();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -238,38 +235,42 @@ public class Navigation_activity extends AppCompatActivity {
     private NavigationView.OnNavigationItemSelectedListener navListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            try {
-                Fragment fragment = fragment_orders;
-                int id = item.getItemId();
-                if (id == R.id.nav_speacl) {
-                    fragment = fragment_specials;
-                } else if (id == R.id.nav_orders) {
-                    fragment = fragment_orders;
-                } else if (id == R.id.nav_bkmr) {
-                    fragment = fragment_bkmrk;
-                } else if (id == R.id.nav_notificatn) {
-                    fragment = fragment_notification;
-                    if (notifyCounter != 0) {
-                        try {
-                            apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                      //provider.setMyNotifiesToChecked();
-                        notifyCounter =0;// provider.getCountOfAllMyNewNotifies();
+            int id = item.getItemId();
+
+        FragmentManager fmanager =  getSupportFragmentManager();
+             //Fragment fragment = fragment_orders;
+
+            if (id == R.id.nav_speacl) {
+                fmanager.beginTransaction().replace(R.id.fram, fragment_specials).commit();
+               // fragment = fragment_specials;
+            } else if (id == R.id.nav_orders) {
+                fmanager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
+               // fragment = fragment_orders;
+            } else if (id == R.id.nav_bkmr) {
+              //  fragment = fragment_bkmrk;
+                fmanager.beginTransaction().replace(R.id.fram, fragment_bkmrk).commit();
+            } else if (id == R.id.nav_notificatn) {
+               // fragment = fragment_notification;
+                if (notifyCounter != 0) {
+                    try {
+                        apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else if (id == R.id.nav_settings) {
-                    fragment = fragment_settings;
-                } else if (id == R.id.nav_messages) {
-                    fragment = fragment_messages;
+                    notifyCounter = 0;
+                    fmanager.beginTransaction().replace(R.id.fram, fragment_notification).commit();
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
-                //toolbar.setTitle(item.getTitle());
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else if (id == R.id.nav_settings) {
+               // fragment = fragment_settings;
+              fmanager.beginTransaction().replace(R.id.fram, fragment_settings).commit();
+            } else if (id == R.id.nav_messages) {
+                //fragment = fragment_messages;
+                fmanager.beginTransaction().replace(R.id.fram, fragment_messages).commit();
             }
+            setTitle(item.getTitle());
+         //   getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
     };
