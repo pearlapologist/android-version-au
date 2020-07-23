@@ -20,28 +20,27 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.projectwnavigation.Navigation_activity;
 import com.example.projectwnavigation.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 import models.ApiProvider;
+import models.Executor;
 import models.MyDataProvider;
 import models.Order;
 
-public class Fragment_orders extends Fragment implements AdapterView.OnItemSelectedListener {
+public class Fragment_orders extends Fragment {
     MyDataProvider provider;
     ApiProvider apiProvider;
     Context context;
-
     RecyclerView recyclerView;
     FloatingActionButton add_button;
     ArrayList<Order> orders = new ArrayList<>();
     Orders_adapter_frg orders_adapter_frg;
     Spinner spinner;
     ImageView img_noorders;
-
-    ArrayAdapter arrayAdapter;
 
     public Fragment_orders(Context context) {
         this.context = context;
@@ -69,14 +68,65 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
         add_button = view.findViewById(R.id.orders_listf_fb);
         recyclerView = view.findViewById(R.id.orders_listf_rv);
         img_noorders = view.findViewById(R.id.orders_listf_no_orders);
-        spinner = view.findViewById(R.id.orders_listf_spinner);
+        spinner = view.findViewById(R.id.orders_listf_spinner2);
 
-        insertArray();
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, getResources().getStringArray(R.array.sections));
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(0);
 
         orders_adapter_frg = new Orders_adapter_frg(getActivity(), context, orders);
         recyclerView.setAdapter(orders_adapter_frg);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        orders_adapter_frg.notifyDataSetChanged();
+
+        checkOrderssArray();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    if (orders != null) {
+                        orders.clear();
+
+                        ArrayList<Order> orders2 = null;
+                        try {
+                            orders2 = apiProvider.getOrders();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        orders.addAll(orders2);
+                        orders_adapter_frg.notifyDataSetChanged();
+                    }else{
+                        try {
+                            orders = apiProvider.getOrders();
+                        } catch (Exception e) {
+                            Log.e("insertExecutorsArray", e.getMessage());
+                        }}
+
+                } else {
+                    int sectionId = position;
+
+                    if (orders != null) {
+                        orders.clear();
+                    }
+                    ArrayList<Order> orders2 = null;
+                    try {
+                        orders2 = apiProvider.getOrdersBySectionId(sectionId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    orders.addAll(orders2);
+                    orders_adapter_frg.notifyDataSetChanged();
+                }
+                checkOrderssArray();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,62 +136,16 @@ public class Fragment_orders extends Fragment implements AdapterView.OnItemSelec
                 manager.beginTransaction().replace(R.id.fram, addFrg).commit();
             }
         });
-
-
-        spinner.setAdapter(arrayAdapter);
-
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //String[] choose = getResources().getStringArray(R.array.sections);
-        String str = parent.getItemAtPosition(position).toString();
-
-        int sectionId = 0; // provider.getSectionIdByTitle(choose[position]);
-        try {
-            sectionId = apiProvider.getSectionIdByTitle(str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (orders != null) {
-            orders.clear();
-        }
-
-        ArrayList<Order> n = null;
-        try {
-            n = apiProvider.getOrdersBySectionId(sectionId); // provider.getOrdersBySectionId(sectionId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        orders.addAll(n);
-        orders_adapter_frg.notifyDataSetChanged();
-
-        arrayAdapter = new ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }
-
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    void insertArray() {
-
-        try {
-            orders = apiProvider.getOrders(); // provider.getOrders();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    void checkOrderssArray() {
         if (orders == null || orders.size() <= 0) {
             img_noorders.setVisibility(View.VISIBLE);
         } else {
             img_noorders.setVisibility(View.GONE);
         }
     }
-
 
 }
 

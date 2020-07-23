@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import fragments.MyProfileActivity;
 import models.ApiProvider;
+import models.CustomArrayAdapter;
 import models.Executor;
 import models.MyDataProvider;
 import models.Persons;
@@ -72,8 +73,8 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
+        CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(this,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, getResources().getStringArray(R.array.sections), 0);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(1);
@@ -81,15 +82,8 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-           //  String[] choose = getResources().getStringArray(R.array.sections);
-                String str = parent.getItemAtPosition(position).toString();
-                try {
-                    sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sectionId = position;
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -110,12 +104,10 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
                 exec.setServices(services);
 
                 try {
-
                     CreateExecutorTask task = new CreateExecutorTask();
                     task.execute(exec);
-                   // provider.addExecutor(exec);
-            Toast.makeText(MyProfile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
-
+                    // provider.addExecutor(exec);
+                    Toast.makeText(MyProfile_createFormActivity.this, "Анкета создана", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -162,8 +154,8 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         dialog.setContentView(R.layout.createform_service_dialog);
         dialog.setTitle("Добавить услугу");
 
-        final EditText edTitle = dialog.findViewById(R.id.createform_service_dialog_title);
-        final EditText edPrice = dialog.findViewById(R.id.createform_service_dialog_price);
+        final TextInputLayout edTitle = dialog.findViewById(R.id.createform_service_dialog_title);
+        final TextInputLayout edPrice = dialog.findViewById(R.id.createform_service_dialog_price);
         Button btnSave = dialog.findViewById(R.id.createform_service_dialog_btnCreate);
         Button btnCancel = dialog.findViewById(R.id.createform_service_dialog_btnCancel);
 
@@ -173,12 +165,30 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Service service = new Service(edTitle.getText().toString().trim(),
-                            Double.parseDouble(edPrice.getText().toString().trim()));
-                    services.add(service);
-                } catch (Exception error) {
-                    Log.e("Create error", error.getMessage());
+                String title3 = edTitle.getEditText().getText().toString().trim().trim();
+                if (title3.isEmpty()) {
+                    edTitle.setError("Заполните поле");
+                    return;
+                } else {
+                    edTitle.setError(null);
+                    edTitle.setErrorEnabled(false);
+
+                    String price3 = edPrice.getEditText().getText().toString().trim();
+                    if (price3.isEmpty()) {
+                        edPrice.setError("Заполните поле");
+                        return;
+                    } else {
+                        edPrice.setError(null);
+                        edPrice.setErrorEnabled(false);
+
+                        try {
+                            Service service = new Service(title3,
+                                    Double.parseDouble(price3));
+                            services.add(service);
+                        } catch (Exception error) {
+                            Log.e("Create error", error.getMessage());
+                        }
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 Toast.makeText(MyProfile_createFormActivity.this, "Created", Toast.LENGTH_LONG).show();
@@ -270,7 +280,7 @@ public class MyProfile_createFormActivity extends AppCompatActivity implements V
 
         @Override
         protected Void doInBackground(Executor... params) {
-                apiProvider.addExecutor(params[0]);
+            apiProvider.addExecutor(params[0]);
             return null;
         }
 

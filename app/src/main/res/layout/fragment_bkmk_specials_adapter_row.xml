@@ -7,16 +7,13 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5sp"
-        android:background="@color/colorWhite"
-        android:padding="5sp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:padding="5sp">
+            android:background="@color/colorBbb2"
+            android:padding="10sp">
 
             <TextView
                 android:id="@+id/frg_bkmk_specials_adapter_name"
@@ -102,7 +99,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="4sp"
-                android:background="@drawable/menu_icon"
+                android:background="@drawable/ic_actions_more_vert"
                 android:clickable="true"></Button>
         </RelativeLayout>
 

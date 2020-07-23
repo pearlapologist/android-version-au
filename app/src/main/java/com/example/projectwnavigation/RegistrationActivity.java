@@ -1,6 +1,7 @@
 package com.example.projectwnavigation;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,32 +19,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.santalu.maskedittext.MaskEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import models.ApiProvider;
 import models.MyUtils;
 import models.MyDataProvider;
 import models.Persons;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     MyDataProvider provider;
     Button btn, btnToAuth;
-    MaskEditText number;
+    MaskEditText number, etBirthday;
     ImageView image;
     ApiProvider apiprovider;
     ProgressDialog pd;
     TextInputLayout name, lastname, passwd, passwd2;
+
+    Long txtbirthday = 0L;
+    String txtnumb = null;
+    String txtname = null;
+    String txtlastname = null;
+    String  txtpasswd=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
         name = findViewById(R.id.regist_name);
         lastname = findViewById(R.id.regist_lastname);
         number = findViewById(R.id.regist_number);
+        etBirthday = findViewById(R.id.regist_birthday);
         passwd = findViewById(R.id.regist_passwd);
         passwd2 = findViewById(R.id.regist_passwd2);
         image = findViewById(R.id.regist_image);
@@ -65,21 +67,17 @@ public class RegistrationActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validateName() || !validatePasswd()) {
+                if (!validateName() || !validatePasswd() || !validateBirthday() || !validateNumber()) {
                     return;
                 }
                 try {
-                    String num = number.getRawText().trim() + "";
-                    String n = "+7" + num;
-
                     Persons person = new Persons();
-                    person.setName(name.getEditText().getText().toString().trim());
-                    person.setLastname(lastname.getEditText().getText().toString().trim());
-                    person.setPasswd(passwd.getEditText().getText().toString().trim());
+                    person.setName(txtname);
+                    person.setLastname(txtlastname);
+                    person.setPasswd(txtpasswd);
                     //person.setPhoto(MyUtils.imageViewToByte(image));
-                    person.setNumber(n);
-                    person.setRating(0);
-                    person.setBirthday(MyUtils.getCurentDateInLong());
+                    person.setNumber(txtnumb);
+                    person.setBirthday(txtbirthday);
 
                     RegistrationTask task2 = new RegistrationTask();
                     task2.execute(person);
@@ -106,6 +104,43 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        etBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "date picker");
+            }
+        });
+    }
+
+    private boolean validateNumber() {
+        String num = number.getRawText().trim();
+        String n = "+7" + num;
+
+        if (n.isEmpty() || n.length() == 0) {
+            number.setError("Заполните поле");
+            return false;
+        } else if (n.length() < 9) {
+            number.setError("Заполните поле корректно");
+            return false;
+        } else {
+            number.setError(null);
+            txtnumb = n;
+            return true;
+        }
+    }
+
+    private boolean validateBirthday() {
+        String b = etBirthday.getText().toString().trim();
+        if (b.isEmpty()) {
+            etBirthday.setError("Заполните поле");
+            return false;
+        } else {
+            etBirthday.setError(null);
+            this.txtbirthday = MyUtils.convertDataToLongWithRawString(b);
+            return true;
+        }
     }
 
     private Boolean validateName() {
@@ -120,9 +155,19 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             name.setError(null);
             name.setErrorEnabled(false);
-            return true;
-        }
+            this.txtname = s;
 
+            String l = lastname.getEditText().getText().toString().trim();
+            if (l.isEmpty()) {
+                lastname.setError("Заполните поле");
+                return false;
+            } else {
+                lastname.setError(null);
+                lastname.setErrorEnabled(false);
+                this.txtlastname = l;
+                return true;
+            }
+        }
     }
 
     private Boolean validatePasswd() {
@@ -148,11 +193,22 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             passwd.setError(null);
             passwd.setErrorEnabled(false);
+
             passwd2.setError(null);
             passwd2.setErrorEnabled(false);
+
+            this.txtpasswd = s;
             return true;
         }
 
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Long l = MyUtils.convertDataToLong(dayOfMonth, month, year);
+        this.txtbirthday = l;
+        String s = MyUtils.convertLongToDataString(l);
+        etBirthday.setText(s);
     }
 
 

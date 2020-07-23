@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -25,100 +26,89 @@
                 android:clickable="true"
                 android:src="@drawable/add_a_photo_black_20dp" />
 
-        <TextView
-            android:id="@+id/profile_edit_tvname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Имя"
-            android:textSize="15sp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_below="@id/profile_edit_btnChoose"
-            ></TextView>
-          <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="Имя"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginTop="25dp"
+                android:layout_below="@id/profile_edit_btnChoose"
                 android:id="@+id/profile_edit_etName"
-                android:layout_width="match_parent"
-              android:padding="10sp"
-              android:layout_marginStart="10sp"
-              android:layout_marginEnd="10sp"
-              android:layout_marginTop="10sp"
-                android:layout_height="wrap_content"
-              android:hint="..."
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:layout_below="@id/profile_edit_tvname"
-           />
+                android:textColorHint="@color/colorMutedText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:textColorHint="@color/colorMutedText"
+                    android:textColor="@color/colorMutedGray2"
+                    android:inputType="textPersonName"
+                    android:layout_height="wrap_content">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/profile_edit_tvlast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Фамилия"
-                android:textSize="15sp"
-                android:layout_marginStart="10sp"
-                android:layout_marginTop="10sp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="Фамилия"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginTop="20dp"
                 android:layout_below="@id/profile_edit_etName"
-                ></TextView>
-            <EditText
                 android:id="@+id/profile_edit_etLast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:layout_below="@id/profile_edit_tvlast"
-                android:padding="10sp"
-                android:layout_marginStart="10sp"
-                android:layout_marginEnd="10sp"
-                android:layout_marginTop="10sp"
-                android:hint="..."/>
+                android:textColorHint="@color/colorMutedText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:textColorHint="@color/colorMutedText"
+                    android:textColor="@color/colorMutedGray2"
+                    android:inputType="textPersonName"
+                    android:layout_height="wrap_content">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/profile_edit_tvbirth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Дата рождения"
-                android:textSize="15sp"
-                android:layout_marginStart="10sp"
-                android:layout_marginTop="10sp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="Дата рождения"
                 android:layout_below="@id/profile_edit_etLast"
-                ></TextView>
-
-            <EditText
-                android:id="@+id/profile_edit_etBirthday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:layout_below="@id/profile_edit_tvbirth"
-                android:padding="10sp"
-                android:layout_marginStart="10sp"
+                android:id="@+id/profile_edit_tvbirthlayout"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10sp"
-                android:layout_marginTop="10sp"
-                android:hint="..."/>
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/colorMutedText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+                <com.santalu.maskedittext.MaskEditText
+                    android:id="@+id/profile_edit_etBirthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/colorMutedText"
+                    android:textColor="@color/colorMutedGray2"
+                    android:inputType="date"
+                    app:met_mask="####.##.##"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/profile_edit_tvnum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Номер"
-                android:textSize="15sp"
-                android:layout_marginStart="10sp"
-                android:layout_marginTop="10sp"
-                android:layout_below="@id/profile_edit_etBirthday"
-                ></TextView>
 
-            <EditText
-                android:id="@+id/profile_edit_etNumber"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:layout_below="@id/profile_edit_tvnum"
-                android:padding="10sp"
-                android:layout_marginStart="10sp"
+                android:hint="Номер"
+                android:id="@+id/profile_edit_etNumberlayout"
+                android:layout_below="@+id/profile_edit_tvbirthlayout"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10sp"
-                android:layout_marginTop="10sp"
-                android:hint="..."/>
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/colorMutedText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/profile_edit_etNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="+7"
+                    android:textColor="@color/colorMutedGray2"
+                    android:enabled="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/profile_edit_btnChoose"
@@ -127,18 +117,31 @@
                 android:layout_below="@id/profile_edit_image"
                 android:layout_marginStart="20sp"
                 android:layout_marginTop="10sp"
-                android:textSize="13sp"
+                android:textAllCaps="false"
+                android:enabled="true"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
                 android:layout_centerHorizontal="true"
                 android:text="Изменить" />
 
             <Button
                 android:id="@+id/profile_edit_btnOk"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="30sp"
-               android:layout_alignParentRight="true"
-                android:layout_below="@id/profile_edit_etNumber"
+                android:layout_marginTop="20sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginBottom="10sp"
+                android:layout_below="@id/profile_edit_etNumberlayout"
+                android:textAllCaps="false"
+                android:enabled="true"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
                 android:text="Сохранить" />
         </RelativeLayout>
     </ScrollView>

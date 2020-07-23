@@ -25,11 +25,13 @@ import android.widget.Toast;
 
 import com.example.projectwnavigation.MyProfile_createFormActivity;
 import com.example.projectwnavigation.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
 import models.ApiProvider;
+import models.CustomArrayAdapter;
 import models.Executor;
 import models.MyUtils;
 import models.MyDataProvider;
@@ -37,24 +39,15 @@ import models.Order;
 
 
 public class Fragment_orders_add extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     MyDataProvider provider;
     ApiProvider apiProvider;
     Context context;
-
-    EditText title, price, descr;
+    TextInputLayout title, price, descr;
     MaskEditText deadline;
     Button add, cancel;
     Spinner mSpinner;
     CheckBox checkBox;
-
     int sectionId = 0;
-
     ProgressDialog pd;
 
     public Fragment_orders_add() {
@@ -66,23 +59,9 @@ public class Fragment_orders_add extends Fragment {
         this.context = context;
     }
 
-
-    public static Fragment_orders_add newInstance(String param1, String param2) {
-        Fragment_orders_add fragment = new Fragment_orders_add();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -93,7 +72,6 @@ public class Fragment_orders_add extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         title = view.findViewById(R.id.orders_add_title);
         price = view.findViewById(R.id.orders_add_price);
         descr = view.findViewById(R.id.orders_add_descr);
@@ -104,32 +82,17 @@ public class Fragment_orders_add extends Fragment {
         checkBox = view.findViewById(R.id.orders_add_checkDeadl);
         this.provider = new MyDataProvider(context);
 
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(context, R.array.sections,
-                android.R.layout.simple_spinner_item);
+        CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(context,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, getResources().getStringArray(R.array.sections), 0);
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter2);
+        mSpinner.setAdapter(arrayAdapter);
         mSpinner.setSelection(1);
-
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-             /*  Long id3 = id;
-              int position3 = position;
-                String str = parent.getItemAtPosition(position).toString();*/
-                try {
-                 //  sectionId = apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
-                    int p =position+1;
-                    sectionId = p;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                sectionId = position;
             }
-
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -140,24 +103,48 @@ public class Fragment_orders_add extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long l = MyUtils.convertDataToLongWithRawString(deadline.getText().toString());
-                Long curr = MyUtils.getCurentDateInLong();
-                Order order = new Order(title.getText().toString().trim(),
-                        provider.getLoggedInPerson().getId(),
-                        sectionId,
-                        Double.valueOf(price.getText().toString()),
-                        descr.getText().toString(),
-                        l,
-                        curr);
-                CreateOrderTask task = new CreateOrderTask();
-                task.execute(order);
-                Toast.makeText(context, "Заказ создан", Toast.LENGTH_SHORT).show();
-                //provider.addOrder(order);
-                Fragment_orders fragment_orders = new Fragment_orders(context);
-                FragmentManager manager = getFragmentManager();
-                manager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
+                String desc = descr.getEditText().getText().toString().trim();
+                if (desc.isEmpty() || desc.equals(" ")) {
+                    descr.setError("Заполните поле");
+                    return;
+                } else {
+                    descr.setError(null);
+                    descr.setErrorEnabled(false);
 
+                    String txttitle = title.getEditText().getText().toString().trim();
+                    if (txttitle.isEmpty() || txttitle.equals(" ")) {
+                        title.setError("Заполните поле");
+                        return;
+                    } else {
+                        title.setError(null);
+                        title.setErrorEnabled(false);
 
+                        String txtprice = price.getEditText().getText().toString().trim();
+                        if (txtprice.isEmpty() || txtprice.equals(" ")) {
+                            price.setError("Заполните поле");
+                            return;
+                        } else {
+                            price.setError(null);
+                            price.setErrorEnabled(false);
+                            Long l = MyUtils.convertDataToLongWithRawString(deadline.getText().toString());
+                            Long curr = MyUtils.getCurentDateInLong();
+                            Order order = new Order(txttitle,
+                                    provider.getLoggedInPerson().getId(),
+                                    sectionId,
+                                    Double.valueOf(txtprice),
+                                    desc,
+                                    l,
+                                    curr);
+                            CreateOrderTask task = new CreateOrderTask();
+                            task.execute(order);
+                            Toast.makeText(context, "Заказ создан", Toast.LENGTH_SHORT).show();
+
+                            Fragment_orders fragment_orders = new Fragment_orders(context);
+                            FragmentManager manager = getFragmentManager();
+                            manager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
+                        }
+                    }
+                }
             }
         });
 
@@ -173,10 +160,7 @@ public class Fragment_orders_add extends Fragment {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean b =checkBox.isChecked();
-                if(b){
-                    deadline.setEnabled(!b);
-                }
+                deadline.setEnabled(!checkBox.isChecked());
             }
         });
         super.onViewCreated(view, savedInstanceState);

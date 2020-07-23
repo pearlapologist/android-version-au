@@ -31,12 +31,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectwnavigation.Navigation_activity;
 import com.example.projectwnavigation.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
 import models.ApiProvider;
 import models.Bookmarks;
+import models.CustomArrayAdapter;
 import models.Executor;
 import models.MyUtils;
 import models.MyDataProvider;
@@ -94,7 +96,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         provider = new MyDataProvider(context);
         apiProvider = new ApiProvider();
         curPerson = provider.getLoggedInPerson();
-
         final Order order = orders.get(position);
 
         holder.title.setText(order.getTitle());
@@ -120,9 +121,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 if (order.getCustomerId() == curPerson.getId()) {
                     isCreator = true;
                 }
-
                 boolean exists = false;
-
                 Bookmarks b = null; // provider.getBookmarkByOrderId(order.getId());
                 try {
                     b = apiProvider.getPersonBookmarkByOrderId(curPerson.getId(), order.getId());
@@ -133,7 +132,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 if (b != null) {
                     exists = true;
                 }
-
                 PopupMenu popup = new PopupMenu(context, v);
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -159,7 +157,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                             Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
                             return true;
                         }
-
                         return false;
                     }
                 });
@@ -174,11 +171,9 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                         popup_menu.findItem(R.id.order_popup_bookm).setVisible(false);
                     }
                 }
-
                 popup.show();
             }
         });
-
         holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +182,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 activity.startActivityForResult(intent, 1);
             }
         });
-
     }
 
     private void showDialogDeleteFromBookm(final int orderId) {
@@ -196,108 +190,116 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         dialog.setContentView(R.layout.dialog_answer_delete);
         Button btnSave = dialog.findViewById(R.id.dialog_answer_delete_btn_save);
         Button btnCancel = dialog.findViewById(R.id.dialog_answer_delete_btn_cancel);
-
         dialog.setCancelable(true);
         dialog.show();
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DeleteOrderFromBookmTask task = new DeleteOrderFromBookmTask();
                 task.execute(curPerson.getId(), orderId);
-               // provider.deleteOrderFromMyBookmarks(orderId);
+                // provider.deleteOrderFromMyBookmarks(orderId);
                 notifyDataSetChanged();
                 Toast.makeText(context, "Заказ удален из ваших закладок", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
             }
         });
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
     }
 
     int sectionId = -1;
-
-
     Order order = null;
 
     private void showDialogUpdate(final int orderId) {
         final Dialog dialog = new Dialog(activity);
-
         dialog.setContentView(R.layout.dialog_order_update);
         dialog.setTitle("Редактировать заказ");
 
-        final EditText title = dialog.findViewById(R.id.dialog_orders_update_title);
-        final EditText price = dialog.findViewById(R.id.dialog_orders_update_price);
-        final EditText descr = dialog.findViewById(R.id.dialog_orders_update_descr);
+        final TextInputLayout title = dialog.findViewById(R.id.dialog_orders_update_title);
+        final TextInputLayout price = dialog.findViewById(R.id.dialog_orders_update_price);
+        final TextInputLayout descr = dialog.findViewById(R.id.dialog_orders_update_descr);
         final MaskEditText deadline = dialog.findViewById(R.id.dialog_orders_update_deadlinee);
         Button btnSave = dialog.findViewById(R.id.dialog_orders_update_btnOk);
         Spinner spinner = dialog.findViewById(R.id.dialog_orders_update_section);
         Button btnCancel = dialog.findViewById(R.id.dialog_orders_update_btnCancel);
 
+        CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(context,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, context.getResources().getStringArray(R.array.sections), 0);
 
-        ArrayList<String> sectionList = null; // provider.getSectionListInString();
-        try {
-            sectionList = apiProvider.getSectionListInString();
-            ArrayAdapter<String> adapter = new ArrayAdapter(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-            spinner.setAdapter(adapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(1);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String str = parent.getItemAtPosition(position).toString();
-                try {
-                    sectionId = apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(str);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sectionId = position;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-
-        dialog.getWindow().setLayout(720, 1300);
         dialog.setCancelable(true);
         dialog.show();
-        // provider.getOrder(orderId);
         try {
             order = apiProvider.getOrder(orderId);
+            title.getEditText().setText(order.getTitle());
+            price.getEditText().setText(order.getPrice() + "");
+            deadline.setText(MyUtils.convertLongToDataString(order.getDeadline()));
+            descr.getEditText().setText(order.getDescription());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        title.setText(order.getTitle());
-        price.setText(order.getPrice() + "");
-        deadline.setText(MyUtils.convertLongToDataString(order.getDeadline()));
-        descr.setText(order.getDescription());
+
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
-                order.setSection(sectionId);
-                order.setDescription(descr.getText().toString().trim());
-                order.setTitle(title.getText().toString().trim());
-                order.setPrice(Double.valueOf(price.getText().toString()));
-                order.setDeadline(l);
+                String desc = descr.getEditText().getText().toString().trim();
+                if (desc.isEmpty() || desc.equals(" ")) {
+                    descr.setError("Заполните поле");
+                    return;
+                } else {
+                    descr.setError(null);
+                    descr.setErrorEnabled(false);
 
-                UpdateOrderTask task = new UpdateOrderTask();
-                task.execute(order);
-                // provider.updateOrder(order);
-                notifyDataSetChanged();
-                Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
+                    String txttitle = title.getEditText().getText().toString().trim();
+                    if (txttitle.isEmpty() || txttitle.equals(" ")) {
+                        title.setError("Заполните поле");
+                        return;
+                    } else {
+                        title.setError(null);
+                        title.setErrorEnabled(false);
+
+                        String txtprice = price.getEditText().getText().toString().trim();
+                        if (txtprice.isEmpty() || txtprice.equals(" ")) {
+                            price.setError("Заполните поле");
+                            return;
+                        } else {
+                            price.setError(null);
+                            price.setErrorEnabled(false);
+
+                            Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                            order.setSection(sectionId);
+                            order.setDescription(desc);
+                            order.setTitle(txttitle);
+                            order.setPrice(Double.valueOf(txtprice));
+                            order.setDeadline(l);
+
+                            UpdateOrderTask task = new UpdateOrderTask();
+                            task.execute(order);  // provider.updateOrder(order);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    }
+                }
             }
         });
 
@@ -345,7 +347,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
                 dialog.dismiss();
             }
         });
-
     }
 
     @Override
@@ -358,7 +359,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
 
     private class UpdateOrderTask extends AsyncTask<Order, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -366,7 +366,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
         @Override
         protected Void doInBackground(Order... params) {
-
             try {
                 apiProvider.updateOrder(params[0]);
             } catch (Exception e) {
@@ -391,7 +390,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
 
         @Override
         protected Void doInBackground(Integer... params) {
-
             try {
                 apiProvider.deleteOrder(params[0]);
             } catch (Exception e) {
@@ -446,8 +444,6 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
             }
             return null;
         }
-
-
         @Override
         protected void onPostExecute(Void s) {
             super.onPostExecute(s);

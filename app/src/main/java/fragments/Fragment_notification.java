@@ -24,11 +24,6 @@ import models.MyDataProvider;
 import models.Notify;
 
 public class Fragment_notification extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-
     MyDataProvider provider;
     ApiProvider apiProvider;
     Context context;
@@ -48,22 +43,9 @@ public class Fragment_notification extends Fragment {
         apiProvider = new ApiProvider();
     }
 
-    public static Fragment_notification newInstance(String param1, String param2) {
-        Fragment_notification fragment = new Fragment_notification();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -77,9 +59,7 @@ public class Fragment_notification extends Fragment {
         recyclerView = view.findViewById(R.id.frg_notification_rv);
         img_no_notify = view.findViewById(R.id.frg_notification_img_nonotify);
         provider = new MyDataProvider(context);
-
         insertArray();
-
         notify_adapter = new Fragment_notification_adapter(context, notifies);
         recyclerView.setAdapter(notify_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));

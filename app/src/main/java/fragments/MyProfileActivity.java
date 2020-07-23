@@ -25,7 +25,7 @@ import models.MyUtils;
 import models.Persons;
 
 public class MyProfileActivity extends AppCompatActivity {
-    TextView tv_name, tv_rating, tv_status, tv_registr;
+    TextView tv_name, tv_rating, tv_birthday, tv_registr;
     Button btn_orders, btn_form, btn_reviews;
     ImageView photo;
     MyDataProvider provider;
@@ -38,7 +38,7 @@ public class MyProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         tv_name = findViewById(R.id.profile_name);
         tv_rating = findViewById(R.id.profile_rating);
-      //  tv_status = findViewById(R.id.profile_status);
+        tv_birthday = findViewById(R.id.profile_birthday);
         tv_registr = findViewById(R.id.profile_registDate);
         btn_orders = findViewById(R.id.profile_orders);
         btn_form = findViewById(R.id.profile_form);
@@ -60,12 +60,11 @@ public class MyProfileActivity extends AppCompatActivity {
         btn_form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isexecutor =apiProvider.getPersonIsExecutorField(person.getId());  //provider.getPersonIsExecutorField(person.getId());
+                boolean isexecutor = apiProvider.getPersonIsExecutorField(person.getId());  //provider.getPersonIsExecutorField(person.getId());
                 if (isexecutor == false) {
                     Intent form = new Intent(MyProfileActivity.this, MyProfile_createFormActivity.class);
                     startActivity(form);
-                }
-                else{
+                } else {
                     Intent r = new Intent(MyProfileActivity.this, MyProfile_myForm_activity.class);
                     startActivity(r);
                 }
@@ -90,12 +89,10 @@ public class MyProfileActivity extends AppCompatActivity {
         tv_name.setText(person.getName() + " " + person.getLastname());
         int rating = person.getRating();
         if (rating != -1) {
-            tv_rating.setText("Рейтинг: " + rating + "");
+            tv_rating.setText(rating + "");
         }
-       // tv_status.setText("Статус: " + "Онлайн");
-
-        String c = MyUtils.convertLongToDataString(person.getCreatedDate());
-        tv_registr.setText("Дата регистрации: " + c);
+        tv_birthday.setText(MyUtils.convertLongToDataString(person.getBirthday()));
+        tv_registr.setText(MyUtils.convertLongToDataString(person.getCreatedDate()));
     }
 
 

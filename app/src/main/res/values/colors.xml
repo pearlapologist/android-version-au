@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#27009688</color>
-    <color name="gray">#1f1f1f</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="colorWhite">#F2FAFDFE</color>
-    <color name="colorMutedGray2">#2F434D</color>
+    <color name="gray">#444446</color>
+    <color name="colorPrimaryDark">#33546D</color>
+    <color name="colorAccent">#F1285B</color>
+    <color name="colorWhite">#F7EFED</color>
+    <color name="colorMutedGray2">#363152</color>
     <color name="colorYellow">#009688</color>
-    <color name="colorMutedText">#992F434D</color>
-    <color name="colorBackground">#C4BEE0DC</color>
-    <color name="colorBbb2">#9DC7C2</color>
+    <color name="colorMutedText">#8e8f94</color>
+    <color name="colorBackground">#ececec</color>
+    <color name="colorBbb2">#7FA7B8</color>
     <color name="colorWhite2">#17F5F2F2</color>
     <color name="colorWhite3">#656565</color>
 
-    <color name="custom_gray">#B1AFAA</color>
     <color name="custom_blue">#01305a</color>
     <color name="custom_red">#f14a41</color>
     <color name="custom_muted_rose">#bc9c9b</color>

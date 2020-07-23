@@ -59,7 +59,6 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     RecyclerView ordersRv;
     Fragment_bkmk_orders_adapter orders_adapter;
     ImageView img_noorders;
-    Spinner spinner;
     ArrayList<Bookmarks> orders;
 
     public Boolean contextModeEnable = false;
@@ -96,7 +95,6 @@ public class Fragment_bkmk_orders extends Fragment implements View.OnLongClickLi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ordersRv = view.findViewById(R.id.frg_bkmk_orders_rv);
-        spinner = view.findViewById(R.id.frg_bkmk_orders_spinenr);
         img_noorders = view.findViewById(R.id.frg_bkmk_orders_no_orders);
         selectionList = new ArrayList<>();
         MyDataProvider provider2 = new MyDataProvider(context);

@@ -40,9 +40,7 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
     ApiProvider apiProvider;
     ArrayList<Bookmarks> orders;
     Fragment_bkmk_orders fragment_bkmk_orders;
-
     Persons curPerson;
-
 
     public Fragment_bkmk_orders_adapter(Fragment_bkmk_orders fragment_bkmk_orders, Context context, ArrayList<Bookmarks> orders) {
         this.context = context;
@@ -60,7 +58,6 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
     }
 
     Order order = null;
-
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         provider = new MyDataProvider(context);
@@ -70,30 +67,71 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
         Bookmarks bookm = orders.get(position);
         final int orderId = bookm.getOrderId();
 
-
         try {
             order = apiProvider.getOrder(orderId); // provider.getOrder(orderId);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        holder.title.setText(order.getTitle());
-        holder.descr.setText(order.getDescription());
-        holder.price.setText(order.getPrice() + "");
-        String created = MyUtils.convertLongToDataString(order.getCreated_date());
-        holder.createdDate.setText(created);
-        String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText("" + deadlinetext);
+        if(order != null){
+            holder.title.setText(order.getTitle());
+            holder.descr.setText(order.getDescription());
+            holder.price.setText(order.getPrice() + "");
+            String created = MyUtils.convertLongToDataString(order.getCreated_date());
+            holder.createdDate.setText(created);
+            String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
+            holder.deadline.setText("" + deadlinetext);
 
+            Section_of_services section = null;
+            try {
+                section = apiProvider.getSection(order.getSection());// provider.getSection(order.getSection());
+                holder.section.setText(section.getTitle());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        Section_of_services section = null;
-        try {
-            section = apiProvider.getSection(order.getSection());// provider.getSection(order.getSection());
-            holder.section.setText(section.getTitle());
-        } catch (Exception e) {
-            e.printStackTrace();
+            holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, Orders_view_activity.class);
+                    intent.putExtra("orderIdFragment", orderId);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(context, v);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.menu_bookm_delete:
+                                    showDialogDelete(order.getId());
+                                    return true;
+                                case R.id.menu_bookm_complain:
+                                    //TODO: доделать методы
+                                    Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+
+                        }
+                    });
+                    popup.inflate(R.menu.menu_bookm_popup);
+                    popup.show();
+                }
+            });
+
+        }else{
+            holder.title.setText("Ошибка");
+            holder.descr.setText("Заказ не найден или был удален");
+            holder.price.setText("0");
         }
-
 
         if (fragment_bkmk_orders.contextModeEnable) {
             holder.chbox.setVisibility(View.VISIBLE);
@@ -101,42 +139,6 @@ public class Fragment_bkmk_orders_adapter extends RecyclerView.Adapter<Fragment_
             holder.chbox.setVisibility(View.GONE);
         }
 
-        holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, Orders_view_activity.class);
-                intent.putExtra("orderIdFragment", orderId);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
-
-        holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(context, v);
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_bookm_delete:
-                                showDialogDelete(order.getId());
-                                return true;
-                            case R.id.menu_bookm_complain:
-                                //TODO: доделать методы
-                                Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
-                                return true;
-                            default:
-                                return false;
-                        }
-
-                    }
-                });
-                popup.inflate(R.menu.menu_bookm_popup);
-                popup.show();
-            }
-        });
 
 
     }

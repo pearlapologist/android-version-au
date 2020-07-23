@@ -26,7 +26,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:layout_toLeftOf="@id/frg_bkmk_order_adapter_txtdeadline"
-            android:hint="раздел по ремонту и бытовым проблемам"
+            android:hint="Прочее"
             android:textColor="@color/colorMutedGray2" />
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10sp"
             android:layout_toLeftOf="@id/frg_bkmk_order_adapter_btn_popup"
-            android:hint="08/06/2020"
+            android:hint="01/01/1970"
             android:textAlignment="center"
             android:textColor="@color/colorMutedGray2" />
 
@@ -85,7 +85,7 @@
             android:layout_below="@id/frg_bkmk_order_adapter_desc"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
-            android:hint="20/06/2020"
+            android:hint="01/02/1970"
             android:textColor="@color/colorMutedGray2" />
 
         <TextView

@@ -25,6 +25,7 @@
 
 
     <string-array name="sections">
+        <item>Все разделы</item>
         <item>Авто услуги</item>
         <item>Бытовые услуги</item>
         <item>Дизайн, фотосъемка и перевод</item>
@@ -53,5 +54,11 @@
     <string name="btn_add_coverphoto">Добавить фото ообложки</string>
     <string name="btn_save">Сохранить</string>
     <string name="btn_add_service">Добавить услугу</string>
+    <string name="btn_cancel">Отменить</string>
+    <string name="btn_delete_form">Удалить анкету</string>
+    <string name="hint_yourasnwer">Ваш ответ</string>
+    <string name="btn_security">Безопасность</string>
+    <string name="btn_set_passwd">Изменить пароль</string>
+    <string name="hint_number">Номер</string>
 
 </resources>

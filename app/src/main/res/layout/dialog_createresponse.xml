@@ -32,8 +32,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxEms="3"
-                android:drawableStart="@drawable/ic_actions_star"
-                android:drawablePadding="10sp"
+                 android:drawablePadding="10sp"
                 android:textColor="@color/colorMutedGray2"
                 android:textColorHint="@color/colorMutedText">
 

@@ -8,17 +8,10 @@
         android:background="@color/colorBackground"
         android:layout_height="match_parent">
 
-
-        <Spinner
-            android:id="@+id/frg_bkmk_specials_spinner"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10sp"
-            android:layout_height="wrap_content" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:background="@color/colorBackground"
-            android:layout_below="@id/frg_bkmk_specials_spinner"
+            android:layout_alignParentTop="true"
             android:id="@+id/frg_bkmk_specials_rv"
             android:layout_marginTop="10sp"
             android:padding="5sp"

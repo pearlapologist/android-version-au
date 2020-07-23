@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fragments.Fragment_settings">
+    tools:context="fragments.Fragment_settings_security">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,14 +13,14 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/frg_settings_btn_tosecurity"
+                android:id="@+id/frg_sttngs_scr_btn_editpasswd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:text="@string/btn_security"
+                android:text="@string/btn_set_passwd"
                 android:padding="5sp"
                 android:background="@color/colorMutedGray2"
                 android:enabled="true"
@@ -31,4 +30,4 @@
 
         </RelativeLayout>
     </ScrollView>
-</RelativeLayout>
+</FrameLayout>

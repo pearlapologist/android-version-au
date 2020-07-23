@@ -33,7 +33,7 @@
                 android:layout_height="40sp"
                 android:layout_below="@id/activity_profile_orders_spinner"
                 android:layout_marginLeft="10sp"
-                android:layout_marginTop="40sp"
+                android:layout_marginTop="20sp"
                 android:layout_marginRight="10sp"
                 android:background="@drawable/corners"
                 android:elevation="1sp"

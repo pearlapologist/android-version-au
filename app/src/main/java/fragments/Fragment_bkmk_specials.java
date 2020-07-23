@@ -50,7 +50,6 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
 
     RecyclerView specialsRv;
     Fragment_bkmk_specials_adapter specials_adapter;
-    Spinner spinner;
     ImageView img_nospecialists;
     ArrayList<Bookmarks> executors;
 
@@ -96,7 +95,6 @@ public class Fragment_bkmk_specials extends Fragment implements View.OnLongClick
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         specialsRv = view.findViewById(R.id.frg_bkmk_specials_rv);
-        spinner = view.findViewById(R.id.frg_bkmk_specials_spinner);
         img_nospecialists = view.findViewById(R.id.frg_bkmk_specials_no_specialists);
         apiProvider = new ApiProvider();
         provider = new MyDataProvider(context);

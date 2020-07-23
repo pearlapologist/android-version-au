@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,12 +64,13 @@ public class Navigation_activity extends AppCompatActivity {
     Persons currentPerson;
     private NotificationManager nManager;
 
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         provider = new MyDataProvider(this);
 
@@ -84,10 +86,8 @@ public class Navigation_activity extends AppCompatActivity {
 
         nManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        DrawerLayout drawer2 = findViewById(R.id.drawer_layout);
-        drawer2.closeDrawer(GravityCompat.START);
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
 
         final ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.open, R.string.close);
@@ -124,10 +124,8 @@ public class Navigation_activity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
                 R.anim.enter_from_right, R.anim.exit_to_right);
-        transaction.addToBackStack(null);
+       // transaction.addToBackStack(null);
         transaction.replace(R.id.fram, fragment_orders).commit();
-        setTitle("Заказы");
-
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
         //header name
@@ -140,7 +138,6 @@ public class Navigation_activity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent_profile = new Intent(Navigation_activity.this, MyProfileActivity.class);
                 startActivity(intent_profile);
-                setTitle("profile");
             }
         });
 
@@ -192,7 +189,6 @@ public class Navigation_activity extends AppCompatActivity {
                     }
                 }
             }
-
             initializeCountDrawer();
         }
         super.onStart();
@@ -242,36 +238,38 @@ public class Navigation_activity extends AppCompatActivity {
     private NavigationView.OnNavigationItemSelectedListener navListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            int id = item.getItemId();
-            Fragment fragment = fragment_orders;
-            if (id == R.id.nav_speacl) {
-                fragment = fragment_specials;
-            } else if (id == R.id.nav_orders) {
-                fragment = fragment_orders;
-            } else if (id == R.id.nav_bkmr) {
-                fragment = fragment_bkmrk;
-            } else if (id == R.id.nav_notificatn) {
-                fragment = fragment_notification;
-                if (notifyCounter != 0) {
-
-                    try {
-                        apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            try {
+                Fragment fragment = fragment_orders;
+                int id = item.getItemId();
+                if (id == R.id.nav_speacl) {
+                    fragment = fragment_specials;
+                } else if (id == R.id.nav_orders) {
+                    fragment = fragment_orders;
+                } else if (id == R.id.nav_bkmr) {
+                    fragment = fragment_bkmrk;
+                } else if (id == R.id.nav_notificatn) {
+                    fragment = fragment_notification;
+                    if (notifyCounter != 0) {
+                        try {
+                            apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                      //provider.setMyNotifiesToChecked();
+                        notifyCounter =0;// provider.getCountOfAllMyNewNotifies();
                     }
-                  //provider.setMyNotifiesToChecked();
-                    notifyCounter =0;// provider.getCountOfAllMyNewNotifies();
+                } else if (id == R.id.nav_settings) {
+                    fragment = fragment_settings;
+                } else if (id == R.id.nav_messages) {
+                    fragment = fragment_messages;
                 }
-            } else if (id == R.id.nav_settings) {
-                fragment = fragment_settings;
-            } else if (id == R.id.nav_messages) {
-                fragment = fragment_messages;
+                getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
+                //toolbar.setTitle(item.getTitle());
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
-            setTitle(item.getTitle());
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-
             return true;
         }
     };

@@ -17,6 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Описание"
+                android:textColor="@color/colorMutedText"
                 android:layout_marginTop="25sp"
                 android:layout_marginStart="4sp"
                 android:layout_marginEnd="4sp"
@@ -37,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Бюджет"
+                android:textColor="@color/colorMutedText"
                 android:layout_marginTop="25sp"
                 android:layout_below="@id/dialog_response_update_descr"
                 android:layout_marginStart="4sp"
@@ -57,6 +59,11 @@
                 android:inputType="number"
                 android:textSize="18sp" />
             <Button
+                android:enabled="true"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
                 android:id="@+id/dialog_response_update_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,6 +75,11 @@
                 android:textSize="15sp" />
 
             <Button
+                android:enabled="true"
+                android:padding="10dp"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorMutedGray2"
+                android:textStyle="bold"
                 android:id="@+id/dialog_response_update_btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

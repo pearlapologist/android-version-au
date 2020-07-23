@@ -15,21 +15,24 @@ import android.widget.Button;
 
 import com.example.projectwnavigation.R;
 
+import models.ApiProvider;
 import models.MyDataProvider;
 
-
-public class Fragment_settings extends Fragment {
- //   MyDataProvider provider;
+public class Fragment_settings_security extends Fragment {
+    /*MyDataProvider provider;
+    ApiProvider apiProvider;*/
     Context context;
+    Button btn_edit_passwd;
 
-    Button btn_tosecurity;
-
-    public Fragment_settings() {
+    public Fragment_settings_security() {
     }
-    public Fragment_settings(Context context) {
+
+    public Fragment_settings_security(Context context) {
+       /* this.provider = new MyDataProvider(context);
+        apiProvider = new ApiProvider();*/
         this.context = context;
-       // this.provider = new MyDataProvider(context);
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,19 +41,19 @@ public class Fragment_settings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_settings_security, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        btn_tosecurity = view.findViewById(R.id.frg_settings_btn_tosecurity);
+        btn_edit_passwd = view.findViewById(R.id.frg_sttngs_scr_btn_editpasswd);
 
-        btn_tosecurity.setOnClickListener(new View.OnClickListener() {
+        btn_edit_passwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment_settings_security addFrg = new Fragment_settings_security(context);
+                Fragment_edit_passwd editFrg = new Fragment_edit_passwd(context);
                 FragmentManager manager = getFragmentManager();
-                manager.beginTransaction().replace(R.id.fram, addFrg).commit();
+                manager.beginTransaction().replace(R.id.fram, editFrg).commit();
             }
         });
 

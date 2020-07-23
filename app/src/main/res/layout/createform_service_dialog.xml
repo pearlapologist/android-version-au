@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/createform_service_dialog"
     android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
 
-    <EditText
+    <!--<EditText
         android:id="@+id/createform_service_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,9 +16,30 @@
         android:layout_marginEnd="10sp"
         android:hint="Название"
         android:maxLength="200"
-        android:padding="10sp"></EditText>
+        android:padding="10sp"></EditText>-->
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:hint="Название"
+        android:id="@+id/createform_service_dialog_title"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10sp"
+        android:textColorHint="@color/colorMutedText"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:textColorHint="@color/colorMutedText"
+            android:textColor="@color/colorMutedGray2"
+            android:inputType="text"
+            android:layout_height="wrap_content">
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+   <!-- <EditText
         android:id="@+id/createform_service_dialog_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,19 +49,43 @@
         android:layout_marginEnd="10sp"
         android:hint="Цена"
         android:inputType="number|numberDecimal"
-        android:padding="10sp"></EditText>
+        android:padding="10sp"></EditText>-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:hint="Цена"
+        android:id="@+id/createform_service_dialog_price"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10sp"
+        android:layout_below="@id/createform_service_dialog_title"
+        android:textColorHint="@color/colorMutedText"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:textColorHint="@color/colorMutedText"
+            android:textColor="@color/colorMutedGray2"
+            android:inputType="number"
+            android:layout_height="wrap_content">
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/createform_service_dialog_btnCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/createform_service_dialog_price"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="10sp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="15sp"
         android:padding="10sp"
-        android:text="Сохранить"></Button>
+        android:textStyle="bold"
+        android:enabled="true"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorMutedGray2"
+        android:textAllCaps="false"
+        android:text="@string/btn_save"/>
 
     <Button
         android:id="@+id/createform_service_dialog_btnCancel"
@@ -50,6 +97,12 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="10sp"
         android:padding="10sp"
-        android:text="Отменить"></Button>
+        android:textStyle="bold"
+        android:enabled="true"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorMutedGray2"
+        android:textAllCaps="false"
+        android:layout_marginBottom="20sp"
+        android:text="@string/btn_cancel"/>
 
 </RelativeLayout>

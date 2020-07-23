@@ -25,10 +25,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 
 import fragments.MyProfileActivity;
 import models.ApiProvider;
+import models.CustomArrayAdapter;
 import models.Executor;
 import models.MyDataProvider;
 import models.Persons;
@@ -84,26 +87,19 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         deleteForm = findViewById(R.id.myForm_btn_deleteform);
         add_service = findViewById(R.id.myForm_btn_addService);
         mSpinner = findViewById(R.id.myForm_spinner);
-
-
         selectionList = new ArrayList<>();
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(this,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, getResources().getStringArray(R.array.sections), 0);
+
+        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
-        mSpinner.setSelection(1);
+        mSpinner.setSelection(curExecutor.getSectionId());
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-              //  String[] choose = getResources().getStringArray(R.array.sections);
-                String str = parent.getItemAtPosition(position).toString();
-                try {
-                    sectionId =apiProvider.getSectionIdByTitle(str); // provider.getSectionIdByTitle(choose[position]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sectionId = position;
             }
 
             @Override
@@ -196,27 +192,45 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         dialog.setContentView(R.layout.createform_service_dialog);
         dialog.setTitle("Добавить услугу");
 
-        final EditText edTitle = dialog.findViewById(R.id.createform_service_dialog_title);
-        final EditText edPrice = dialog.findViewById(R.id.createform_service_dialog_price);
+        final TextInputLayout edTitle = dialog.findViewById(R.id.createform_service_dialog_title);
+        final TextInputLayout edPrice = dialog.findViewById(R.id.createform_service_dialog_price);
         Button btnSave = dialog.findViewById(R.id.createform_service_dialog_btnCreate);
         Button btnCancel = dialog.findViewById(R.id.createform_service_dialog_btnCancel);
 
-        dialog.getWindow().setLayout(720, 800);
         dialog.setCancelable(true);
         dialog.show();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Service service = new Service(edTitle.getText().toString().trim(),
-                            Double.parseDouble(edPrice.getText().toString().trim()));
-                    services.add(service);
-                } catch (Exception error) {
-                    Log.e("error", error.getMessage());
+                String title3 = edTitle.getEditText().getText().toString().trim().trim();
+                if (title3.isEmpty()) {
+                    edTitle.setError("Заполните поле");
+                    return;
+                } else {
+                    edTitle.setError(null);
+                    edTitle.setErrorEnabled(false) ;
+
+                    String price3 = edPrice.getEditText().getText().toString().trim();
+                    if (price3.isEmpty()) {
+                        edPrice.setError("Заполните поле");
+                        return;
+                    } else {
+                        edPrice.setError(null);
+                        edPrice.setErrorEnabled(false);
+
+                        try {
+                            Service service = new Service(title3,
+                                    Double.parseDouble(price3));
+                            services.add(service);
+
+                            adapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        } catch (Exception error) {
+                            Log.e("error", error.getMessage());
+                        }
                 }
-                adapter.notifyDataSetChanged();
-                dialog.dismiss();
+                }
             }
         });
 
@@ -228,6 +242,7 @@ public class MyProfile_myForm_activity extends AppCompatActivity implements View
         });
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

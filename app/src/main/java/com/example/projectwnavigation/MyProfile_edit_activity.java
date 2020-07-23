@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -19,27 +20,35 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+import com.santalu.maskedittext.MaskEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.DateFormat;
 
+import fragments.Fragment_orders_add;
 import fragments.MyProfileActivity;
 import models.ApiProvider;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class MyProfile_edit_activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class MyProfile_edit_activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     Button btnOk, btnCh;
     ImageView image;
     MyDataProvider provider;
     ApiProvider apiProvider;
-    EditText etName, etLastname, etBirthday, etNumber;
+    TextInputLayout etName, etLastname, etNumber;
+    MaskEditText etBirthday;
     ProgressDialog pd;
 
+    Long birthday = 0L;
+    String name = null;
+    String lastname = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +63,7 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         etName = findViewById(R.id.profile_edit_etName);
         etLastname = findViewById(R.id.profile_edit_etLast);
         etBirthday = findViewById(R.id.profile_edit_etBirthday);
-        etNumber = findViewById(R.id.profile_edit_etNumber);
-
+        etNumber = findViewById(R.id.profile_edit_etNumberlayout);
         initData();
 
         btnCh.setOnClickListener(new View.OnClickListener() {
@@ -71,22 +79,26 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!validateName() || !validateBirthday()) {
+                    return;
+                }
                 try {
                     Persons pers = provider.getLoggedInPerson();
-                    pers.setName(etName.getText().toString().trim());
-                    pers.setLastname(etLastname.getText().toString().trim());
-                    pers.setNumber(etNumber.getText().toString().trim());
-                    pers.setBirthday(MyUtils.getCurentDateInLong());
-                  //  pers.setPhoto(MyUtils.imageViewToByte(image));
+                    pers.setName(name);
+                    pers.setLastname(lastname);
+                    pers.setBirthday(birthday);
+                    //  pers.setPhoto(MyUtils.imageViewToByte(image));
 
                     EditTask task2 = new EditTask();
                     task2.execute(pers);
-                    Toast.makeText(MyProfile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                    String result = task2.get();
+                    Toast.makeText(MyProfile_edit_activity.this, result, Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(MyProfile_edit_activity.this, MyProfileActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(MyProfile_edit_activity.this, "error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyProfile_edit_activity.this, "Ошибка: 4", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -98,6 +110,54 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
+
+        etNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment_edit_number fragment_editnumber = new Fragment_edit_number(MyProfile_edit_activity.this);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_editnumber).commit();
+               setTitle("Изменить номер");
+            }
+        });
+    }
+
+    private boolean validateBirthday() {
+        String b = etBirthday.getText().toString().trim();
+        if (b.isEmpty()) {
+            etBirthday.setError("Заполните поле");
+            return false;
+        } else {
+            etBirthday.setError(null);
+            this.birthday = MyUtils.convertDataToLongWithRawString(b);
+            return true;
+        }
+    }
+
+    private boolean validateName() {
+        String w = "\\A\\w{3,20}\\z";
+        String s = etName.getEditText().getText().toString().trim();
+        if (s.isEmpty()) {
+            etName.setError("Заполните поле");
+            return false;
+        } else if (!s.matches(w)) {
+            etName.setError("Инвалидное имя");
+            return false;
+        } else {
+            etName.setError(null);
+            etName.setErrorEnabled(false);
+            name = s;
+
+            String lastname = etLastname.getEditText().getText().toString().trim();
+            if (lastname.isEmpty()) {
+                etLastname.setError("Заполните поле");
+                return false;
+            } else {
+                etLastname.setError(null);
+                etLastname.setErrorEnabled(false);
+                this.lastname = lastname;
+                return true;
+            }
+        }
     }
 
     private void initData() {
@@ -105,22 +165,28 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         if (person.getPhoto() != null) {
             image.setImageBitmap(MyUtils.decodeByteToBitmap(person.getPhoto()));
         }
-        etName.setText(person.getName());
-        etLastname.setText(person.getLastname());
-        etNumber.setText(person.getNumber());
+        etName.getEditText().setText(person.getName());
+        etLastname.getEditText().setText(person.getLastname());
+        etNumber.getEditText().setText(person.getNumber());
+
+        if (person.getBirthday() != null) {
+            if (person.getBirthday() > 1) {
+                String b = MyUtils.convertLongToDataString(person.getBirthday());
+                etBirthday.setText(b);
+            }
+        }
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Long l = MyUtils.convertDataToLong(dayOfMonth, month, year);
+        birthday = l;
         String s = MyUtils.convertLongToDataString(l);
-        //String s = DateFormat.getDateInstance(DateFormat.FULL).format(year,month,dayOfMonth);
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        etBirthday.setText(s);
     }
 
 
-    private class EditTask extends AsyncTask<Persons, Void, Void> {
-
+    private class EditTask extends AsyncTask<Persons, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -131,9 +197,10 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         }
 
         @Override
-        protected Void doInBackground(Persons... params) {
+        protected String doInBackground(Persons... params) {
             try {
-                apiProvider.updatePerson(params[0]);
+                String s = apiProvider.updatePerson(params[0]);
+                return s;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,7 +209,7 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
 
 
         @Override
-        protected void onPostExecute(Void s) {
+        protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (pd.isShowing()) {
                 pd.dismiss();
@@ -168,7 +235,6 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
         if (requestCode == provider.READ_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
 
@@ -182,6 +248,7 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
                 image.setImageURI(resultUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception ex = res.getError();
+                ex.printStackTrace();
             }
 
         }

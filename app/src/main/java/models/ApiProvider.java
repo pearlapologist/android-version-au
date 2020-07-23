@@ -46,8 +46,7 @@ public class ApiProvider {
         jsonObject.put("lastname", person.getLastname());
         jsonObject.put("numb", person.getNumber());
         jsonObject.put("passwd", person.getPasswd());
-        String b = person.getBirthday() + "";
-        jsonObject.put("birth", b);
+        jsonObject.put("birth", person.getBirthday() + "");
 
         OutputStream os = con.getOutputStream();
         byte[] input = jsonObject.toString().getBytes("utf-8");
@@ -68,38 +67,38 @@ public class ApiProvider {
 
     //READ PERSON
     public Persons getPerson(int personId) throws Exception {
-            String url = "https://aualmaty.herokuapp.com/GetPersonById?id=" + personId;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
+        String url = "https://aualmaty.herokuapp.com/GetPersonById?id=" + personId;
+        MyJsonTask task = new MyJsonTask();
+        task.execute(url);
+        String result = task.get();
 
-            JSONObject jsonObject = new JSONObject(result);
-            int id = jsonObject.getInt("id");
-            String name = jsonObject.getString("name");
-            String lastName = jsonObject.getString("lastname");
-            String number = jsonObject.getString("number");
-            String created = jsonObject.getString("created");
-            int rating = jsonObject.getInt("rating");
-            String birthday = jsonObject.getString("birth");
-            int reviewscount = jsonObject.getInt("rcount");
-            //photo
+        JSONObject jsonObject = new JSONObject(result);
+        int id = jsonObject.getInt("id");
+        String name = jsonObject.getString("name");
+        String lastName = jsonObject.getString("lastname");
+        String number = jsonObject.getString("number");
+        String created = jsonObject.getString("created");
+        int rating = jsonObject.getInt("rating");
+        String birthday = jsonObject.getString("birth");
+        int reviewscount = jsonObject.getInt("rcount");
+        //photo
 
-            Persons p = null;
-            if(0<id){
-                p=new Persons();
-                p.setId(id);
-                p.setName(name);
-                p.setLastname(lastName);
-                p.setNumber(number);
-                Long cr = Long.valueOf(created);
-                p.setCreatedDate(cr);
-                p.setRating(rating);
-                Long bt = Long.valueOf(birthday);
-                p.setBirthday(bt);
-                p.setReviewscount(reviewscount);
+        Persons p = null;
+        if (0 < id) {
+            p = new Persons();
+            p.setId(id);
+            p.setName(name);
+            p.setLastname(lastName);
+            p.setNumber(number);
+            Long cr = Long.valueOf(created);
+            p.setCreatedDate(cr);
+            p.setRating(rating);
+            Long bt = Long.valueOf(birthday);
+            p.setBirthday(bt);
+            p.setReviewscount(reviewscount);
         }
 
-            return p;
+        return p;
     }
 
     public Persons getPersonByNumbNPasswd(String passwd, String number) {
@@ -179,25 +178,8 @@ public class ApiProvider {
         return b;
     }
 
-    public int getPersonRatingById(int id) {
-        int rating = -1;
-        try {
-            String url = "https://aualmaty.herokuapp.com/GetPersonRatingById?id=" + id;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
-
-            JSONObject jsonObject = new JSONObject(result);
-            rating = jsonObject.getInt("rating");
-        } catch (Exception e) {
-            Log.e("getRating", e.getMessage());
-        }
-        return rating;
-    }
-
     //UPDATE PERSON
-    public void updatePerson(Persons person) {
-        try {
+    public String updatePerson(Persons person) throws Exception{
             URL url = new URL("https://aualmaty.herokuapp.com/UpdatePersonById?id=" + person.getId());
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -227,35 +209,74 @@ public class ApiProvider {
                 response.append(responseLine.trim());
             }
             String r = response.toString();
-            Log.i("updatePerson", r);
-        } catch (Exception e) {
-            Log.e("updatePerson", e.getMessage());
-        }
+            return r;
     }
 
-    public void updatePersonRatingById(int personId) {
-        try {
-            String surl = "https://aualmaty.herokuapp.com/UpdatePersonRatingById?id=" + personId;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(surl);
-        } catch (Exception e) {
-            Log.e("updatePersonRatingById", e.getMessage());
-        }
+    public String updatePersonNumber(int personId, String number) throws Exception{
+            URL url = new URL("https://aualmaty.herokuapp.com/updatePersonNumber");
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("id", personId);
+            jsonObject.put("numb", number);
+
+            OutputStream os = con.getOutputStream();
+            byte[] input = jsonObject.toString().getBytes("utf-8");
+            os.write(input, 0, input.length);
+            os.flush();
+            os.close();
+
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), "utf-8"));
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            String r = response.toString();
+            return r;
     }
+
+    public String updatePersonPsswd(int personId, String passwd) throws Exception{
+        URL url = new URL("https://aualmaty.herokuapp.com/updatePersonPsswd");
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("id", personId);
+        jsonObject.put("pswd", passwd);
+
+        OutputStream os = con.getOutputStream();
+        byte[] input = jsonObject.toString().getBytes("utf-8");
+        os.write(input, 0, input.length);
+        os.flush();
+        os.close();
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(con.getInputStream(), "utf-8"));
+        StringBuilder response = new StringBuilder();
+        String responseLine = null;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+        String r = response.toString();
+        return r;
+    }
+
 
     //DELETE PERSON
-    public void deletePerson(int personId) {
-        try {
-            String surl = "https://aualmaty.herokuapp.com/DeletePersonById?id=" + personId;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(surl);
-        } catch (Exception e) {
-            Log.e("deletePerson", e.getMessage());
-        }
-    }
-
     //endregion
-
 
     //region Executor
     //CREATE EXECUTOR
@@ -392,7 +413,7 @@ public class ApiProvider {
     public ArrayList<Executor> getExecutorsBySectionId(int cId) {
         ArrayList<Executor> executors = new ArrayList<>();
         try {
-            String url = "https://aualmaty.herokuapp.com/GetExecutorsBySectionId?id=" + cId;
+            String url = "https://aualmaty.herokuapp.com/GetExecutorsBySectionId?sId=" + cId;
             MyJsonTask task = new MyJsonTask();
             task.execute(url);
             String result = task.get();
@@ -413,7 +434,7 @@ public class ApiProvider {
                     executor.getServices().clear();
                 } else {
                     ArrayList<Service> services = new ArrayList<>();
-                    JSONArray arr2 = jsonObject.getJSONArray("services");
+                    JSONArray arr2 = jsonService.getJSONArray("services");
                     for (int k = 0; k < arr2.length(); k++) {
                         JSONObject jsonService2 = arr2.getJSONObject(k);
                         int id2 = jsonService2.getInt("sId");
@@ -434,44 +455,44 @@ public class ApiProvider {
     }
 
     public void updateExecutor(Executor executor) throws Exception {
-            URL url = new URL("https://aualmaty.herokuapp.com/UpdateExecutor?id=" + executor.getId());
+        URL url = new URL("https://aualmaty.herokuapp.com/UpdateExecutor?id=" + executor.getId());
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
 
-            JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("sId", executor.getSectionId());
-            jsonObject.put("spec", executor.getSpecialztn());
-            jsonObject.put("desc", executor.getDescriptn());
-            JSONArray services = new JSONArray();
-            for (Service s : executor.getServices()) {
-                JSONObject service = new JSONObject();
-                service.put("sTitle", s.getTitle());
-                service.put("sPrice", s.getPrice());
-                services.put(service);
-            }
-            jsonObject.put("services", services);
+        jsonObject.put("sId", executor.getSectionId());
+        jsonObject.put("spec", executor.getSpecialztn());
+        jsonObject.put("desc", executor.getDescriptn());
+        JSONArray services = new JSONArray();
+        for (Service s : executor.getServices()) {
+            JSONObject service = new JSONObject();
+            service.put("sTitle", s.getTitle());
+            service.put("sPrice", s.getPrice());
+            services.put(service);
+        }
+        jsonObject.put("services", services);
 
 
-            OutputStream os = con.getOutputStream();
-            byte[] input = jsonObject.toString().getBytes("utf-8");
-            os.write(input, 0, input.length);
-            os.flush();
-            os.close();
+        OutputStream os = con.getOutputStream();
+        byte[] input = jsonObject.toString().getBytes("utf-8");
+        os.write(input, 0, input.length);
+        os.flush();
+        os.close();
 
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "utf-8"));
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-            String r = response.toString();
-            Log.i("updateExecutor", r);
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(con.getInputStream(), "utf-8"));
+        StringBuilder response = new StringBuilder();
+        String responseLine = null;
+        while ((responseLine = br.readLine()) != null) {
+            response.append(responseLine.trim());
+        }
+        String r = response.toString();
+        Log.i("updateExecutor", r);
     }
 
     //DELETE EXECUTOR
@@ -487,36 +508,6 @@ public class ApiProvider {
 
     //endregion
 
-
- /*   public void loadExecutorServices(Executor executor) {
-        try {
-            String url = "https://aualmaty.herokuapp.com/LoadExecutorServices?id=" + executor.getId();
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
-
-            JSONObject jsonObject = new JSONObject(result);
-            if (executor.getServices() != null) {
-                executor.getServices().clear();
-            } else {
-                ArrayList<Service> services = new ArrayList<>();
-                JSONArray arr = jsonObject.getJSONArray("services");
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject jsonService = arr.getJSONObject(i);
-                    int id = jsonService.getInt("id");
-                    String title = jsonService.getString("title");
-                    Double price = jsonService.getDouble("price");
-                    Service service = new Service(id, title, price);
-                    services.add(service);
-                }
-                executor.setServices(services);
-            }
-
-        } catch (Exception e) {
-            Log.e("loadServices", e.getMessage());
-        }
-    }*/
-
     //region section
     public Section_of_services getSection(int sectionId) throws Exception {
         String url = "https://aualmaty.herokuapp.com/GetSection?id=" + sectionId;
@@ -530,38 +521,6 @@ public class ApiProvider {
         Section_of_services division = new Section_of_services(sectionId, title);
 
         return division;
-    }
-
-    public ArrayList<String> getSectionListInString() throws Exception{
-        ArrayList<String> divisions = new ArrayList<>();
-        String url = "https://aualmaty.herokuapp.com/GetSectionListInString";
-        MyJsonTask task = new MyJsonTask();
-        task.execute(url);
-        String result = task.get();
-
-        JSONObject jsonObject = new JSONObject(result);
-
-        JSONArray arr = jsonObject.getJSONArray("sections");
-        for (int i = 0; i < arr.length(); i++) {
-            String division = arr.getString(i);
-
-            divisions.add(division);
-        }
-        return divisions;
-    }
-
-    public int getSectionIdByTitle(String title) throws Exception{
-       String str = title.trim();
-        str = str.replaceAll("\\s", "%20");
-        String url = "https://aualmaty.herokuapp.com/GetSectionIdByTitle?title=" + str;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
-
-            JSONObject jsonObject = new JSONObject(result);
-            int id = jsonObject.getInt("id");
-
-            return id;
     }
 
     //endregion
@@ -611,70 +570,63 @@ public class ApiProvider {
     //READ Order
     public Order getOrder(int orderId) throws Exception {
         Order order = null;
-        try {
-            String url = "https://aualmaty.herokuapp.com/GetOrder?id=" + orderId;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
+        String url = "https://aualmaty.herokuapp.com/GetOrder?id=" + orderId;
+        MyJsonTask task = new MyJsonTask();
+        task.execute(url);
+        String result = task.get();
 
-            JSONObject jsonObject = new JSONObject(result);
-            int id = jsonObject.getInt("id");
-            String title = jsonObject.getString("title");
-            int customerId = jsonObject.getInt("customer");
-            int sectionId = jsonObject.getInt("section");
-            Double price = jsonObject.getDouble("price");
-            String desc = jsonObject.getString("desc");
-            String deadline = jsonObject.getString("dealine");
-            String created = jsonObject.getString("created");
+        JSONObject jsonObject = new JSONObject(result);
+        int id = jsonObject.getInt("id");
+        String title = jsonObject.getString("title");
+        int customerId = jsonObject.getInt("customer");
+        int sectionId = jsonObject.getInt("section");
+        Double price = jsonObject.getDouble("price");
+        String desc = jsonObject.getString("desc");
+        String deadline = jsonObject.getString("dealine");
+        String created = jsonObject.getString("created");
+
+        Long cr = Long.valueOf(created);
+        Long d = Long.valueOf(deadline);
+
+        order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
+        return order;
+    }
+
+    public ArrayList<Order> getOrders() throws Exception {
+        ArrayList<Order> orders = new ArrayList<>();
+        String url = "https://aualmaty.herokuapp.com/GetAllOrders";
+        MyJsonTask task = new MyJsonTask();
+        task.execute(url);
+        String result = task.get();
+
+        JSONObject jsonObject = new JSONObject(result);
+
+        JSONArray arr = jsonObject.getJSONArray("orders");
+        Order order = null;
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject jsonOrder = arr.getJSONObject(i);
+            int id = jsonOrder.getInt("id");
+            String title = jsonOrder.getString("title");
+            int customerId = jsonOrder.getInt("customer");
+            int sectionId = jsonOrder.getInt("section");
+            Double price = jsonOrder.getDouble("price");
+            String desc = jsonOrder.getString("desc");
+            String deadline = jsonOrder.getString("dealine");
+            String created = jsonOrder.getString("created");
 
             Long cr = Long.valueOf(created);
             Long d = Long.valueOf(deadline);
 
             order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
-        } finally {
-            return order;
+
+            orders.add(order);
         }
-    }
-
-
-    public ArrayList<Order> getOrders() throws Exception {
-        ArrayList<Order> orders = new ArrayList<>();
-        try {
-            String url = "https://aualmaty.herokuapp.com/GetAllOrders";
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
-
-            JSONObject jsonObject = new JSONObject(result);
-
-            JSONArray arr = jsonObject.getJSONArray("orders");
-            Order order = null;
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject jsonOrder = arr.getJSONObject(i);
-                int id = jsonOrder.getInt("id");
-                String title = jsonOrder.getString("title");
-                int customerId = jsonOrder.getInt("customer");
-                int sectionId = jsonOrder.getInt("section");
-                Double price = jsonOrder.getDouble("price");
-                String desc = jsonOrder.getString("desc");
-                String deadline = jsonOrder.getString("dealine");
-                String created = jsonOrder.getString("created");
-
-                Long cr = Long.valueOf(created);
-                Long d = Long.valueOf(deadline);
-
-                order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
-
-                orders.add(order);
-            }
-        } finally {
-            return orders;
-        }
+        return orders;
     }
 
     public ArrayList<Order> getOrdersBySectionId(int rId) throws Exception {
         ArrayList<Order> orders = new ArrayList<>();
-        String url = "https://aualmaty.herokuapp.com/GetOrdersBySectionId?id=" + rId;
+        String url = "https://aualmaty.herokuapp.com/GetOrdersBySectionId?sId=" + rId;
         MyJsonTask task = new MyJsonTask();
         task.execute(url);
         String result = task.get();
@@ -705,38 +657,60 @@ public class ApiProvider {
 
     public ArrayList<Order> getPersonOrdersById(int personId) throws Exception {
         ArrayList<Order> orders = new ArrayList<>();
-        try {
-            String url = "https://aualmaty.herokuapp.com/GetPersonOrdersById?id=" + personId;
-            MyJsonTask task = new MyJsonTask();
-            task.execute(url);
-            String result = task.get();
+        String url = "https://aualmaty.herokuapp.com/GetPersonOrdersById?id=" + personId;
+        MyJsonTask task = new MyJsonTask();
+        task.execute(url);
+        String result = task.get();
 
-            JSONObject jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject(result);
 
-            JSONArray arr = jsonObject.getJSONArray("orders");
-            Order order;
+        JSONArray arr = jsonObject.getJSONArray("orders");
+        Order order;
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject jsonOrder = arr.getJSONObject(i);
+            int id = jsonOrder.getInt("id");
+            String title = jsonOrder.getString("title");
+            int customerId = jsonOrder.getInt("customer");
+            int sectionId = jsonOrder.getInt("section");
+            Double price = jsonOrder.getDouble("price");
+            String desc = jsonOrder.getString("desc");
+            String deadline = jsonOrder.getString("dealine");
+            String created = jsonOrder.getString("created");
+
+            Long cr = Long.valueOf(created);
+            Long d = Long.valueOf(deadline);
+
+            order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
+
+            orders.add(order);
+        }
+        return orders;
+    }
+
+    public ArrayList<Order> getPersonOrdersByIdNSection(int personId, int sectionId) throws Exception {
+        ArrayList<Order> orders = new ArrayList<>();
+        String url = "https://aualmaty.herokuapp.com/GetPersonOrdersByIdNSection?id=" + personId + "&sId=" + sectionId;
+        MyJsonTask task = new MyJsonTask();
+        task.execute(url);
+        String result = task.get();
+        JSONObject jsonObject = new JSONObject(result);
+        JSONArray arr = jsonObject.getJSONArray("orders");
+        Order order;
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject jsonOrder = arr.getJSONObject(i);
                 int id = jsonOrder.getInt("id");
                 String title = jsonOrder.getString("title");
                 int customerId = jsonOrder.getInt("customer");
-                int sectionId = jsonOrder.getInt("section");
                 Double price = jsonOrder.getDouble("price");
                 String desc = jsonOrder.getString("desc");
                 String deadline = jsonOrder.getString("dealine");
                 String created = jsonOrder.getString("created");
-
                 Long cr = Long.valueOf(created);
                 Long d = Long.valueOf(deadline);
-
                 order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
-
                 orders.add(order);
             }
-
-        } finally {
-            return orders;
-        }
+        return orders;
     }
 
     //UPDATE ORDER
@@ -919,8 +893,9 @@ public class ApiProvider {
         JSONObject jsonObject = new JSONObject(result);
         int id = jsonObject.getInt("id");
 
-        if(id >0){
-        bookmark = new Bookmarks(id, personId, 0, orderId);}
+        if (id > 0) {
+            bookmark = new Bookmarks(id, personId, 0, orderId);
+        }
 
         return bookmark;
     }
@@ -1174,7 +1149,7 @@ public class ApiProvider {
 
     //DELETE REVIEW
     public void deleteReview(int id, int executorId) throws Exception {
-        String surl = "https://aualmaty.herokuapp.com/DeleteReview?id=" + id+"&executorId="+executorId;
+        String surl = "https://aualmaty.herokuapp.com/DeleteReview?id=" + id + "&executorId=" + executorId;
         MyJsonTask task = new MyJsonTask();
         task.execute(surl);
     }
@@ -1296,7 +1271,7 @@ public class ApiProvider {
     public ArrayList<Integer> getRespondedPersonsIdListByOrderIdId(int orderId) throws Exception {
         ArrayList<Integer> arrId = new ArrayList<>();
 
-        String url = "https://aualmaty.herokuapp.com/GetRespondedPersonsIdListByOrderId?orderId="+orderId;
+        String url = "https://aualmaty.herokuapp.com/GetRespondedPersonsIdListByOrderId?orderId=" + orderId;
         MyJsonTask task = new MyJsonTask();
         task.execute(url);
         String result = task.get();
@@ -1418,51 +1393,6 @@ public class ApiProvider {
     }
 
     //READ ANSWER
-    //TODO: удалить, если не будет нигде использоватться
-    public Answer getAnswer(int id) throws Exception {
-        String url = "https://aualmaty.herokuapp.com/GetAnswer?id=" + id;
-        MyJsonTask task = new MyJsonTask();
-        task.execute(url);
-        String result = task.get();
-
-        JSONObject jsonObject = new JSONObject(result);
-        int reviewId = jsonObject.getInt("reviewId");
-        int whoanswersId = jsonObject.getInt("whoanswersId");
-        int whoposted = jsonObject.getInt("whopostedId");
-        String text = jsonObject.getString("text");
-        String created = jsonObject.getString("created");
-        Long cr = Long.valueOf(created);
-
-        Answer answer = new Answer(id, reviewId, whoanswersId, whoposted, text, cr);
-        return answer;
-    }
-
-    public ArrayList<Answer> getAllReviewAnswersById(int reviewId) throws Exception {
-        ArrayList<Answer> answers = new ArrayList<>();
-        String url = "https://aualmaty.herokuapp.com/GetAllReviewAnswersById?id=" + reviewId;
-        MyJsonTask task = new MyJsonTask();
-        task.execute(url);
-        String result = task.get();
-
-        JSONObject jsonObject = new JSONObject(result);
-
-        JSONArray arr = jsonObject.getJSONArray("answers");
-        Answer answer = null;
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject jsonResponse = arr.getJSONObject(i);
-            int answerId = jsonResponse.getInt("id");
-            int whoanswersId = jsonResponse.getInt("whoanswersId");
-            int whoposted = jsonResponse.getInt("whopostedId");
-            String text = jsonResponse.getString("text");
-            String created = jsonResponse.getString("created");
-            Long cr = Long.valueOf(created);
-
-            answer = new Answer(answerId, reviewId, whoanswersId, whoposted, text, cr);
-            answers.add(answer);
-        }
-        return answers;
-    }
-
     //UPDATE ANSWER
     public void updateAnswer(Answer answer) throws Exception {
         URL url = new URL("https://aualmaty.herokuapp.com/UpdateAnswer?id=" + answer.getId());

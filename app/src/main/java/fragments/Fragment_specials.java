@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.projectwnavigation.Navigation_activity;
 import com.example.projectwnavigation.R;
 
 import java.util.ArrayList;
@@ -28,16 +29,10 @@ import models.Executor;
 import models.MyDataProvider;
 
 
-public class Fragment_specials extends Fragment implements AdapterView.OnItemSelectedListener {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class Fragment_specials extends Fragment {
     MyDataProvider provider;
     ApiProvider apiProvider;
     Context context;
-
-
-    private String mParam1;
-    private String mParam2;
 
     RecyclerView recyclerView;
     Executors_adapter_frg executors_adapter;
@@ -55,22 +50,9 @@ public class Fragment_specials extends Fragment implements AdapterView.OnItemSel
         apiProvider = new ApiProvider();
     }
 
-    public static Fragment_specials newInstance(String param1, String param2) {
-        Fragment_specials fragment = new Fragment_specials();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -83,63 +65,67 @@ public class Fragment_specials extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.fargment_specials_rv);
-        spinner = view.findViewById(R.id.fargment_specials_spinner2);
+        spinner = view.findViewById(R.id.fargment_specials_spinner3);
         img_nospec = view.findViewById(R.id.fargment_specials_no_spec);
 
-        insertExecutorsArray();
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, getResources().getStringArray(R.array.sections));
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(0);
 
         executors_adapter = new Executors_adapter_frg(context, executors);
         recyclerView.setAdapter(executors_adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.sections));
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
+        checkExecutorsArray();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+
+                    if (executors != null) {
+                        executors.clear();
+                        ArrayList<Executor> executors22 = apiProvider.getAllExecutors();
+                        executors.addAll(executors22);
+                        executors_adapter.notifyDataSetChanged();
+                    }
+                    else {
+                        try {
+                            executors = apiProvider.getAllExecutors();
+                        } catch (Exception e) {
+                            Log.e("insertExecutorsArray", e.getMessage());
+                        }
+                    }
+
+                } else {
+                    int sectionId = position;
+
+                    if (executors != null) {
+                        executors.clear();
+                    }
+                    ArrayList<Executor> executors2 = apiProvider.getExecutorsBySectionId(sectionId); // provider.getExecutorsBySectionId(sectionId);
+                    executors.addAll(executors2);
+                    executors_adapter.notifyDataSetChanged();
+                }
+                checkExecutorsArray();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-     /*   String[] choose = getResources().getStringArray(R.array.sections);
-        String division = choose[position];*/
-        String str = parent.getItemAtPosition(position).toString();
-        int sectionId = 0; // provider.getSectionIdByTitle(division);
-        try {
-            sectionId = apiProvider.getSectionIdByTitle(str);
-        } catch (Exception e) {
-            e.printStackTrace();
+    void checkExecutorsArray() {
+        if (executors == null || executors.size() <= 0) {
+            img_nospec.setVisibility(View.VISIBLE);
+        } else {
+            img_nospec.setVisibility(View.GONE);
         }
-        if (executors != null) {
-            executors.clear();
-        }
-        ArrayList<Executor>n =apiProvider.getExecutorsBySectionId(sectionId); // provider.getExecutorsBySectionId(sectionId);
-        executors.addAll(n);
-        executors_adapter.notifyDataSetChanged();
-        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    void insertExecutorsArray() {
-        try {
-            executors = apiProvider.getAllExecutors() ; //provider.getAllExecutors();
-            if (executors == null || executors.size() <= 0) {
-                img_nospec.setVisibility(View.VISIBLE);
-            }
-            else {
-          //      executors.clear();
-          //      executors_adapter.notifyDataSetChanged();
-                img_nospec.setVisibility(View.GONE);
-            }
-        } catch (Exception e) {
-            Log.e("insertExecutorsArray", e.getMessage());
-        }
-
     }
 
 

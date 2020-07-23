@@ -28,11 +28,13 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectwnavigation.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 
 import models.ApiProvider;
+import models.CustomArrayAdapter;
 import models.MyDataProvider;
 import models.MyUtils;
 import models.Order;
@@ -78,6 +80,7 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
             adapter_layout = itemView.findViewById(R.id.activity_profile_orders_adapter_layout);
         }
     }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -98,7 +101,7 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
         String created = MyUtils.convertLongToDataString(order.getCreated_date());
         holder.createdDate.setText(created);
         String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText(""+deadlinetext);
+        holder.deadline.setText("" + deadlinetext);
         final int id = order.getId();
 
         Section_of_services section = null;
@@ -167,9 +170,9 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    DeleteOrderTask task  = new DeleteOrderTask();
+                    DeleteOrderTask task = new DeleteOrderTask();
                     task.execute(id);
-                   // provider.deleteOrder(id);
+                    // provider.deleteOrder(id);
                     notifyDataSetChanged();
                     dialog.dismiss();
                 } catch (Exception e) {
@@ -189,39 +192,33 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
 
     int sectionId = -1;
 
-    Order order= null;
+    Order order = null;
+
     private void showDialogUpdate(final int orderId) {
         final Dialog dialog = new Dialog(activity);
 
         dialog.setContentView(R.layout.dialog_order_update);
         dialog.setTitle("Редактировать заказ");
 
-        final EditText title = dialog.findViewById(R.id.dialog_orders_update_title);
-        final EditText price = dialog.findViewById(R.id.dialog_orders_update_price);
-        final EditText descr = dialog.findViewById(R.id.dialog_orders_update_descr);
+        final TextInputLayout title = dialog.findViewById(R.id.dialog_orders_update_title);
+        final TextInputLayout price = dialog.findViewById(R.id.dialog_orders_update_price);
+        final TextInputLayout descr = dialog.findViewById(R.id.dialog_orders_update_descr);
         final MaskEditText deadline = dialog.findViewById(R.id.dialog_orders_update_deadlinee);
         Button btnSave = dialog.findViewById(R.id.dialog_orders_update_btnOk);
         Spinner spinner = dialog.findViewById(R.id.dialog_orders_update_section);
         Button btnCancel = dialog.findViewById(R.id.dialog_orders_update_btnCancel);
 
-        ArrayList<String> sectionList = null; // provider.getSectionListInString();
-        try {
-            sectionList = apiProvider.getSectionListInString();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_layout, R.id.spinner_layout_textview, sectionList);
-            spinner.setAdapter(adapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(context,
+                R.layout.spinner_layout, R.id.spinner_layout_textview, context.getResources().getStringArray(R.array.sections), 0);
+
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(1);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String str = parent.getItemAtPosition(position).toString();
-                try {
-                    sectionId = apiProvider.getSectionIdByTitle(str);// provider.getSectionIdByTitle(str);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sectionId = position;
             }
 
             @Override
@@ -230,36 +227,62 @@ public class MyProfile_orders_adapter extends RecyclerView.Adapter<MyProfile_ord
             }
         });
 
-        dialog.getWindow().setLayout(720, 1300);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show();
 
         try {
-            order =apiProvider.getOrder(orderId); // provider.getOrder(orderId);
+            order = apiProvider.getOrder(orderId); // provider.getOrder(orderId);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        title.setText(order.getTitle());
-        price.setText(order.getPrice() + "");
+        title.getEditText().setText(order.getTitle());
+        price.getEditText().setText(order.getPrice() + "");
         deadline.setText(MyUtils.convertLongToDataString(order.getDeadline()));
-        descr.setText(order.getDescription());
+        descr.getEditText().setText(order.getDescription());
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
-                order.setSection(sectionId);
-                order.setDescription(descr.getText().toString().trim());
-                order.setTitle(title.getText().toString().trim());
-                order.setPrice(Double.valueOf(price.getText().toString()));
-                order.setDeadline(l);
+                String desc = descr.getEditText().getText().toString().trim();
+                if (desc.isEmpty()|| desc.equals(" ")) {
+                    descr.setError("Заполните поле");
+                    return ;
+                }else {
+                    descr.setError(null);
+                    descr.setErrorEnabled(false);
 
-                UpdateOrderTask task = new UpdateOrderTask();
-                task.execute(order);
-            //    provider.updateOrder(order);
-                notifyDataSetChanged();
-                Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
+                    String txttitle = title.getEditText().getText().toString().trim();
+                    if (txttitle.isEmpty() || txttitle.equals(" ")) {
+                        title.setError("Заполните поле");
+                        return ;
+                    }else {
+                        title.setError(null);
+                        title.setErrorEnabled(false);
+
+                        String txtprice = price.getEditText().getText().toString().trim();
+                        if (txtprice.isEmpty() || txtprice.equals(" ")) {
+                            price.setError("Заполните поле");
+                            return ;
+                        }else {
+                            price.setError(null);
+                            price.setErrorEnabled(false);
+
+                            order.setSection(sectionId);
+                            order.setDescription(desc);
+                            order.setTitle(txttitle);
+                            order.setPrice(Double.valueOf(txtprice));
+                            Long l = MyUtils.convertPntdStringToLong(deadline.getText().toString());
+                            order.setDeadline(l);
+
+                            UpdateOrderTask task = new UpdateOrderTask();
+                            task.execute(order);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Изменения сохранены", Toast.LENGTH_LONG).show();
+
+                            dialog.dismiss();
+                        }
+                    }
+                }
             }
         });
 

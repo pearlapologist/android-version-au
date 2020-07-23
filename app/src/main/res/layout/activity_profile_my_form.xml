@@ -33,11 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/myForm_tvsection"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="8sp"
-                android:layout_marginTop="10sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="8sp"
                 android:layout_marginEnd="10sp"
-                ></Spinner>
+                android:popupBackground="@color/colorBbb2"></Spinner>
 
             <Button
                 android:id="@+id/myForm_btn_addCoverPh"
@@ -48,11 +47,11 @@
                 android:layout_marginTop="15dp"
                 android:textAllCaps="false"
                 android:layout_marginEnd="10sp"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:layout_marginBottom="10sp"
                 android:text="Изменить фото ообложки"
                 android:enabled="true"
-                android:padding="5sp"
+                android:padding="10dp"
                 android:textColor="@color/colorWhite"
                 android:background="@color/colorMutedGray2"
                 android:textStyle="bold"
@@ -83,7 +82,8 @@
                 android:layout_marginTop="15sp"
                 android:layout_marginEnd="10sp"
                 android:hint="Специализация"
-                android:inputType="text"></EditText>
+                android:inputType="text"
+                android:textSize="14sp"></EditText>
 
             <Button
                 android:id="@+id/myForm_btn_addService"
@@ -91,17 +91,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/myForm_rv"
                 android:layout_marginStart="10sp"
-                android:textAllCaps="false"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10sp"
-                android:textSize="18sp"
-                android:text="Добавить услугу"
-                android:enabled="true"
-                android:padding="10sp"
-                android:textColor="@color/colorWhite"
                 android:background="@color/colorMutedGray2"
-                android:textStyle="bold"
-                ></Button>
+                android:enabled="true"
+                android:padding="10dp"
+                android:text="@string/btn_add_service"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                android:textStyle="bold"></Button>
 
             <Button
                 android:id="@+id/myForm_btn_deleteform"
@@ -112,13 +111,13 @@
                 android:textAllCaps="false"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10sp"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:enabled="true"
-                android:padding="5sp"
+                android:padding="10dp"
                 android:textColor="@color/colorWhite"
                 android:background="@color/colorMutedGray2"
                 android:textStyle="bold"
-                android:text="Удалить анкету"></Button>
+                android:text="@string/btn_delete_form"></Button>
 
             <EditText
                 android:id="@+id/myForm_desc"
@@ -131,8 +130,7 @@
                 android:hint="Описание"
                 android:inputType="text"
                 android:maxLength="1000"
-                android:textSize="18sp"></EditText>
-
+                android:textSize="14sp"></EditText>
 
 
             <Button
@@ -142,16 +140,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="10sp"
-                android:textAllCaps="false"
                 android:layout_marginTop="10sp"
                 android:layout_marginEnd="10sp"
-                android:text="Сохранить"
-                android:enabled="true"
-                android:padding="10sp"
-                android:textColor="@color/colorWhite"
                 android:background="@color/colorMutedGray2"
-                android:textStyle="bold"
-                android:textSize="18sp"></Button>
+                android:enabled="true"
+                android:padding="10dp"
+                android:text="@string/btn_save"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                android:textStyle="bold"></Button>
 
             <TextView
                 android:id="@+id/myForm_tvservices"

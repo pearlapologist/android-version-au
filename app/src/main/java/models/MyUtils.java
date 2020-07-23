@@ -19,21 +19,6 @@ import java.util.Date;
 
 public class MyUtils {
 
-
-    public static Long convertDataToLong(String res) {
-        long startDate = 0;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sdf.parse(res);
-            startDate = date.getTime();
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return startDate;
-    }
-
     public static Long convertPntdStringToLong(String res) {
         long startDate = 0;
         try {
@@ -60,7 +45,6 @@ public class MyUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return startDate;
     }
 

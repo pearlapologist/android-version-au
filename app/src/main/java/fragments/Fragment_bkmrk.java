@@ -19,11 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import models.MyDataProvider;
 
 public class Fragment_bkmrk extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-
     MyDataProvider provider;
     Context context;
 
@@ -39,24 +34,9 @@ public class Fragment_bkmrk extends Fragment {
         this.context = context;
         this.provider = new MyDataProvider(context);
     }
-
-
-    public static Fragment_bkmrk newInstance(String param1, String param2) {
-        Fragment_bkmrk fragment = new Fragment_bkmrk();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -67,13 +47,10 @@ public class Fragment_bkmrk extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         fragment_specials = new Fragment_bkmk_specials(context);
         fragment_orders = new Fragment_bkmk_orders(context);
-
         bottomNavigationView = view.findViewById(R.id.frg_bkm_navbar);
         bottomNavigationView.setOnNavigationItemSelectedListener(listener);
-
 
         FragmentManager manager = getFragmentManager();
         manager.beginTransaction().replace(R.id.frg_bkm_framelayout, fragment_specials).commit();

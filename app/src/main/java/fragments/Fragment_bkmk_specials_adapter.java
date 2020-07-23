@@ -69,74 +69,80 @@ public class Fragment_bkmk_specials_adapter extends RecyclerView.Adapter<Fragmen
         int executorId = bookm.getExecutorId();
        final Executor executor = apiProvider.getExecutor(executorId); //  provider.getExecutor(executorId);
 
-        holder.spcltn_txt.setText(executor.getSpecialztn());
+        if(executor != null) {
+            holder.spcltn_txt.setText(executor.getSpecialztn());
+            try {
+                p = apiProvider.getPerson(executor.getPersonId());   //provider.getPerson(executor.getPersonId());
+                if (p.getPhoto() == null) {
+                    holder.photo.setImageResource(R.drawable.executors_default_image);
+                } else {
+                    holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+                }
+                holder.name.setText(p.getName());
+                holder.rating.setText(p.getRating() + "");
 
-
-        try {
-            p = apiProvider.getPerson(executor.getPersonId());   //provider.getPerson(executor.getPersonId());
-
-            if (p.getPhoto() == null) {
-                holder.photo.setImageResource(R.drawable.executors_default_image);
-            } else {
-                holder.photo.setImageBitmap(MyUtils.decodeByteToBitmap(p.getPhoto()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            holder.name.setText(p.getName());
-            holder.rating.setText(p.getRating() + "");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (p.getId() == curPerson.getId()) {
+                        Intent intent = new Intent(context, MyProfileActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, Executors_view_activity.class);
+                        intent.putExtra("executorIdFragment", executor.getId());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                }
+            });
+
+            holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(context, v);
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.menu_bookm_delete:
+                                    showDialogDelete(executor);
+                                    return true;
+                                case R.id.menu_bookm_complain:
+                                    //TODO: доделать методы
+                                    Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    popup.inflate(R.menu.menu_bookm_popup);
+                    popup.show();
+                }
+            });
+
+        }else{
+            holder.spcltn_txt.setText("Ошибка");
+            try {
+                holder.photo.setImageResource(R.drawable.executors_default_image);
+                holder.name.setText("Специалист удален или не найден" );
+                holder.rating.setText("0");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
         if (fragment_bkmk_specials.contextModeEnable) {
             holder.chbox.setVisibility(View.VISIBLE);
         } else {
             holder.chbox.setVisibility(View.GONE);
             //holder.chbox.setChecked(false);
         }
-
-        holder.adapter_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (p.getId() == curPerson.getId()) {
-                    Intent intent = new Intent(context, MyProfileActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else {
-                    Intent intent = new Intent(context, Executors_view_activity.class);
-                    intent.putExtra("executorIdFragment", executor.getId());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            }
-        });
-
-        holder.btn_popup_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(context, v);
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_bookm_delete:
-                                showDialogDelete(executor);
-                                return true;
-                            case R.id.menu_bookm_complain:
-                                //TODO: доделать методы
-                                Toast.makeText(context, "отправлена", Toast.LENGTH_SHORT).show();
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-                });
-                popup.inflate(R.menu.menu_bookm_popup);
-                popup.show();
-            }
-        });
-
     }
 
     private void showDialogDelete(final Executor executor) {

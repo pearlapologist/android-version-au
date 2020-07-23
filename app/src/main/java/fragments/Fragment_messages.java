@@ -27,16 +27,9 @@ import models.Persons;
 
 
 public class Fragment_messages extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     MyDataProvider provider;
     Context context;
     ApiProvider apiProvider;
-
 
     RecyclerView recyclerView;
     Messages_adapter_frg messages_adapter;
@@ -52,22 +45,9 @@ public class Fragment_messages extends Fragment {
         this.provider = new MyDataProvider(context);
     }
 
-    public static Fragment_messages newInstance(String param1, String param2) {
-        Fragment_messages fragment = new Fragment_messages();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
