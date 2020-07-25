@@ -37,12 +37,13 @@ import models.MyDataProvider;
 import models.MyUtils;
 import models.Persons;
 
-public class MyProfile_edit_activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class MyProfile_edit_activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
     Button btnOk, btnCh;
     ImageView image;
     MyDataProvider provider;
     ApiProvider apiProvider;
     TextInputLayout etName, etLastname, etNumber;
+    EditText editTextNumber;
     MaskEditText etBirthday;
     ProgressDialog pd;
 
@@ -64,61 +65,51 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         etLastname = findViewById(R.id.profile_edit_etLast);
         etBirthday = findViewById(R.id.profile_edit_etBirthday);
         etNumber = findViewById(R.id.profile_edit_etNumberlayout);
+        editTextNumber = findViewById(R.id.profile_edit_etNumber);
         initData();
 
-        btnCh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityCompat.requestPermissions(
-                        MyProfile_edit_activity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        999
-                );
+        btnCh.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
+        etBirthday.setOnClickListener(this);
+        etNumber.setOnClickListener(this);
+        editTextNumber.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.profile_edit_etNumberlayout || v.getId() == R.id.profile_edit_etNumber){
+            Intent intent = new Intent(MyProfile_edit_activity.this, Activity_edit_number.class);
+            startActivity(intent);
+        }else if(v.getId() ==R.id.profile_edit_etBirthday){
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
+        }else if(v.getId() ==R.id.profile_edit_btnChoose){
+            ActivityCompat.requestPermissions(
+                    MyProfile_edit_activity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    999
+            );
+        }else if(v.getId() ==R.id.profile_edit_btnOk){
+            if (!validateName() || !validateBirthday()) {
+                return;
             }
-        });
+            try {
+                Persons pers = provider.getLoggedInPerson();
+                pers.setName(name);
+                pers.setLastname(lastname);
+                pers.setBirthday(birthday);
+                //  pers.setPhoto(MyUtils.imageViewToByte(image));
 
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!validateName() || !validateBirthday()) {
-                    return;
-                }
-                try {
-                    Persons pers = provider.getLoggedInPerson();
-                    pers.setName(name);
-                    pers.setLastname(lastname);
-                    pers.setBirthday(birthday);
-                    //  pers.setPhoto(MyUtils.imageViewToByte(image));
+                EditTask task2 = new EditTask();
+                task2.execute(pers);
 
-                    EditTask task2 = new EditTask();
-                    task2.execute(pers);
-                    String result = task2.get();
-                    Toast.makeText(MyProfile_edit_activity.this, result, Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MyProfile_edit_activity.this, MyProfileActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(MyProfile_edit_activity.this, "Ошибка: 4", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(MyProfile_edit_activity.this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MyProfile_edit_activity.this, MyProfileActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(MyProfile_edit_activity.this, "Ошибка с изменением данных", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        etBirthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(), "date picker");
-            }
-        });
-
-        etNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment_edit_number fragment_editnumber = new Fragment_edit_number(MyProfile_edit_activity.this);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment_editnumber).commit();
-               setTitle("Изменить номер");
-            }
-        });
+        }
     }
 
     private boolean validateBirthday() {
@@ -186,7 +177,8 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
     }
 
 
-    private class EditTask extends AsyncTask<Persons, Void, String> {
+
+    private class EditTask extends AsyncTask<Persons, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -197,10 +189,9 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
         }
 
         @Override
-        protected String doInBackground(Persons... params) {
+        protected Void doInBackground(Persons... params) {
             try {
-                String s = apiProvider.updatePerson(params[0]);
-                return s;
+                apiProvider.updatePerson(params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -209,7 +200,7 @@ public class MyProfile_edit_activity extends AppCompatActivity implements DatePi
 
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(Void s) {
             super.onPostExecute(s);
             if (pd.isShowing()) {
                 pd.dismiss();

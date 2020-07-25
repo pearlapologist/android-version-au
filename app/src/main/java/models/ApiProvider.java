@@ -179,7 +179,7 @@ public class ApiProvider {
     }
 
     //UPDATE PERSON
-    public String updatePerson(Persons person) throws Exception{
+    public void updatePerson(Persons person) throws Exception{
             URL url = new URL("https://aualmaty.herokuapp.com/UpdatePersonById?id=" + person.getId());
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -209,11 +209,11 @@ public class ApiProvider {
                 response.append(responseLine.trim());
             }
             String r = response.toString();
-            return r;
+            Log.i("updatePerson", r);
     }
 
     public String updatePersonNumber(int personId, String number) throws Exception{
-            URL url = new URL("https://aualmaty.herokuapp.com/updatePersonNumber");
+            URL url = new URL("https://aualmaty.herokuapp.com/UpdatePersonNumber");
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -243,8 +243,8 @@ public class ApiProvider {
             return r;
     }
 
-    public String updatePersonPsswd(int personId, String passwd) throws Exception{
-        URL url = new URL("https://aualmaty.herokuapp.com/updatePersonPsswd");
+    public String updatePersonPsswd(int id, String passwd, String oldpasswd) throws Exception{
+        URL url = new URL("https://aualmaty.herokuapp.com/UpdatePersonPsswd");
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -254,8 +254,9 @@ public class ApiProvider {
 
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("id", personId);
-        jsonObject.put("pswd", passwd);
+        jsonObject.put("id", id);
+        jsonObject.put("psswd", passwd);
+        jsonObject.put("oldpasswd", oldpasswd);
 
         OutputStream os = con.getOutputStream();
         byte[] input = jsonObject.toString().getBytes("utf-8");
@@ -546,6 +547,11 @@ public class ApiProvider {
             jsonObject.put("desc", order.getDescription());
             String b = order.getDeadline() + "";
             jsonObject.put("deadline", b);
+            int v = 0;
+            if(order.isAnonNote()){
+                v = 1;
+            }
+            jsonObject.put("sanon", v);
 
             OutputStream os = con.getOutputStream();
             byte[] input = jsonObject.toString().getBytes("utf-8");
@@ -584,11 +590,16 @@ public class ApiProvider {
         String desc = jsonObject.getString("desc");
         String deadline = jsonObject.getString("dealine");
         String created = jsonObject.getString("created");
-
+        int sanon = jsonObject.getInt("sanon");
+        boolean b =false;
+        if(sanon ==1){
+            b =true;
+        }
         Long cr = Long.valueOf(created);
         Long d = Long.valueOf(deadline);
 
         order = new Order(id, customerId, title, sectionId, price, desc, d, cr);
+        order.setIsAnonNote(b);
         return order;
     }
 

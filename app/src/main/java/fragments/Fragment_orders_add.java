@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -42,11 +43,11 @@ public class Fragment_orders_add extends Fragment {
     MyDataProvider provider;
     ApiProvider apiProvider;
     Context context;
-    TextInputLayout title, price, descr;
+    TextInputLayout title, price, descr, deadlinelayout;
     MaskEditText deadline;
     Button add, cancel;
     Spinner mSpinner;
-    CheckBox checkBox;
+    CheckBox checkDeadl, ch_anon;
     int sectionId = 0;
     ProgressDialog pd;
 
@@ -79,7 +80,9 @@ public class Fragment_orders_add extends Fragment {
         add = view.findViewById(R.id.dialog_orders_add_btnOk);
         mSpinner = view.findViewById(R.id.orders_add_section);
         cancel = view.findViewById(R.id.dialog_orders_add_btnCancel);
-        checkBox = view.findViewById(R.id.orders_add_checkDeadl);
+        checkDeadl = view.findViewById(R.id.orders_add_checkDeadl);
+        deadlinelayout = view.findViewById(R.id.orders_add_deadlineelayout);
+        ch_anon = view.findViewById(R.id.orders_add_checkbox_isanon);
         this.provider = new MyDataProvider(context);
 
         CustomArrayAdapter arrayAdapter = new CustomArrayAdapter(context,
@@ -126,7 +129,10 @@ public class Fragment_orders_add extends Fragment {
                         } else {
                             price.setError(null);
                             price.setErrorEnabled(false);
-                            Long l = MyUtils.convertDataToLongWithRawString(deadline.getText().toString());
+                            Long l = 0L;
+                            if (!checkDeadl.isChecked()) {
+                                l = MyUtils.convertDataToLongWithRawString(deadline.getText().toString());
+                            }
                             Long curr = MyUtils.getCurentDateInLong();
                             Order order = new Order(txttitle,
                                     provider.getLoggedInPerson().getId(),
@@ -135,6 +141,8 @@ public class Fragment_orders_add extends Fragment {
                                     desc,
                                     l,
                                     curr);
+
+                            order.setIsAnonNote(!ch_anon.isChecked());
                             CreateOrderTask task = new CreateOrderTask();
                             task.execute(order);
                             Toast.makeText(context, "Заказ создан", Toast.LENGTH_SHORT).show();
@@ -157,10 +165,17 @@ public class Fragment_orders_add extends Fragment {
             }
         });
 
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkDeadl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                deadline.setEnabled(!checkBox.isChecked());
+                deadline.setEnabled(!checkDeadl.isChecked());
+                if (checkDeadl.isChecked()) {
+                    deadlinelayout.setBackgroundColor(getResources().getColor(R.color.colorMutedText));
+                    deadlinelayout.setBoxStrokeColor(getResources().getColor(R.color.colorMutedText));
+                } else {
+                    deadlinelayout.setBackgroundColor(getResources().getColor(R.color.colorBackground));
+                    deadlinelayout.setBoxStrokeColor(getResources().getColor(R.color.colorMutedText));
+                }
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -203,4 +218,12 @@ public class Fragment_orders_add extends Fragment {
 
         }
     }
+
+    public void onBackPressed() {
+        Fragment_orders fragment_orders = new Fragment_orders(context);
+        FragmentManager manager = getFragmentManager();
+        manager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
+    }
+
+
 }

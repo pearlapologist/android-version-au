@@ -100,7 +100,7 @@ public class Fragment_notification_adapter extends RecyclerView.Adapter<Fragment
                 holder.subText.setText(order.getTitle());
             }
         } else if (section == 2) {
-            drawb = R.drawable.review;
+            drawb = R.drawable.ic_contact_message;
 
             Persons p = null; // provider.getPerson(src);
             try {

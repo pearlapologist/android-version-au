@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fragments.Fragment_settings">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,6 +18,7 @@
                 android:textAllCaps="false"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
+                android:drawableStart="@drawable/ic_security_safety"
                 android:text="@string/btn_security"
                 android:padding="5sp"
                 android:background="@color/colorMutedGray2"
@@ -29,6 +27,22 @@
                 android:textStyle="bold"
                 />
 
+            <Button
+                android:id="@+id/frg_settings_btn_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:text="Выйти из аккаунта"
+                android:padding="5sp"
+                android:layout_marginBottom="30dp"
+                android:background="@color/colorMutedGray2"
+                android:enabled="true"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                />
+
         </RelativeLayout>
-    </ScrollView>
-</FrameLayout>
+</RelativeLayout>

@@ -113,7 +113,7 @@ public Order(){}
         return isAnonNote;
     }
 
-    public void setAnonNote(boolean anonNote) {
+    public void setIsAnonNote(boolean anonNote) {
         isAnonNote = anonNote;
     }
 }

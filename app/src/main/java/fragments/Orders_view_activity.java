@@ -69,7 +69,6 @@ public class Orders_view_activity extends AppCompatActivity {
         btn_viewprofile = findViewById(R.id.order_view_btnViewPrf);
         provider = new MyDataProvider(this);
         apiProvider = new ApiProvider();
-
         curPerson = provider.getLoggedInPerson();
 
         if (getIntent().hasExtra("orderIdFragment")) {
@@ -101,8 +100,12 @@ public class Orders_view_activity extends AppCompatActivity {
         title.setText(cur.getTitle());
         price.setText("" + cur.getPrice());
         descr.setText(cur.getDescription());
-        String s = MyUtils.convertLongToDataString(cur.getDeadline());
-        deadline.setText(s);
+        Long deadlinelong = cur.getDeadline();
+        if (deadlinelong != 0) {
+            deadline.setText(MyUtils.convertLongToDataString(deadlinelong));
+        }else{
+            deadline.setText("Не ограничено");
+        }
         String d = MyUtils.convertLongToDataString(cur.getCreated_date());
         createdDate.setText(d);
 
@@ -120,6 +123,7 @@ public class Orders_view_activity extends AppCompatActivity {
         }
         if (b == true || curPerson.getId() == cur.getCustomerId()) {
             btn_response.setEnabled(false);
+            btn_response.setBackgroundColor(getResources().getColor(R.color.colorMutedGrayLight));
         }
 
 
@@ -129,6 +133,12 @@ public class Orders_view_activity extends AppCompatActivity {
                 showDialogCreate();
             }
         });
+
+
+        if (cur.isAnonNote()) {
+            btn_viewprofile.setEnabled(false);
+            btn_viewprofile.setBackgroundColor(getResources().getColor(R.color.colorMutedGrayLight));
+        }
 
         btn_viewprofile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +176,7 @@ public class Orders_view_activity extends AppCompatActivity {
 
     public void insertRespones() {
         try {
-            responses =apiProvider.getOrderResponsesById(cur.getId());  //provider.getAllOrderResponsesByOrderId(cur.getId());
+            responses = apiProvider.getOrderResponsesById(cur.getId());  //provider.getAllOrderResponsesByOrderId(cur.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,7 +208,7 @@ public class Orders_view_activity extends AppCompatActivity {
 
                     AddResponseTask addResponseTask = new AddResponseTask();
                     addResponseTask.execute(response);
-                   //provider.addRespons(response);
+                    //provider.addRespons(response);
                     adapter.notifyItemInserted(response.getId());
                     responses.add(response);
                     Notify notify = new Notify(cur.getCustomerId(), "У вашего заказа новый отклик", MyUtils.getCurentDateInLong(), 1, cur.getId(), 0);

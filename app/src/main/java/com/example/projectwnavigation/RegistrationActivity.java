@@ -174,6 +174,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         String c = passwd2.getEditText().getText().toString().trim();
         String p = "^" +
                 "(?=.*[a-zA-Z])" +      //any letter
+                "(?=.*[а-яА-Я])" +
                 "(?=\\S+$)" +           //no white spaces
                 ".{4,}" +               //at least 4 characters
                 "$";

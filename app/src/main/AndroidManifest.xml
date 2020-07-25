@@ -13,15 +13,15 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".OnBoadingActivity"></activity>
+        <activity android:name=".OnBoadingActivity" />
         <activity android:name=".Verify_numberActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
@@ -65,7 +65,8 @@
             android:label="Мой профиль" />
         <activity
             android:name=".Navigation_activity"
-            android:theme="@style/AppTheme.woutActionBar" />
+            android:theme="@style/AppTheme.woutActionBar"
+            />
         <activity
             android:name=".MyProfile_createFormActivity"
             android:label="Создать анкету" />
@@ -75,6 +76,10 @@
         <activity
             android:name=".AuthorizationActivity"
             android:label="Авторизоваться" />
+        <activity
+            android:name=".Activity_edit_number"
+            android:label="Изменить номер" />
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/AppTheme" />

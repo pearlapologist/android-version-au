@@ -103,8 +103,12 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
         holder.price.setText(order.getPrice() + "");
         String created = MyUtils.convertLongToDataString(order.getCreated_date());
         holder.createdDate.setText(created);
-        String deadlinetext = MyUtils.convertLongToDataString(order.getDeadline());
-        holder.deadline.setText("" + deadlinetext);
+        Long deadlinelong = order.getDeadline();
+        if (deadlinelong != 0) {
+            holder.deadline.setText(MyUtils.convertLongToDataString(deadlinelong));
+        }else{
+            holder.deadline.setText("Не ограничено");
+        }
         final int id = order.getId();
         Section_of_services section = null;
         try {
@@ -444,6 +448,7 @@ public class Orders_adapter_frg extends RecyclerView.Adapter<Orders_adapter_frg.
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void s) {
             super.onPostExecute(s);

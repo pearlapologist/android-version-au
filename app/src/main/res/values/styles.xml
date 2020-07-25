@@ -1,23 +1,21 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorMutedGray2</item>
-        <item name="colorPrimaryDark">@color/colorBackground</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorYellow</item>
         <item name="spinBars">true</item>
         <item name="android:textColor">@color/colorMutedGray2</item>
         <item name="background">@color/colorBackground</item>
-        <item name="android:windowAnimationStyle">
-            @style/activityAnim
-        </item>
+        <item name="android:windowAnimationStyle">@style/activityAnim</item>
         <item name="android:fontFamily">@font/chalkboard</item>
-
         <item name="android:windowContentTransitions">true</item>
-
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.woutActionBar" parent="AppTheme">
+    <style name="AppTheme.woutActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

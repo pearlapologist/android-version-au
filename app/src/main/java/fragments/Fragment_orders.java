@@ -87,7 +87,6 @@ public class Fragment_orders extends Fragment {
                 if (position == 0) {
                     if (orders != null) {
                         orders.clear();
-
                         ArrayList<Order> orders2 = null;
                         try {
                             orders2 = apiProvider.getOrders();

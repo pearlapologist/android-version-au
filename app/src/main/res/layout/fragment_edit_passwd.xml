@@ -2,11 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="fragments.Fragment_edit_passwd">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,13 +19,14 @@
                 android:layout_alignParentTop="true"
                 android:id="@+id/frg_edit_passwd_et_oldpasswd"
                 android:textColorHint="@color/colorMutedText"
+                app:passwordToggleEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:textColorHint="@color/colorMutedText"
                     android:textColor="@color/colorMutedGray2"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:layout_height="wrap_content">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -41,12 +39,13 @@
                 android:id="@+id/frg_edit_passwd_et_newpasswd"
                 android:textColorHint="@color/colorMutedText"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:passwordToggleEnabled="true"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:textColorHint="@color/colorMutedText"
                     android:textColor="@color/colorMutedGray2"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:layout_height="wrap_content">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -59,12 +58,13 @@
                 android:id="@+id/frg_edit_passwd_et_newpasswdconfirm"
                 android:textColorHint="@color/colorMutedText"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+               app:passwordToggleEnabled="true"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:textColorHint="@color/colorMutedText"
                     android:textColor="@color/colorMutedGray2"
-                    android:inputType="number"
+                    android:inputType="textPassword"
                     android:layout_height="wrap_content">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -73,7 +73,7 @@
                 android:id="@+id/frg_edit_passwd_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/frg_edit_passwd_et_newpasswdconfirm"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="4sp"
                 android:layout_marginTop="25sp"
@@ -91,11 +91,11 @@
                 android:id="@+id/frg_edit_passwd_btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/frg_edit_passwd_et_newpasswdconfirm"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="4sp"
                 android:layout_marginTop="25sp"
                 android:layout_marginEnd="4sp"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="20sp"
                 android:background="@color/colorMutedGray2"
                 android:enabled="true"
@@ -105,5 +105,4 @@
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
         </RelativeLayout>
-    </ScrollView>
 </FrameLayout>

@@ -46,7 +46,7 @@ public class Executors_adapter_frg extends RecyclerView.Adapter<Executors_adapte
     Persons curPerson;
     private Menu popup_menu;
 
-    Executors_adapter_frg(Context context, ArrayList<Executor> executors) {
+    public Executors_adapter_frg(Context context, ArrayList<Executor> executors) {
         this.context = context;
         this.executors = executors;
     }

@@ -2,7 +2,6 @@ package fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -15,14 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.projectwnavigation.Fragment_edit_number;
-import com.example.projectwnavigation.MyProfile_edit_activity;
 import com.example.projectwnavigation.R;
 import com.google.android.material.textfield.TextInputLayout;
-import com.santalu.maskedittext.MaskEditText;
 
 import models.ApiProvider;
 import models.MyDataProvider;
@@ -36,7 +31,9 @@ public class Fragment_edit_passwd extends Fragment implements View.OnClickListen
     TextInputLayout oldpasswd, passwd, confirmpasswd;
     Button btn_save, btn_cancel;
     ProgressDialog pd;
-    String txtpasswd=null;
+
+    String txtpasswd = null;
+    String oldtxtpasswd = null;
 
     public Fragment_edit_passwd() {
     }
@@ -79,35 +76,60 @@ public class Fragment_edit_passwd extends Fragment implements View.OnClickListen
     private boolean validatePasswd() {
         String pswd = passwd.getEditText().getText().toString().trim();
         String p = "^" +
+                "(?=.*[a-zA-Z])" +    //any letter
+                "(?=.*[а-яА-Я])" +
+                "(?=\\S+$)" +           //no white spaces
+                ".{4,}" +               //at least 4 characters
+                "$";
+        if (pswd.isEmpty()) {
+            passwd.setError("Заполните поле");
+            return false;
+        } else if (!pswd.matches(p)) {
+            passwd.setError("Пароль слишком легкий");
+            return false;
+        } else {
+            passwd.setError(null);
+            passwd.setErrorEnabled(false);
+            this.txtpasswd = pswd;
+            return true;
+        }
+    }
+
+    private boolean validateConfirmField() {
+        String p = "^" +
                 "(?=.*[a-zA-Z])" +      //any letter
                 "(?=\\S+$)" +           //no white spaces
                 ".{4,}" +               //at least 4 characters
                 "$";
         String confirm = confirmpasswd.getEditText().getText().toString().trim();
-        if (pswd.isEmpty()) {
-            passwd.setError("Заполните поле");
-            return false;
-        } else if (confirm.isEmpty()) {
+
+        if (confirm.isEmpty()) {
             confirmpasswd.setError("Заполните поле");
             return false;
-        } else if (!pswd.matches(p)) {
-            passwd.setError("Пароль слишком легкий");
-            return false;
-        } else if (!(pswd.equals(confirm))) {
+        } else if (!(txtpasswd.equals(confirm))) {
             confirmpasswd.setError("Пароли не совпадают");
             return false;
         } else {
-            passwd.setError(null);
-            passwd.setErrorEnabled(false);
-
             confirmpasswd.setError(null);
             confirmpasswd.setErrorEnabled(false);
-
-            this.txtpasswd = pswd;
             return true;
         }
-
     }
+
+    private boolean validateOldPasswd() {
+        String oldpswd = oldpasswd.getEditText().getText().toString().trim();
+        if (oldpswd.isEmpty()) {
+            oldpasswd.setError("Заполните поле");
+            return false;
+        } else {
+            oldpasswd.setError(null);
+            oldpasswd.setErrorEnabled(false);
+
+            this.oldtxtpasswd = oldpswd;
+            return true;
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -116,15 +138,14 @@ public class Fragment_edit_passwd extends Fragment implements View.OnClickListen
             FragmentManager manager = getFragmentManager();
             manager.beginTransaction().replace(R.id.fram, fragment_security).commit();
         } else if (v.getId() == R.id.frg_edit_passwd_btn_save) {
-            if ( !validatePasswd() ) {
+            if (!validateOldPasswd() || !validatePasswd() || !validateConfirmField()) {
                 return;
             }
 
             try {
-                loggedInPerson.setPasswd(txtpasswd);
+                EditPasswdTask task = new EditPasswdTask();
 
-               EditPasswdTask task = new EditPasswdTask();
-                task.execute(loggedInPerson);
+                task.execute(txtpasswd, oldtxtpasswd);
                 String result = task.get();
                 Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -138,7 +159,7 @@ public class Fragment_edit_passwd extends Fragment implements View.OnClickListen
         }
     }
 
-    private class EditPasswdTask extends AsyncTask<Persons, Void, String> {
+    private class EditPasswdTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -149,9 +170,9 @@ public class Fragment_edit_passwd extends Fragment implements View.OnClickListen
         }
 
         @Override
-        protected String doInBackground(Persons... params) {
+        protected String doInBackground(String... params) {
             try {
-                String s = apiProvider.updatePersonPsswd(params[0].getId(), params[0].getPasswd());
+                String s = apiProvider.updatePersonPsswd(provider.getLoggedInPerson().getId(), params[0], params[1]);
                 return s;
             } catch (Exception e) {
                 e.printStackTrace();

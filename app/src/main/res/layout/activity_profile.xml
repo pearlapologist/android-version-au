@@ -22,7 +22,7 @@
                 android:layout_width="120sp"
                 android:layout_height="140sp"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="30sp"
+                android:layout_marginStart="20sp"
                 android:layout_marginTop="40sp"
                 android:src="@drawable/executors_default_image" />
 
@@ -60,12 +60,12 @@
 
             <Button
                 android:id="@+id/profile_orders"
-                android:layout_width="336dp"
-                android:layout_height="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/profile_registDate"
-                android:layout_marginStart="37dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="60sp"
-                android:layout_marginEnd="38dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/colorMutedGray2"
                 android:enabled="true"
                 android:text="@string/profile_orders"
@@ -76,12 +76,12 @@
 
             <Button
                 android:id="@+id/profile_form"
-                android:layout_width="336dp"
-                android:layout_height="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/profile_orders"
-                android:layout_marginStart="37dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20sp"
-                android:layout_marginEnd="38dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/colorMutedGray2"
                 android:enabled="true"
                 android:text="@string/profile_form"
@@ -92,12 +92,12 @@
 
             <Button
                 android:id="@+id/profile_reviews"
-                android:layout_width="336dp"
-                android:layout_height="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/profile_form"
-                android:layout_marginStart="37dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20sp"
-                android:layout_marginEnd="38dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/colorMutedGray2"
                 android:enabled="true"
                 android:text="@string/profile_reviews"
@@ -110,23 +110,23 @@
                 android:id="@+id/profile_birthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profile_rating"
+                android:layout_below="@id/profile_image"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="3sp"
                 android:layout_marginTop="15sp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="7dp"
                 android:layout_toEndOf="@id/profile_txtbirthday"
-                android:hint="birthday" />
+                android:hint="birthdaybirthdaybirthdaybirthday" />
 
 
             <TextView
                 android:id="@+id/profile_txtbirthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profile_rating"
+                android:layout_below="@id/profile_image"
                 android:layout_marginStart="20sp"
                 android:layout_marginTop="15sp"
-                android:layout_toEndOf="@id/profile_image"
+                android:layout_alignParentStart="true"
                 android:text="Дата рождения: " />
 
             <TextView
@@ -148,7 +148,7 @@
                 android:layout_below="@id/profile_txtbirthday"
                 android:layout_marginStart="20sp"
                 android:layout_marginTop="15sp"
-                android:layout_toEndOf="@id/profile_image"
+                android:layout_alignParentStart="true"
                 android:text="Дата регистрации: " />
         </RelativeLayout>
     </ScrollView>

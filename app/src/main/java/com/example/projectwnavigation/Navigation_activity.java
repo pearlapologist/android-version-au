@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 
+import fragments.Fragment_about;
 import fragments.Fragment_bkmrk;
 import fragments.Fragment_messages;
 import fragments.Fragment_notification;
@@ -43,7 +44,9 @@ import models.MyUtils;
 import models.Notify;
 import models.Persons;
 
-public class Navigation_activity extends AppCompatActivity {
+public class Navigation_activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout drawer;
+
     private TextView mNotifyTv;
     int notifyCounter = 0;
 
@@ -55,6 +58,8 @@ public class Navigation_activity extends AppCompatActivity {
     Fragment_notification fragment_notification;
     Fragment_settings fragment_settings;
     Fragment_messages fragment_messages;
+    Fragment_about fragment_about;
+
     TextView headerPersonName;
     ImageView headerImageView;
 
@@ -65,25 +70,26 @@ public class Navigation_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         provider = new MyDataProvider(this);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(navListener);
-        navigationView.setCheckedItem(R.id.nav_orders);
-
-        fragment_specials = new Fragment_specials(this);
-        fragment_orders = new Fragment_orders(this);
-        fragment_bkmrk = new Fragment_bkmrk(this);
-        fragment_notification = new Fragment_notification(this);
-        fragment_settings = new Fragment_settings(this);
-        fragment_messages = new Fragment_messages(this);
+        fragment_specials = new Fragment_specials(getApplicationContext());
+        fragment_orders = new Fragment_orders(getApplicationContext());
+        fragment_bkmrk = new Fragment_bkmrk(getApplicationContext());
+        fragment_notification = new Fragment_notification(getApplicationContext());
+        fragment_settings = new Fragment_settings(getApplicationContext());
+        fragment_messages = new Fragment_messages(getApplicationContext());
+        fragment_about = new Fragment_about(this);
 
         nManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Заказы");
+
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         final ActionBarDrawerToggle toogle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.open, R.string.close);
@@ -117,11 +123,15 @@ public class Navigation_activity extends AppCompatActivity {
         });
         toogle.syncState();
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
-                R.anim.enter_from_right, R.anim.exit_to_right);
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.fram, fragment_orders).commit();
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                    R.anim.enter_from_right, R.anim.exit_to_right);
+            transaction.addToBackStack(null);
+
+            transaction.replace(R.id.fram, fragment_orders).commit();
+            navigationView.setCheckedItem(R.id.nav_orders);
+        }
 
         //notifivation
         mNotifyTv = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notificatn));
@@ -146,6 +156,8 @@ public class Navigation_activity extends AppCompatActivity {
                 startActivity(intent_profile);
             }
         });
+
+        drawer.closeDrawer(GravityCompat.START);
 
     }
 
@@ -208,7 +220,6 @@ public class Navigation_activity extends AppCompatActivity {
     }*/
 
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -223,34 +234,24 @@ public class Navigation_activity extends AppCompatActivity {
             Intent testIntent = new Intent(Navigation_activity.this, TestActivity.class);
             startActivity(testIntent);
             return true;
-        } else if (id == R.id.action_exit) {
-            provider.setLoggedInPerson(null);
-            onStart();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private NavigationView.OnNavigationItemSelectedListener navListener = new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            int id = item.getItemId();
 
-        FragmentManager fmanager =  getSupportFragmentManager();
-             //Fragment fragment = fragment_orders;
-
-            if (id == R.id.nav_speacl) {
-                fmanager.beginTransaction().replace(R.id.fram, fragment_specials).commit();
-               // fragment = fragment_specials;
-            } else if (id == R.id.nav_orders) {
-                fmanager.beginTransaction().replace(R.id.fram, fragment_orders).commit();
-               // fragment = fragment_orders;
-            } else if (id == R.id.nav_bkmr) {
-              //  fragment = fragment_bkmrk;
-                fmanager.beginTransaction().replace(R.id.fram, fragment_bkmrk).commit();
-            } else if (id == R.id.nav_notificatn) {
-               // fragment = fragment_notification;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_orders:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_orders).commit();
+                break;
+            case R.id.nav_speacl:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_specials).commit();
+                break;
+            case R.id.nav_notificatn:
                 if (notifyCounter != 0) {
                     try {
                         apiProvider.setPersonNotifiesToChecked(currentPerson.getId());
@@ -258,22 +259,33 @@ public class Navigation_activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     notifyCounter = 0;
-                    fmanager.beginTransaction().replace(R.id.fram, fragment_notification).commit();
                 }
-            } else if (id == R.id.nav_settings) {
-               // fragment = fragment_settings;
-              fmanager.beginTransaction().replace(R.id.fram, fragment_settings).commit();
-            } else if (id == R.id.nav_messages) {
-                //fragment = fragment_messages;
-                fmanager.beginTransaction().replace(R.id.fram, fragment_messages).commit();
-            }
-            setTitle(item.getTitle());
-         //   getSupportFragmentManager().beginTransaction().replace(R.id.fram, fragment).commit();
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_notification).commit();
+                break;
+            case R.id.nav_messages:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_messages).commit();
+                break;
+            case R.id.nav_bkmr:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_bkmrk).commit();
+                break;
+            case R.id.nav_settings:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_settings).commit();
+                break;
+            case R.id.nav_about:
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fram, fragment_about).commit();
+                break;
         }
-    };
+
+       setTitle(item.getTitle());
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
     private void initializeCountDrawer() {
         mNotifyTv.setGravity(Gravity.CENTER_VERTICAL);

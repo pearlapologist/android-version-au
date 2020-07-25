@@ -36,6 +36,7 @@
 
     <item android:title="Дополнительно">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settingss"
@@ -44,6 +45,7 @@
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_about"
                 android:title="О программе"></item>
+            </group>
         </menu>
     </item>
 </menu>
